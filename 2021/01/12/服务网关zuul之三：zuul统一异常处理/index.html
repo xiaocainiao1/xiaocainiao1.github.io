@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="服务网关zuul之三：zuul统一异常处理我们详细介绍了Spring Cloud Zuul中自己实现的一些核心过滤器，以及这些过滤器在请求生命周期中的不同作用。我们会发现在这些核心过滤器中并没有实现error阶段的过滤器。那么这些过滤器可以用来做什么呢？接下来，本文将介绍如何利用error过滤器来实现统一的异常处理。 过滤器中抛出异常的问题首先，我们可以来看看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/01/12/%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3zuul%E4%B9%8B%E4%B8%89%EF%BC%9Azuul%E7%BB%9F%E4%B8%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="服务网关zuul之三：zuul统一异常处理我们详细介绍了Spring Cloud Zuul中自己实现的一些核心过滤器，以及这些过滤器在请求生命周期中的不同作用。我们会发现在这些核心过滤器中并没有实现error阶段的过滤器。那么这些过滤器可以用来做什么呢？接下来，本文将介绍如何利用error过滤器来实现统一的异常处理。 过滤器中抛出异常的问题首先，我们可以来看看">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://images2017.cnblogs.com/blog/285763/201709/285763-20170918150433150-2013481451.png">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://images2017.cnblogs.com/blog/285763/201709/285763-20170918151619368-1555310138.png">
+<meta property="og:image" content="https://images2017.cnblogs.com/blog/285763/201709/285763-20170918154940556-1741762725.png">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="article:published_time" content="2021-01-12T06:26:42.730Z">
+<meta property="article:modified_time" content="2021-01-12T06:26:43.101Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://common.cnblogs.com/images/copycode.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-服务网关zuul之三：zuul统一异常处理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/12/%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3zuul%E4%B9%8B%E4%B8%89%EF%BC%9Azuul%E7%BB%9F%E4%B8%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="article-date">
+  <time datetime="2021-01-12T06:26:42.730Z" itemprop="datePublished">2021-01-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="服务网关zuul之三：zuul统一异常处理"><a href="#服务网关zuul之三：zuul统一异常处理" class="headerlink" title="                   服务网关zuul之三：zuul统一异常处理"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/duanxz/p/7543040.html">                   服务网关zuul之三：zuul统一异常处理</a></h1><p>我们详细介绍了Spring Cloud Zuul中自己实现的一些核心过滤器，以及这些过滤器在请求生命周期中的不同作用。我们会发现在这些核心过滤器中并没有实现error阶段的过滤器。那么这些过滤器可以用来做什么呢？接下来，本文将介绍如何利用error过滤器来实现统一的异常处理。</p>
+<h2 id="过滤器中抛出异常的问题"><a href="#过滤器中抛出异常的问题" class="headerlink" title="过滤器中抛出异常的问题"></a>过滤器中抛出异常的问题</h2><p>首先，我们可以来看看默认情况下，过滤器中抛出异常Spring Cloud Zuul会发生什么现象。我们创建一个pre类型的过滤器，并在该过滤器的run方法实现中抛出一个异常。比如下面的实现，在run方法中调用的<code>doSomething</code>方法将抛出<code>RuntimeException</code>异常。</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">package com.dxz.zuul;</span><br><span class="line"></span><br><span class="line">import org.apache.log4j.Logger;</span><br><span class="line">import com.netflix.zuul.ZuulFilter;</span><br><span class="line"></span><br><span class="line">public class ThrowExceptionFilter extends ZuulFilter &#123;</span><br><span class="line"></span><br><span class="line">    private static Logger log = Logger.getLogger(ThrowExceptionFilter.class);</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String filterType() &#123;</span><br><span class="line">        return &quot;pre&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int filterOrder() &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean shouldFilter() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Object run() &#123;</span><br><span class="line">        log.info(&quot;This is a pre filter, it will throw a RuntimeException&quot;);</span><br><span class="line">        doSomething();</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void doSomething() &#123;</span><br><span class="line">        throw new RuntimeException(&quot;Exist some errors...&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>在启动类为自定义过滤器创建具体的Bean才能启动该过滤器，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public ThrowExceptionFilter throwExceptionFilter() &#123;</span><br><span class="line">    return new ThrowExceptionFilter();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行网关程序并访问某个路由请求，此时我们会发现：在API网关服务的控制台中输出了ThrowExceptionFilter的过滤逻辑中的日志信息，但是并没有输出任何异常信息，同时发起的请求也没有获得任何响应结果。为什么会出现这样的情况呢？我们又该如何在过滤器中处理异常呢？</p>
+<h3 id="解决方案一：严格的try-catch处理"><a href="#解决方案一：严格的try-catch处理" class="headerlink" title="解决方案一：严格的try-catch处理"></a><strong>解决方案一：严格的try-catch处理</strong></h3><p>　　运行网关程序并访问某个路由请求，此时我们会发现：在API网关服务的控制台中输出了<code>ThrowExceptionFilter</code>的过滤逻辑中的日志信息，但是并没有输出任何异常信息，同时发起的请求也没有获得任何响应结果。为什么会出现这样的情况呢？我们又该如何在过滤器中处理异常呢？</p>
+<p>回想一下，我们在上一节中介绍的所有核心过滤器，是否还记得有一个<code>post</code>过滤器<code>SendErrorFilter</code>是用来处理异常信息的？根据正常的处理流程，该过滤器会处理异常信息，那么这里没有出现任何异常信息说明很有可能就是这个过滤器没有被执行。所以，我们不妨来详细看看<code>SendErrorFilter</code>的<code>shouldFilter</code>函数：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public boolean shouldFilter() &#123;</span><br><span class="line">    RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">    // only forward to errorPath if it hasn&#x27;t been forwarded to already</span><br><span class="line">    return ctx.containsKey(&quot;error.status_code&quot;)</span><br><span class="line">            &amp;&amp; !ctx.getBoolean(SEND_ERROR_FILTER_RAN, false);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p><img src="https://images2017.cnblogs.com/blog/285763/201709/285763-20170918150433150-2013481451.png" alt="img"></p>
+<p>可以看到该方法的返回值中有一个重要的判断依据<code>ctx.containsKey(&quot;error.status_code&quot;)</code>，也就是说请求上下文中必须有<code>error.status_code</code>参数，我们实现的<code>ThrowExceptionFilter</code>中并没有设置这个参数，所以自然不会进入<code>SendErrorFilter</code>过滤器的处理逻辑。那么我们要如何用这个参数呢？我们可以看一下<code>route</code>类型的几个过滤器，由于这些过滤器会对外发起请求，所以肯定会有异常需要处理，比如spring-cloud-netflix-core-1.1.4.RELEASE.jar中的org.springframework.cloud.netflix.zuul.filters.route.<code>RibbonRoutingFilter</code>的<code>run</code>方法实现如下：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public Object run() &#123;</span><br><span class="line">    RequestContext context = RequestContext.getCurrentContext();</span><br><span class="line">    this.helper.addIgnoredHeaders();</span><br><span class="line">    try &#123;</span><br><span class="line">        RibbonCommandContext commandContext = buildCommandContext(context);</span><br><span class="line">        ClientHttpResponse response = forward(commandContext);</span><br><span class="line">        setResponse(response);</span><br><span class="line">        return response;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (ZuulException ex) &#123;</span><br><span class="line">        context.set(ERROR_STATUS_CODE, ex.nStatusCode);</span><br><span class="line">        context.set(&quot;error.message&quot;, ex.errorCause);</span><br><span class="line">        context.set(&quot;error.exception&quot;, ex);</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Exception ex) &#123;</span><br><span class="line">        context.set(&quot;error.status_code&quot;,</span><br><span class="line">                HttpServletResponse.SC_INTERNAL_SERVER_ERROR);</span><br><span class="line">        context.set(&quot;error.exception&quot;, ex);</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>可以看到，整个发起请求的逻辑都采用了<code>try-catch</code>块处理。在<code>catch</code>异常的处理逻辑中并没有做任何输出操作，而是往请求上下文中添加一些<code>error</code>相关的参数，主要有下面三个参数：</p>
+<ul>
+<li><code>error.status_code</code>：错误编码</li>
+<li><code>error.exception</code>：<code>Exception</code>异常对象</li>
+<li><code>error.message</code>：错误信息</li>
+</ul>
+<p>其中，<code>error.status_code</code>参数就是<code>SendErrorFilter</code>过滤器用来判断是否需要执行的重要参数。分析到这里，实现异常处理的大致思路就开始明朗了，我们可以参考<code>RibbonRoutingFilter</code>的实现对<code>ThrowExceptionFilter</code>的<code>run</code>方法做一些异常处理的改造，具体如下：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public Object run() &#123;</span><br><span class="line">    log.info(&quot;This is a pre filter, it will throw a RuntimeException&quot;);</span><br><span class="line">    RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">    try &#123;</span><br><span class="line">        doSomething();</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        ctx.set(&quot;error.status_code&quot;, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);</span><br><span class="line">        ctx.set(&quot;error.exception&quot;, e);</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>通过上面的改造之后，我们再尝试访问之前的接口，这个时候我们可以得到如下响应内容：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;timestamp&quot;: 1481674980376,</span><br><span class="line">&quot;status&quot;: 500,</span><br><span class="line">&quot;error&quot;: &quot;Internal Server Error&quot;,</span><br><span class="line">&quot;exception&quot;: &quot;java.lang.RuntimeException&quot;,</span><br><span class="line">&quot;message&quot;: &quot;Exist some errors...&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>此时，我们的异常信息已经被<code>SendErrorFilter</code>过滤器正常处理并返回给客户端了，同时在网关的控制台中也输出了异常信息。从返回的响应信息中，我们可以看到几个我们之前设置在请求上下文中的内容，它们的对应关系如下：</p>
+<ul>
+<li><code>status</code>：对应<code>error.status_code</code>参数的值</li>
+<li><code>exception</code>：对应<code>error.exception</code>参数中<code>Exception</code>的类型</li>
+<li><code>message</code>：对应<code>error.exception</code>参数中<code>Exception</code>的<code>message</code>信息。对于<code>message</code>的信息，我们在过滤器中还可以通过<code>ctx.set(&quot;error.message&quot;, &quot;自定义异常消息&quot;);</code>来定义更友好的错误信息。<code>SendErrorFilter</code>会优先取<code>error.message</code>来作为返回的<code>message</code>内容，如果没有的话才会使用<code>Exception</code>中的<code>message</code>信息</li>
+</ul>
+<h3 id="解决方案二：ErrorFilter处理"><a href="#解决方案二：ErrorFilter处理" class="headerlink" title="解决方案二：ErrorFilter处理"></a>解决方案二：ErrorFilter处理</h3><p>通过上面的分析与实验，我们已经知道如何在过滤器中正确的处理异常，让错误信息能够顺利地流转到后续的<code>SendErrorFilter</code>过滤器来组织和输出。但是，即使我们不断强调要在过滤器中使用<code>try-catch</code>来处理业务逻辑并往请求上下文添加异常信息，但是不可控的人为因素、意料之外的程序因素等，依然会使得一些异常从过滤器中抛出，对于意外抛出的异常又会导致没有控制台输出也没有任何响应信息的情况出现，那么是否有什么好的方法来为这些异常做一个统一的处理呢？</p>
+<p>这个时候，我们就可以用到<code>error</code>类型的过滤器了。由于在请求生命周期的<code>pre</code>、<code>route</code>、<code>post</code>三个阶段中有异常抛出的时候都会进入<code>error</code>阶段的处理，所以我们可以通过创建一个<code>error</code>类型的过滤器来捕获这些异常信息，并根据这些异常信息在请求上下文中注入需要返回给客户端的错误描述，这里我们可以直接沿用在<code>try-catch</code>处理异常信息时用的那些error参数，这样就可以让这些信息被<code>SendErrorFilter</code>捕获并组织成消息响应返回给客户端。比如，下面的代码就实现了这里所描述的一个过滤器：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package com.dxz.zuul;</span><br><span class="line"></span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line">import org.apache.log4j.Logger;</span><br><span class="line"></span><br><span class="line">import com.netflix.zuul.ZuulFilter;</span><br><span class="line">import com.netflix.zuul.context.RequestContext;</span><br><span class="line"></span><br><span class="line">public class ErrorFilter extends ZuulFilter &#123;</span><br><span class="line"></span><br><span class="line">    Logger log = Logger.getLogger(ErrorFilter.class);</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String filterType() &#123;</span><br><span class="line">        return &quot;error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int filterOrder() &#123;</span><br><span class="line">        return 10;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean shouldFilter() &#123;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Object run() &#123;</span><br><span class="line">        RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">        Throwable throwable = ctx.getThrowable();</span><br><span class="line">        log.error(&quot;this is a ErrorFilter :&quot; + throwable.getCause().getMessage(), throwable);</span><br><span class="line">        ctx.set(&quot;error.status_code&quot;, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);</span><br><span class="line">        ctx.set(&quot;error.exception&quot;, throwable.getCause());</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>在启动类为自定义过滤器创建具体的Bean才能启动该过滤器，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public ErrorFilter errorFilter() &#123;</span><br><span class="line">    return new ErrorFilter();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改并保留ThrowExceptionFilter，</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public Object run() &#123;</span><br><span class="line">    log.info(&quot;This is a pre filter, it will throw a RuntimeException&quot;);</span><br><span class="line">    doSomething();</span><br><span class="line">    /*RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">    try &#123;</span><br><span class="line">        doSomething();</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">        ctx.set(&quot;error.status_code&quot;, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);</span><br><span class="line">        ctx.set(&quot;error.exception&quot;, e);</span><br><span class="line">    &#125;*/</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>在将该过滤器加入到我们的API网关服务之后，我们可以尝试使用之前介绍<code>try-catch</code>处理时实现的<code>ThrowExceptionFilter</code>（不包含异常处理机制的代码），让该过滤器能够抛出异常。这个时候我们再通过API网关来访问服务接口。此时，我们就可以在控制台中看到<code>ThrowExceptionFilter</code>过滤器抛出的异常信息，并且请求响应中也能获得如下的错误信息内容，而不是什么信息都没有的情况了。</p>
+<p><img src="https://images2017.cnblogs.com/blog/285763/201709/285763-20170918151619368-1555310138.png" alt="img"></p>
+<p>两种解决方案：一种是通过在各个阶段的过滤器中增加<code>try-catch</code>块，实现过滤器内部的异常处理；另一种是利用<code>error</code>类型过滤器的生命周期特性，集中地处理<code>pre</code>、<code>route</code>、<code>post</code>阶段抛出的异常信息。通常情况下，我们可以将这两种手段同时使用，其中第一种是对开发人员的基本要求；而第二种是对第一种处理方式的补充，以防止一些意外情况的发生。这样的异常处理机制看似已经完美，但是如果在多一些应用实践或源码分析之后，我们会发现依然存在一些不足。</p>
+<h3 id="不足之处"><a href="#不足之处" class="headerlink" title="不足之处"></a>不足之处</h3><p>下面，我们不妨跟着源码来看看，到底上面的方案还有哪些不足之处需要我们注意和进一步优化的。先来看看外部请求到达API网关服务之后，各个阶段的过滤器是如何进行调度的：</p>
+<p><img src="https://images2017.cnblogs.com/blog/285763/201709/285763-20170918154940556-1741762725.png" alt="img"></p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void service(javax.servlet.ServletRequest servletRequest, javax.servlet.ServletResponse servletResponse) throws ServletException, IOException &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        init((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);</span><br><span class="line"></span><br><span class="line">        // Marks this request as having passed through the &quot;Zuul engine&quot;, as opposed to servlets</span><br><span class="line">        // explicitly bound in web.xml, for which requests will not have the same data attached</span><br><span class="line">        RequestContext context = RequestContext.getCurrentContext();</span><br><span class="line">        context.setZuulEngineRan();</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            preRoute();</span><br><span class="line">        &#125; catch (ZuulException e) &#123;</span><br><span class="line">            error(e);</span><br><span class="line">            postRoute();</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            route();</span><br><span class="line">        &#125; catch (ZuulException e) &#123;</span><br><span class="line">            error(e);</span><br><span class="line">            postRoute();</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            postRoute();</span><br><span class="line">        &#125; catch (ZuulException e) &#123;</span><br><span class="line">            error(e);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125; catch (Throwable e) &#123;</span><br><span class="line">        error(new ZuulException(e, 500, &quot;UNHANDLED_EXCEPTION_&quot; + e.getClass().getName()));</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        RequestContext.getCurrentContext().unset();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>问题分析与进一步优化上面代码源自<code>com.netflix.zuul.http.ZuulServlet</code>的<code>service</code>方法实现，它定义了Zuul处理外部请求过程时，各个类型过滤器的执行逻辑。从代码中我们可以看到三个<code>try-catch</code>块，它们依次分别代表了<code>pre</code>、<code>route</code>、<code>post</code>三个阶段的过滤器调用，在<code>catch</code>的异常处理中我们可以看到它们都会被<code>error</code>类型的过滤器进行处理（之前使用<code>error</code>过滤器来定义统一的异常处理也正是利用了这个特性）；<code>error</code>类型的过滤器处理完毕之后，除了来自<code>post</code>阶段的异常之外，都会再被<code>post</code>过滤器进行处理。而对于从<code>post</code>过滤器中抛出异常的情况，在经过了<code>error</code>过滤器处理之后，就没有其他类型的过滤器来接手了，这就是使用之前所述方案存在不足之处的根源。</p>
+<p>回想一下之前实现的两种异常处理方法，其中非常核心的一点，这两种处理方法都在异常处理时候往请求上下文中添加了一系列的<code>error.*</code>参数，而这些参数真正起作用的地方是在<code>post</code>阶段的<code>SendErrorFilter</code>，在该过滤器中会使用这些参数来组织内容返回给客户端。而对于<code>post</code>阶段抛出异常的情况下，由<code>error</code>过滤器处理之后并不会在调用<code>post</code>阶段的请求，自然这些<code>error.*</code>参数也就不会被<code>SendErrorFilter</code>消费输出。所以，如果我们在自定义<code>post</code>过滤器的时候，没有正确的处理异常，就依然有可能出现日志中没有异常并且请求响应内容为空的问题。我们可以通过修改之前<code>ThrowExceptionFilter</code>的<code>filterType</code>修改为<code>post</code>来验证这个问题的存在，注意去掉<code>try-catch</code>块的处理，让它能够抛出异常。</p>
+<p>解决上述问题的方法有很多种，比如最直接的我们可以在实现<code>error</code>过滤器的时候，直接来组织结果返回就能实现效果，但是这样的缺点也很明显，对于错误信息组织和返回的代码实现就会存在多份，这样非常不易于我们日后的代码维护工作。所以为了保持对异常返回处理逻辑的一致，我们还是希望将<code>post</code>过滤器抛出的异常能够交给<code>SendErrorFilter</code>来处理。</p>
+<p>在前文中，我们已经实现了一个<code>ErrorFilter</code>来捕获<code>pre</code>、<code>route</code>、<code>post</code>过滤器抛出的异常，并组织<code>error.*</code>参数保存到请求的上下文中。由于我们的目标是沿用<code>SendErrorFilter</code>，这些<code>error.*</code>参数依然对我们有用，所以我们可以继续沿用该过滤器，让它在<code>post</code>过滤器抛出异常的时候，继续组织<code>error.*</code>参数，只是这里我们已经无法将这些<code>error.*</code>参数再传递给<code>SendErrorFitler</code>过滤器来处理了。所以，我们需要在<code>ErrorFilter</code>过滤器之后再定义一个<code>error</code>类型的过滤器，让它来实现<code>SendErrorFilter</code>的功能，但是这个<code>error</code>过滤器并不需要处理所有出现异常的情况，它仅对<code>post</code>过滤器抛出的异常才有效。根据上面的思路，我们完全可以创建一个继承自<code>SendErrorFilter</code>的过滤器，就能复用它的<code>run</code>方法，然后重写它的类型、顺序以及执行条件，实现对原有逻辑的复用，具体实现如下：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">package com.dxz.zuul;</span><br><span class="line"></span><br><span class="line">import org.springframework.cloud.netflix.zuul.filters.post.SendErrorFilter;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">public class ErrorExtFilter extends SendErrorFilter &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String filterType() &#123;</span><br><span class="line">        return &quot;error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int filterOrder() &#123;</span><br><span class="line">        return 30; // 大于ErrorFilter的值</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean shouldFilter() &#123;</span><br><span class="line">        // TODO 判断：仅处理来自post过滤器引起的异常</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>到这里，我们在过滤器调度上的实现思路已经很清晰了，但是又有一个问题出现在我们面前：怎么判断引起异常的过滤器是来自什么阶段呢？（<code>shouldFilter</code>方法该如何实现）对于这个问题，我们第一反应会寄希望于请求上下文<code>RequestContext</code>对象，可是在查阅文档和源码后发现其中并没有存储异常来源的内容，所以我们不得不扩展原来的过滤器处理逻辑，当有异常抛出的时候，记录下抛出异常的过滤器，这样我们就可以在<code>ErrorExtFilter</code>过滤器的<code>shouldFilter</code>方法中获取并以此判断异常是否来自<code>post</code>阶段的过滤器了。</p>
+<p>为了扩展过滤器的处理逻辑，为请求上下文增加一些自定义属性，我们需要深入了解一下Zuul过滤器的核心处理器：<code>com.netflix.zuul.FilterProcessor</code>。该类中定义了下面过滤器调用和处理相关的核心方法：到这里，我们在过滤器调度上的实现思路已经很清晰了，但是又有一个问题出现在我们面前：怎么判断引起异常的过滤器是来自什么阶段呢？（<code>shouldFilter</code>方法该如何实现）对于这个问题，我们第一反应会寄希望于请求上下文<code>RequestContext</code>对象，可是在查阅文档和源码后发现其中并没有存储异常来源的内容，所以我们不得不扩展原来的过滤器处理逻辑，当有异常抛出的时候，记录下抛出异常的过滤器，这样我们就可以在<code>ErrorExtFilter</code>过滤器的<code>shouldFilter</code>方法中获取并以此判断异常是否来自<code>post</code>阶段的过滤器了。</p>
+<ul>
+<li><code>getInstance()</code>：该方法用来获取当前处理器的实例</li>
+<li><code>setProcessor(FilterProcessor processor)</code>：该方法用来设置处理器实例，可以使用此方法来设置自定义的处理器</li>
+<li><code>processZuulFilter(ZuulFilter filter)</code>：该方法定义了用来执行<code>filter</code>的具体逻辑，包括对请求上下文的设置，判断是否应该执行，执行时一些异常处理等</li>
+<li><code>getFiltersByType(String filterType)</code>：该方法用来根据传入的<code>filterType</code>获取API网关中对应类型的过滤器，并根据这些过滤器的<code>filterOrder</code>从小到大排序，组织成一个列表返回</li>
+<li><code>runFilters(String sType)</code>：该方法会根据传入的<code>filterType</code>来调用<code>getFiltersByType(String filterType)</code>获取排序后的过滤器列表，然后轮询这些过滤器，并调用<code>processZuulFilter(ZuulFilter filter)</code>来依次执行它们</li>
+<li><code>preRoute()</code>：调用<code>runFilters(&quot;pre&quot;)</code>来执行所有<code>pre</code>类型的过滤器</li>
+<li><code>route()</code>：调用<code>runFilters(&quot;route&quot;)</code>来执行所有<code>route</code>类型的过滤器</li>
+<li><code>postRoute()</code>：调用<code>runFilters(&quot;post&quot;)</code>来执行所有<code>post</code>类型的过滤器</li>
+<li><code>error()</code>：调用<code>runFilters(&quot;error&quot;)</code>来执行所有<code>error</code>类型的过滤器</li>
+</ul>
+<p>根据我们之前的设计，我们可以直接通过扩展<code>processZuulFilter(ZuulFilter filter)</code>方法，当过滤器执行抛出异常的时候，我们捕获它，并往请求上下中记录一些信息。比如下面的具体实现：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package com.dxz.zuul;</span><br><span class="line"></span><br><span class="line">import com.netflix.zuul.FilterProcessor;</span><br><span class="line">import com.netflix.zuul.ZuulFilter;</span><br><span class="line">import com.netflix.zuul.context.RequestContext;</span><br><span class="line">import com.netflix.zuul.exception.ZuulException;</span><br><span class="line"></span><br><span class="line">public class DidiFilterProcessor extends FilterProcessor &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Object processZuulFilter(ZuulFilter filter) throws ZuulException &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            return super.processZuulFilter(filter);</span><br><span class="line">        &#125; catch (ZuulException e) &#123;</span><br><span class="line">            RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">            ctx.set(&quot;failed.filter&quot;, filter);</span><br><span class="line">            throw e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>在上面代码的实现中，我们创建了一个<code>FilterProcessor</code>的子类，并重写了<code>processZuulFilter(ZuulFilter filter)</code>，虽然主逻辑依然使用了父类的实现，但是在最外层，我们为其增加了异常捕获，并在异常处理中为请求上下文添加了<code>failed.filter</code>属性，以存储抛出异常的过滤器实例。在实现了这个扩展之后，我们也就可以完善之前<code>ErrorExtFilter</code>中的<code>shouldFilter()</code>方法，通过从请求上下文中获取该信息作出正确的判断，具体实现如下：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package com.dxz.zuul;</span><br><span class="line"></span><br><span class="line">import org.springframework.cloud.netflix.zuul.filters.post.SendErrorFilter;</span><br><span class="line">import org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line">import com.netflix.zuul.ZuulFilter;</span><br><span class="line">import com.netflix.zuul.context.RequestContext;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">public class ErrorExtFilter extends SendErrorFilter &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String filterType() &#123;</span><br><span class="line">        return &quot;error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int filterOrder() &#123;</span><br><span class="line">        return 30; // 大于ErrorFilter的值</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean shouldFilter() &#123;</span><br><span class="line">        // 判断：仅处理来自post过滤器引起的异常</span><br><span class="line">        RequestContext ctx = RequestContext.getCurrentContext();</span><br><span class="line">        ZuulFilter failedFilter = (ZuulFilter) ctx.get(&quot;failed.filter&quot;);</span><br><span class="line">        if (failedFilter != null &amp;&amp; failedFilter.filterType().equals(&quot;post&quot;)) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>到这里，我们的优化任务还没有完成，因为扩展的过滤器处理类并还没有生效。最后，我们需要在应用主类中，通过调用<code>FilterProcessor.setProcessor(new DidiFilterProcessor());</code>方法来启用自定义的核心处理器以完成我们的优化目标。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/12/%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3zuul%E4%B9%8B%E4%B8%89%EF%BC%9Azuul%E7%BB%9F%E4%B8%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" data-id="clh04c6dv000so4rg0rum9xqu" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/01/12/linux%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E5%85%8D%E5%AF%86%E7%A0%81/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/01/09/%E5%85%B3%E4%BA%8EJib%E6%8F%92%E4%BB%B6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/04/18/%E5%A4%8D%E4%B9%A0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/23/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/11/Spring%20Security%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E7%9A%84%E5%8E%9F%E7%90%86/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%20%EF%BC%88jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%89/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/06/Docker%20Volume/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

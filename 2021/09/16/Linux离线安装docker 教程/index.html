@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Linux离线安装docker 教程前言 有时候会遇到服务器不能联网的情况，这样就没法用yum安装软件，docker也是如此，针对这种情况，总结了一下离线安装docker的步骤，分享给大家，安装前确定linux内核版本，要求CentenOS 7 内核3.1以上，内核查看命令： uname -a 1. 准备docker离线包 下载地址为：http:&#x2F;&#x2F;25.213.30.100:3000&#x2F;cxpt-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/09/16/Linux%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%20%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Linux离线安装docker 教程前言 有时候会遇到服务器不能联网的情况，这样就没法用yum安装软件，docker也是如此，针对这种情况，总结了一下离线安装docker的步骤，分享给大家，安装前确定linux内核版本，要求CentenOS 7 内核3.1以上，内核查看命令： uname -a 1. 准备docker离线包 下载地址为：http:&#x2F;&#x2F;25.213.30.100:3000&#x2F;cxpt-">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img.jbzj.com/file_images/article/201908/2019080709531410.png">
+<meta property="og:image" content="https://img.jbzj.com/file_images/article/201908/2019080709531411.png">
+<meta property="og:image" content="https://img.jbzj.com/file_images/article/201908/2019080709531512.png">
+<meta property="article:published_time" content="2021-09-16T06:12:00.523Z">
+<meta property="article:modified_time" content="2021-09-16T07:32:55.874Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.jbzj.com/file_images/article/201908/2019080709531410.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Linux离线安装docker 教程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/09/16/Linux%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%20%E6%95%99%E7%A8%8B/" class="article-date">
+  <time datetime="2021-09-16T06:12:00.523Z" itemprop="datePublished">2021-09-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Linux离线安装docker-教程"><a href="#Linux离线安装docker-教程" class="headerlink" title="Linux离线安装docker 教程"></a>Linux离线安装docker 教程</h1><p><strong>前言</strong></p>
+<p>有时候会遇到服务器不能联网的情况，这样就没法用yum安装软件，docker也是如此，针对这种情况，总结了一下离线安装docker的步骤，分享给大家，安装前确定linux内核版本，要求CentenOS 7 内核3.1以上，内核查看命令： uname -a</p>
+<p><strong>1. 准备docker离线包</strong></p>
+<p>下载地址为：<a target="_blank" rel="noopener" href="http://25.213.30.100:3000/cxpt-aip/tools/outcomes/download/1a7f989f-075d-40be-a7c5-2cc484a03290">http://25.213.30.100:3000/cxpt-aip/tools/outcomes/download/1a7f989f-075d-40be-a7c5-2cc484a03290</a></p>
+<p>下载需要安装的docker版本，我此次下载的是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-18.06.1-ce.tgz版本</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 准备docker.service 系统配置文件</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Docker Application Container Engine</span><br><span class="line">Documentation=https://docs.docker.com</span><br><span class="line">After=network-online.target firewalld.service</span><br><span class="line">Wants=network-online.target</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line"># the default is not to use systemd for cgroups because the delegate issues still</span><br><span class="line"># exists and systemd currently does not support the cgroup feature set required</span><br><span class="line"># for containers run by docker</span><br><span class="line">ExecStart=/usr/bin/dockerd</span><br><span class="line">ExecReload=/bin/kill -s HUP $MAINPID</span><br><span class="line"># Having non-zero Limit*s causes performance problems due to accounting overhead</span><br><span class="line"># in the kernel. We recommend using cgroups to do container-local accounting.</span><br><span class="line">LimitNOFILE=infinity</span><br><span class="line">LimitNPROC=infinity</span><br><span class="line">LimitCORE=infinity</span><br><span class="line"># Uncomment TasksMax if your systemd version supports it.</span><br><span class="line"># Only systemd 226 and above support this version.</span><br><span class="line">#TasksMax=infinity</span><br><span class="line">TimeoutStartSec=0</span><br><span class="line"># set delegate yes so that systemd does not reset the cgroups of docker containers</span><br><span class="line">Delegate=yes</span><br><span class="line"># kill only the docker process, not all processes in the cgroup</span><br><span class="line">KillMode=process</span><br><span class="line"># restart the docker process if it exits prematurely</span><br><span class="line">Restart=on-failure</span><br><span class="line">StartLimitBurst=3</span><br><span class="line">StartLimitInterval=60s</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 准备安装脚本和卸载脚本</strong></p>
+<p>安装脚本 <code>install.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo &#x27;解压tar包...&#x27;</span><br><span class="line">tar -xvf $1</span><br><span class="line">echo &#x27;将docker目录移到/usr/bin目录下...&#x27;</span><br><span class="line">cp docker/* /usr/bin/</span><br><span class="line">echo &#x27;将docker.service 移到/etc/systemd/system/ 目录...&#x27;</span><br><span class="line">cp docker.service /etc/systemd/system/</span><br><span class="line">echo &#x27;添加文件权限...&#x27;</span><br><span class="line">chmod +x /etc/systemd/system/docker.service</span><br><span class="line">echo &#x27;重新加载配置文件...&#x27;</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">echo &#x27;启动docker...&#x27;</span><br><span class="line">systemctl start docker</span><br><span class="line">echo &#x27;设置开机自启...&#x27;</span><br><span class="line">systemctl enable docker.service</span><br><span class="line">echo &#x27;docker安装成功...&#x27;</span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<p><strong>卸载脚本 uninstall.sh</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo &#x27;删除docker.service...&#x27;</span><br><span class="line">rm -f /etc/systemd/system/docker.service</span><br><span class="line">echo &#x27;删除docker文件...&#x27;</span><br><span class="line">rm -rf /usr/bin/docker*</span><br><span class="line">echo &#x27;重新加载配置文件&#x27;</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">echo &#x27;卸载成功...&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 安装</strong></p>
+<p>4.1 此时目录为：（只需要关注docker-18.06.1-ce.tgz、docker.service、install.sh、uninstall.sh即可）</p>
+<p><img src="https://img.jbzj.com/file_images/article/201908/2019080709531410.png" alt="img"></p>
+<p>4.2 执行脚本 <code>sh install.sh docker-18.06.1-ce.tgz </code></p>
+<p>执行过程如下：</p>
+<p><img src="https://img.jbzj.com/file_images/article/201908/2019080709531411.png" alt="img"></p>
+<p>待脚本执行完毕后，执行 <code>docker -v </code></p>
+<p>发现此时docker已安装成功，可以用<code>docker --help</code>查看docker命令，从现在开始你就可以自己安装image和container了</p>
+<p>4.3 如果你想卸载docker，此时执行脚本<code>sh uninstall.sh</code>即可，执行过程如下：</p>
+<p><img src="https://img.jbzj.com/file_images/article/201908/2019080709531512.png" alt="img"></p>
+<p>此时输入 <code>docker -v</code> ，发现docker已经卸载</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/09/16/Linux%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%20%E6%95%99%E7%A8%8B/" data-id="clh04c6dd0005o4rgc0na415c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/09/16/Docker%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8(%E9%83%A8%E7%BD%B2spring-boot%E9%A1%B9%E7%9B%AE)/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/05/13/grid-boot%20%E9%83%91%E5%B7%9E%E6%A0%BC%E8%92%82%E5%8D%95%E4%BD%93%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/04/18/%E5%A4%8D%E4%B9%A0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/23/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/11/Spring%20Security%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E7%9A%84%E5%8E%9F%E7%90%86/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%20%EF%BC%88jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%89/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/06/Docker%20Volume/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-Linux离线安装docker 教程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/09/16/Linux%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%20%E6%95%99%E7%A8%8B/" class="article-date">
+  <time datetime="2021-09-16T06:12:00.523Z" itemprop="datePublished">2021-09-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Linux离线安装docker-教程"><a href="#Linux离线安装docker-教程" class="headerlink" title="Linux离线安装docker 教程"></a>Linux离线安装docker 教程</h1><p><strong>前言</strong></p>
+<p>有时候会遇到服务器不能联网的情况，这样就没法用yum安装软件，docker也是如此，针对这种情况，总结了一下离线安装docker的步骤，分享给大家，安装前确定linux内核版本，要求CentenOS 7 内核3.1以上，内核查看命令： uname -a</p>
+<p><strong>1. 准备docker离线包</strong></p>
+<p>下载地址为：<a target="_blank" rel="noopener" href="http://25.213.30.100:3000/cxpt-aip/tools/outcomes/download/1a7f989f-075d-40be-a7c5-2cc484a03290">http://25.213.30.100:3000/cxpt-aip/tools/outcomes/download/1a7f989f-075d-40be-a7c5-2cc484a03290</a></p>
+<p>下载需要安装的docker版本，我此次下载的是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-18.06.1-ce.tgz版本</span><br></pre></td></tr></table></figure>
+
+<p><strong>2. 准备docker.service 系统配置文件</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Docker Application Container Engine</span><br><span class="line">Documentation=https://docs.docker.com</span><br><span class="line">After=network-online.target firewalld.service</span><br><span class="line">Wants=network-online.target</span><br><span class="line"> </span><br><span class="line">[Service]</span><br><span class="line">Type=notify</span><br><span class="line"># the default is not to use systemd for cgroups because the delegate issues still</span><br><span class="line"># exists and systemd currently does not support the cgroup feature set required</span><br><span class="line"># for containers run by docker</span><br><span class="line">ExecStart=/usr/bin/dockerd</span><br><span class="line">ExecReload=/bin/kill -s HUP $MAINPID</span><br><span class="line"># Having non-zero Limit*s causes performance problems due to accounting overhead</span><br><span class="line"># in the kernel. We recommend using cgroups to do container-local accounting.</span><br><span class="line">LimitNOFILE=infinity</span><br><span class="line">LimitNPROC=infinity</span><br><span class="line">LimitCORE=infinity</span><br><span class="line"># Uncomment TasksMax if your systemd version supports it.</span><br><span class="line"># Only systemd 226 and above support this version.</span><br><span class="line">#TasksMax=infinity</span><br><span class="line">TimeoutStartSec=0</span><br><span class="line"># set delegate yes so that systemd does not reset the cgroups of docker containers</span><br><span class="line">Delegate=yes</span><br><span class="line"># kill only the docker process, not all processes in the cgroup</span><br><span class="line">KillMode=process</span><br><span class="line"># restart the docker process if it exits prematurely</span><br><span class="line">Restart=on-failure</span><br><span class="line">StartLimitBurst=3</span><br><span class="line">StartLimitInterval=60s</span><br><span class="line"> </span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. 准备安装脚本和卸载脚本</strong></p>
+<p>安装脚本 <code>install.sh</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo &#x27;解压tar包...&#x27;</span><br><span class="line">tar -xvf $1</span><br><span class="line">echo &#x27;将docker目录移到/usr/bin目录下...&#x27;</span><br><span class="line">cp docker/* /usr/bin/</span><br><span class="line">echo &#x27;将docker.service 移到/etc/systemd/system/ 目录...&#x27;</span><br><span class="line">cp docker.service /etc/systemd/system/</span><br><span class="line">echo &#x27;添加文件权限...&#x27;</span><br><span class="line">chmod +x /etc/systemd/system/docker.service</span><br><span class="line">echo &#x27;重新加载配置文件...&#x27;</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">echo &#x27;启动docker...&#x27;</span><br><span class="line">systemctl start docker</span><br><span class="line">echo &#x27;设置开机自启...&#x27;</span><br><span class="line">systemctl enable docker.service</span><br><span class="line">echo &#x27;docker安装成功...&#x27;</span><br><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<p><strong>卸载脚本 uninstall.sh</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo &#x27;删除docker.service...&#x27;</span><br><span class="line">rm -f /etc/systemd/system/docker.service</span><br><span class="line">echo &#x27;删除docker文件...&#x27;</span><br><span class="line">rm -rf /usr/bin/docker*</span><br><span class="line">echo &#x27;重新加载配置文件&#x27;</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">echo &#x27;卸载成功...&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4. 安装</strong></p>
+<p>4.1 此时目录为：（只需要关注docker-18.06.1-ce.tgz、docker.service、install.sh、uninstall.sh即可）</p>
+<p><img src="https://img.jbzj.com/file_images/article/201908/2019080709531410.png" alt="img"></p>
+<p>4.2 执行脚本 <code>sh install.sh docker-18.06.1-ce.tgz </code></p>
+<p>执行过程如下：</p>
+<p><img src="https://img.jbzj.com/file_images/article/201908/2019080709531411.png" alt="img"></p>
+<p>待脚本执行完毕后，执行 <code>docker -v </code></p>
+<p>发现此时docker已安装成功，可以用<code>docker --help</code>查看docker命令，从现在开始你就可以自己安装image和container了</p>
+<p>4.3 如果你想卸载docker，此时执行脚本<code>sh uninstall.sh</code>即可，执行过程如下：</p>
+<p><img src="https://img.jbzj.com/file_images/article/201908/2019080709531512.png" alt="img"></p>
+<p>此时输入 <code>docker -v</code> ，发现docker已经卸载</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/09/16/Linux%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85docker%20%E6%95%99%E7%A8%8B/" data-id="clh04c6dd0005o4rgc0na415c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-grid-boot 郑州格蒂单体服务架构" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/05/13/grid-boot%20%E9%83%91%E5%B7%9E%E6%A0%BC%E8%92%82%E5%8D%95%E4%BD%93%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" class="article-date">
+  <time datetime="2021-05-13T09:02:20.381Z" itemprop="datePublished">2021-05-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="grid-boot-郑州格蒂单体服务架构"><a href="#grid-boot-郑州格蒂单体服务架构" class="headerlink" title="grid-boot 郑州格蒂单体服务架构"></a>grid-boot 郑州格蒂单体服务架构</h1><hr>
+<p>当前最新版本: 1.0</p>
+<p>作者: 潘冰冰、孙权</p>
+<p>日期: 2021-1-11</p>
+<hr>
+<h2 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h2><p>grid-boot整体采用模块开发的方式进行编码，内部集成了主流的单体服务框架spring-boot和Spring Security权限架构以及缓存服务器redis和代码自动生成器AutoGenerator等，实现了基本的拿来即用，让开发更多的关心于业务,而不必苦恼于环境。</p>
+<h3 id="模块介绍"><a href="#模块介绍" class="headerlink" title="模块介绍"></a>模块介绍</h3><ul>
+<li>grid-app-parent:所有工程的父类</li>
+<li>grid-app-web: controller类所在模块</li>
+<li>grid-app-service: service类所在模块</li>
+<li>grid-app-dao: dao类所在模块</li>
+<li>grid-app-pojo: pojo类所在模块</li>
+<li>grid-app-common: common类所在模块</li>
+</ul>
+<h3 id="项目结构介绍"><a href="#项目结构介绍" class="headerlink" title="项目结构介绍"></a>项目结构介绍</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line">grid-boot                                            -- 工程名</span><br><span class="line">         ├── Dockerfile_config                       -- dockerfile文件目录,docker部署时需要</span><br><span class="line">         │   └── grid-app-web                        -- 需要docker部署的模块名</span><br><span class="line">         |       └──Dockerfile                       -- Dockerfile文件</span><br><span class="line">         ├── grid-app-common                         -- common类所在模块</span><br><span class="line">         │   └── src</span><br><span class="line">         │       └── main</span><br><span class="line">         │           └── java</span><br><span class="line">         │               └── com</span><br><span class="line">         │                   └── grid</span><br><span class="line">         │                       └── common</span><br><span class="line">         │                           ├── annotation</span><br><span class="line">         │                           ├── config</span><br><span class="line">         │                           ├── constant</span><br><span class="line">         │                           ├── enums</span><br><span class="line">         │                           ├── errors</span><br><span class="line">         │                           ├── exception</span><br><span class="line">         │                           ├── handler</span><br><span class="line">         │                           ├── utils</span><br><span class="line">         │                           └── vo</span><br><span class="line">         ├── grid-app-dao                            -- dao类所在模块</span><br><span class="line">         │   └── src</span><br><span class="line">         │       └── main</span><br><span class="line">         │           ├── java</span><br><span class="line">         │           │   └── com</span><br><span class="line">         │           │       └── grid</span><br><span class="line">         │           │           └── dao</span><br><span class="line">         │           │               ├── mapper      -- mybatis-plus架构持久层</span><br><span class="line">         │           │               │   └── sample</span><br><span class="line">         │           │               └── repository  -- spring-data-jpa架构持久层</span><br><span class="line">         │           │                   └── user</span><br><span class="line">         │           └── resources</span><br><span class="line">         │               └── mapper</span><br><span class="line">         │                   └── sample</span><br><span class="line">         ├── grid-app-pojo                            --  pojo类所在模块                       </span><br><span class="line">         │   └── src</span><br><span class="line">         │       └── main</span><br><span class="line">         │           └── java</span><br><span class="line">         │               └── com</span><br><span class="line">         │                   └── grid</span><br><span class="line">         │                       └── pojo</span><br><span class="line">         │                           ├── constant</span><br><span class="line">         │                           ├── domain</span><br><span class="line">         │                           │   └── user</span><br><span class="line">         │                           ├── dto</span><br><span class="line">         │                           │   └── sample</span><br><span class="line">         │                           └── mapper</span><br><span class="line">         │                               ├── sample</span><br><span class="line">         │                               └── sample1</span><br><span class="line">         ├── grid-app-service                          -- service类所在模块</span><br><span class="line">         │   └── src</span><br><span class="line">         │       └── main</span><br><span class="line">         │           └── java</span><br><span class="line">         │               └── com</span><br><span class="line">         │                   └── grid</span><br><span class="line">         │                       └── service</span><br><span class="line">         │                           ├── impl          </span><br><span class="line">         │                           │   └── sample</span><br><span class="line">         │                           ├── sample</span><br><span class="line">         │                           └── user</span><br><span class="line">         │                               └── mapper</span><br><span class="line">         ├── grid-app-web                            -- controller类所在模块</span><br><span class="line">         │   ├── src</span><br><span class="line">         │   │   └── main</span><br><span class="line">         │   │       ├── docker                      -- docker部署环境配置，可以不用管</span><br><span class="line">         │   │       │   ├── grafana</span><br><span class="line">         │   │       │   │   └── provisioning</span><br><span class="line">         │   │       │   │       ├── dashboards</span><br><span class="line">         │   │       │   │       └── datasources</span><br><span class="line">         │   │       │   └── prometheus</span><br><span class="line">         │   │       ├── java</span><br><span class="line">         │   │       │   └── com</span><br><span class="line">         │   │       │       └── grid</span><br><span class="line">         │   │       │           └── web</span><br><span class="line">         │   │       │               ├── aop</span><br><span class="line">         │   │       │               │   └── logging</span><br><span class="line">         │   │       │               ├── config</span><br><span class="line">         │   │       │               ├── controller</span><br><span class="line">         │   │       │               │   ├── base</span><br><span class="line">         │   │       │               │   ├── sample</span><br><span class="line">         │   │       │               │   └── user</span><br><span class="line">         │   │       │               └── security</span><br><span class="line">         │   │       │                   └── jwt</span><br><span class="line">         │   │       ├── jib                      -- jib-maven-plugin插件模式下，docker构建命令</span><br><span class="line">         │   │       ├── resources</span><br><span class="line">         │   │       │   ├── config</span><br><span class="line">         │   │       │   │   ├── liquibase</span><br><span class="line">         │   │       │   │   │   ├── changelog</span><br><span class="line">         │   │       │   │   │   └── data</span><br><span class="line">         │   │       │   │   └── tls</span><br><span class="line">         │   │       │   ├── i18n</span><br><span class="line">         │   │       │   └── templates</span><br><span class="line">         │   │       │       └── mail</span><br><span class="line">         │   │       └── webapp</span><br><span class="line">         │   │           ├── app</span><br><span class="line">         │   │           │   ├── account</span><br><span class="line">         │   │           │   │   ├── activate</span><br><span class="line">         │   │           │   │   ├── password</span><br><span class="line">         │   │           │   │   ├── password-reset</span><br><span class="line">         │   │           │   │   │   ├── finish</span><br><span class="line">         │   │           │   │   │   └── init</span><br><span class="line">         │   │           │   │   ├── register</span><br><span class="line">         │   │           │   │   └── settings</span><br><span class="line">         │   │           │   ├── admin</span><br><span class="line">         │   │           │   │   ├── audits</span><br><span class="line">         │   │           │   │   ├── configuration</span><br><span class="line">         │   │           │   │   ├── docs</span><br><span class="line">         │   │           │   │   ├── health</span><br><span class="line">         │   │           │   │   ├── logs</span><br><span class="line">         │   │           │   │   ├── metrics</span><br><span class="line">         │   │           │   │   └── user-management</span><br><span class="line">         │   │           │   ├── blocks</span><br><span class="line">         │   │           │   │   ├── config</span><br><span class="line">         │   │           │   │   └── interceptor</span><br><span class="line">         │   │           │   ├── core</span><br><span class="line">         │   │           │   │   ├── auth</span><br><span class="line">         │   │           │   │   ├── icons</span><br><span class="line">         │   │           │   │   ├── login</span><br><span class="line">         │   │           │   │   └── user</span><br><span class="line">         │   │           │   ├── entities</span><br><span class="line">         │   │           │   ├── home</span><br><span class="line">         │   │           │   ├── layouts</span><br><span class="line">         │   │           │   │   ├── error</span><br><span class="line">         │   │           │   │   ├── footer</span><br><span class="line">         │   │           │   │   ├── main</span><br><span class="line">         │   │           │   │   ├── navbar</span><br><span class="line">         │   │           │   │   └── profiles</span><br><span class="line">         │   │           │   └── shared</span><br><span class="line">         │   │           │       ├── alert</span><br><span class="line">         │   │           │       ├── auth</span><br><span class="line">         │   │           │       ├── constants</span><br><span class="line">         │   │           │       ├── login</span><br><span class="line">         │   │           │       └── util</span><br><span class="line">         │   │           ├── content</span><br><span class="line">         │   │           │   ├── css</span><br><span class="line">         │   │           │   ├── images</span><br><span class="line">         │   │           │   └── scss</span><br><span class="line">         │   │           ├── swagger-ui</span><br><span class="line">         │   │           │   └── dist</span><br><span class="line">         │   │           │       └── images</span><br><span class="line">         │   │           └── WEB-INF</span><br><span class="line">         │   └── webpack</span><br><span class="line">         |── sql                                                     -- 初始化脚本文件夹</span><br><span class="line">         |── Deploy.sh                                               -- docker部署脚本，结合jenkins使用</span><br><span class="line">         └── sonar-project.properties                                -- sonarqube 配置文件，结合jenkins使用</span><br></pre></td></tr></table></figure>
+
+<h2 id="适用项目"><a href="#适用项目" class="headerlink" title="适用项目"></a>适用项目</h2><p>grid-boot 郑州格蒂单独服务架构，项目内部集成了一套完善的且经过实际验证的spring-boot线上环境配置和各种util包，适用于郑州格蒂内部所有的用spring-boot开发的项目。</p>
+<h2 id="技术架构"><a href="#技术架构" class="headerlink" title="技术架构"></a>技术架构</h2><h4 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h4><ul>
+<li>语言：Java 8</li>
+<li>IDE(JAVA)： IDEA / Eclipse安装lombok插件 </li>
+<li>依赖管理：Maven</li>
+<li>数据库：MySQL5.7+ &amp; Oracle 11g &amp; Sqlserver2017</li>
+<li>缓存：Redis</li>
+<li>maven私服（<a target="_blank" rel="noopener" href="http://39.100.127.235:8081/%EF%BC%89">http://39.100.127.235:8081/）</a></li>
+<li>docker私服（<a target="_blank" rel="noopener" href="http://39.100.127.235:8009/%EF%BC%89(%E5%8F%AF%E9%80%89%EF%BC%8C%E4%B8%8D%E6%98%AFdocker%E9%83%A8%E7%BD%B2%EF%BC%8C%E5%8F%AF%E4%BB%A5%E4%B8%8D%E7%94%A8%E5%85%B3%E6%B3%A8%E8%BF%99%E7%82%B9)">http://39.100.127.235:8009/）(可选，不是docker部署，可以不用关注这点)</a></li>
+</ul>
+<h4 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h4><ul>
+<li>基础框架：Spring Boot 2.1.9.RELEASE，jhipster 3.0.6</li>
+<li>持久层框架：Mybatis-plus 3.4.1/Spring-data-jpa 2.1.11.RELEASE</li>
+<li>安全框架：Spring Security 5.1.6.RELEASE，JJwt 0.10.7</li>
+<li>数据库连接池：HikariCP 3.2.0</li>
+<li>缓存框架：redisson 3.11.4（redis客户端）</li>
+<li>日志打印：logback</li>
+<li>jib-maven-plugin docker插件（docker部署，可选）</li>
+<li>其他：fastjson，poi，Swagger-ui，quartz, lombok（简化代码）,hutool(常用工具类)等。 </li>
+</ul>
+<h2 id="mybatis-plus-AutoGenerator代码生成"><a href="#mybatis-plus-AutoGenerator代码生成" class="headerlink" title="mybatis-plus AutoGenerator代码生成"></a>mybatis-plus AutoGenerator代码生成</h2><p>代码生成工具在<code>grid-app-common</code>模块下<code>com.grid.common.utils.CodeGenerator</code>工具。</p>
+<ol>
+<li><p>使用前设置： 按需修改<strong>author</strong>,<strong>jdbcUrl</strong>,<strong>jdbcUsername</strong>,<strong>jdbcPassword</strong>属性</p>
+</li>
+<li><p>使用前提：在数据库中已创建业务表</p>
+</li>
+<li><p>使用方法：启动main函数，依次输入<strong>业务模块/业务包</strong>，要生成的具体<strong>业务表（多个以,分割）</strong></p>
+</li>
+<li><p>代码调整：</p>
+<ol>
+<li>grid-app-dao<ul>
+<li>调整对应的Mapper接口中Entity为EntityDO </li>
+<li>调整resources/mapper/下对应的Mapper.xml文件 resultMap 中type为对应实体类全路径</li>
+</ul>
+</li>
+<li>grid-app-service<ul>
+<li>调整service接口中 Entity为EntityDO</li>
+<li>调整ServiceImpl方法中 Entity为EntityDO</li>
+</ul>
+</li>
+<li>grid-app-web<ul>
+<li>调整controller web接口路径和配置</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>友情提示</p>
+<ul>
+<li>已生成的代码不会覆盖，防止误操作</li>
+</ul>
+</li>
+</ol>
+<h2 id="开发规约和使用说明"><a href="#开发规约和使用说明" class="headerlink" title="开发规约和使用说明"></a>开发规约和使用说明</h2><h3 id="maven规约"><a href="#maven规约" class="headerlink" title="maven规约"></a>maven规约</h3><ol>
+<li>maven的依赖声明和属性版本都必须放在grid-app-parent下</li>
+<li>子类直接引用父类声明的包，不允许自主定义</li>
+<li>maven仓库不存在的第三方jar上传到私服</li>
+</ol>
+<h3 id="业务编码规约"><a href="#业务编码规约" class="headerlink" title="业务编码规约"></a>业务编码规约</h3><ol>
+<li><p>业务代码的书写必须申明业务包</p>
+</li>
+<li><p>控制层写在模块</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grid-app-web</span><br></pre></td></tr></table></figure>
+
+<p>controller包下且命名后缀为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*Controller</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>接口路径统一为** /api/模块名/业务名/ **</li>
+</ol>
+</li>
+<li><p>业务具体实现写在模块<code>grid-app-service</code> service包下且命名后缀为<code>*Service</code> 和 <code>*ServiceImpl</code></p>
+</li>
+<li><p>持久层具体实现写在模块<code>grid-app-dao</code> dao包下，目前架构兼容spring data jpa和mybatis-plus持久层架构，规定不是特殊要求，使用mybatis-plus,使用repository和mapper包来区分不同的持久层,命名后缀分别为*Repository 和 *Mapper</p>
+</li>
+<li><p>实体类写在模块<code>grid-app-pojo</code> pojo包下,目前规定必须至少定义2个层级：DTO层和DO层,DTO层代表和客户端交互层，DO层代表与数据库交互层，domain和mapper包分别代表spring data jpa和mybatis-plus持久层架构产生的DO,命名后缀为<code>*DO</code> 和 <code>*DTO</code></p>
+</li>
+</ol>
+<h3 id="异常规约"><a href="#异常规约" class="headerlink" title="异常规约"></a>异常规约</h3><ol>
+<li>正常情况业务模块不用关心异常的处理，只关心业务代码</li>
+<li>如果想自定义异常，new KeeperException进行统一处理</li>
+</ol>
+<h3 id="日志规约"><a href="#日志规约" class="headerlink" title="日志规约"></a>日志规约</h3><ol>
+<li>DEBUG级别下，默认打印方法参数的输入和返回值</li>
+<li>AuditLog 注解记录自定义需要数据库记录的审计日志</li>
+<li>logback-spring.xml配置自定义日志输出，线上开启file appender</li>
+</ol>
+<h2 id="项目下载和运行"><a href="#项目下载和运行" class="headerlink" title="项目下载和运行"></a>项目下载和运行</h2><ul>
+<li>拉取项目代码 </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.92.23.16:8098/grid/grid-boot.git    </span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>安装jdk、maven、redis等基础环境</li>
+<li>切换到grid-app文件夹下</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 编译 </span><br><span class="line">mvn compile</span><br><span class="line"></span><br><span class="line"># 清除</span><br><span class="line">mvn clean</span><br><span class="line"></span><br><span class="line"># 打包</span><br><span class="line">mvn package</span><br><span class="line"></span><br><span class="line"># 运行项目</span><br><span class="line">java -jar target/*.jar</span><br></pre></td></tr></table></figure>
+
+<h2 id="项目部署"><a href="#项目部署" class="headerlink" title="项目部署"></a>项目部署</h2><ol>
+<li>打可运行jar，手动上传部署方式（略）</li>
+<li>devops自动化部署(仅限于开发和测试环境)<ul>
+<li>自动化容器部署方式（jenkins+sonatqube+maven+docker+gitlab）<ul>
+<li>找运维配置docker自动化脚本</li>
+<li>根据gitlab触发条件，提交代码自动编译打包容器化，上传远程仓库，拉取镜像，启动服务</li>
+</ul>
+</li>
+<li>自动化部署（常规方式）<ul>
+<li>找运维配置自动化脚本</li>
+<li>根据gitlab触发条件，提交代码自动编译打包容器化，上传远程服务，启动服务</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>其他待补充…</li>
+</ul>
+<h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><h3 id="历史事件"><a href="#历史事件" class="headerlink" title="历史事件"></a>历史事件</h3><ul>
+<li>2021-05-10：按照前后分离模式，基于RBAC模式搭建的接口服务<ul>
+<li>新增用户 <code>SysUser</code> 角色 <code>SysRole</code> 菜单<code>SysMenu</code> 部门<code>SysDept</code>模块</li>
+<li>spring-security 修改为从<code>SysUser</code>中获取用户信息</li>
+<li>新增通用查询注解<code>@Query</code> 。搭配<code>QueryGenerator</code>快速构建mybatisPlus <code>QueryWrapper</code>查询条件</li>
+</ul>
+</li>
+<li>security代码质量检测sonarqube配置，添加swagger全局token验证</li>
+<li>2020-01-08：项目引入docker脚本，构建jenkins流水线，编写jenkins piline脚本实现docker容器化自动化部署</li>
+<li>2020-01-05：引入容器的相关配置，集成jib-maven-plugin插件实现基本的容器化部署</li>
+<li>2020-12-25：构建且测试通过基本的devops，实现基本的自动化部署</li>
+<li>2020-12-01：构建基本架构环境，发布最初的1.0版本</li>
+</ul>
+<p>备注里写清楚每个发布版本更新了什么，等后续版本稳定之后，做为最初的1.0版本</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/13/grid-boot%20%E9%83%91%E5%B7%9E%E6%A0%BC%E8%92%82%E5%8D%95%E4%BD%93%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/" data-id="clh04c6dl000do4rg8l73ew60" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-k8s笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/04/27/k8s%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time datetime="2021-04-27T09:53:20.730Z" itemprop="datePublished">2021-04-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="k8s笔记"><a href="#k8s笔记" class="headerlink" title="k8s笔记"></a>k8s笔记</h2><h1 id="1-k8s安装之Linux-centos7升级内核到4-18以上"><a href="#1-k8s安装之Linux-centos7升级内核到4-18以上" class="headerlink" title="1.k8s安装之Linux centos7升级内核到4.18以上"></a>1.k8s安装之Linux centos7升级内核到4.18以上</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</span><br><span class="line">rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm</span><br><span class="line">#查看最新版内核： yum --disablerepo=&quot;*&quot; --enablerepo=&quot;elrepo-kernel&quot; list available</span><br><span class="line">#安装最新版：</span><br><span class="line">yum --enablerepo=elrepo-kernel install kernel-ml kernel-ml-devel –y</span><br><span class="line">#查看当前可用内核版本：</span><br><span class="line">awk -F\&#x27; &#x27;$1==&quot;menuentry &quot; &#123;print i++ &quot; : &quot; $2&#125;&#x27; /etc/grub2.cfg</span><br><span class="line">#选择最新内核版本，0代表查看当前可用内核版本列表的左侧索引号</span><br><span class="line">grub2-set-default 0</span><br><span class="line">#生成grub文件</span><br><span class="line">grub2-mkconfig -o /boot/grub2/grub.cfg</span><br><span class="line">#重启linux</span><br><span class="line">reboot</span><br><span class="line">#查看内核</span><br><span class="line">uname -r</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/27/k8s%E7%AC%94%E8%AE%B0/" data-id="clh04c6dn000go4rg3ydrfnnf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-viso使用" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/04/22/viso%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time datetime="2021-04-22T06:21:32.358Z" itemprop="datePublished">2021-04-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​                                                                 viso使用</p>
+<p>shift+crtl+4:快捷键是文本和图形切换选中</p>
+<p>鼠标图形可以生成常用的图形，平角还是圆角可以调整角度的参数来切换。</p>
+<p>调整间距不生效，需要添加连接线</p>
+<p>调整所有选中图形的大小，在视图里有个任务窗口，里面有调整大小和位置</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/22/viso%E4%BD%BF%E7%94%A8/" data-id="clh04c6ds000no4rge52i25p4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-公司大数据中心应用场景建设项目环节合规性监测" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/04/09/%E5%85%AC%E5%8F%B8%E5%A4%A7%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E5%BB%BA%E8%AE%BE%E9%A1%B9%E7%9B%AE%E7%8E%AF%E8%8A%82%E5%90%88%E8%A7%84%E6%80%A7%E7%9B%91%E6%B5%8B/" class="article-date">
+  <time datetime="2021-04-09T08:01:52.969Z" itemprop="datePublished">2021-04-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="公司大数据中心应用场景建设项目环节合规性监测"><a href="#公司大数据中心应用场景建设项目环节合规性监测" class="headerlink" title="公司大数据中心应用场景建设项目环节合规性监测"></a>公司大数据中心应用场景建设项目环节合规性监测</h1><h1 id="1、建设背景"><a href="#1、建设背景" class="headerlink" title="1、建设背景"></a>1、<strong>建设背景</strong></h1><p>随着经济高速发展，大量的电力基建项目投入建设和使用。由于电力基建项目数量庞大、流程繁杂导致部分项目出现记录不合规、流程不合规等现象。并且目前公司在基建项目的管理上存在着一系列监管盲区，直接影响了工程项目执行科学、严谨、安全。</p>
+<p>为提升项目建设科学合规，增强过程监管，对工程项目各环节业务明细数据进行监测与分析，全面掌握真实有效的项目合规性，及时进行风险预警，帮助企业提高业务透明度、矫正操作，促进项目规范性水平的不断提升。为此，开展了本场景的研发工作，以提高项监管水平，推动项目按便准计划顺利实施。</p>
+<h1 id="2、项目必要性"><a href="#2、项目必要性" class="headerlink" title="2、项目必要性"></a>2、项目必要性</h1><ul>
+<li><p><strong>项目建设各环节不合规情况时有发生</strong></p>
+</li>
+<li><p><strong>项目信息情况繁杂，亟待运用大数据等新技术手段</strong></p>
+</li>
+</ul>
+<h1 id="3、建设目标"><a href="#3、建设目标" class="headerlink" title="3、建设目标"></a>3、建设目标</h1><p>全面整合全业务数据中心ERP、基建管控系统、PMS2.0系统、经营辅助决策系统等相关数据，对全省项目进行全流程分析、监控，实时掌握全省及各地市项目合规状况、各电压类别项目合规状况，及时暴露问题，助力推动建设项目规范管控。</p>
+<h1 id="4、建设过程"><a href="#4、建设过程" class="headerlink" title="4、建设过程"></a>4、建设过程</h1><h2 id="4-1、数据来源"><a href="#4-1、数据来源" class="headerlink" title="4.1、数据来源"></a>4.1、数据来源</h2><table>
+<thead>
+<tr>
+<th><strong>序号</strong></th>
+<th>业务系统</th>
+<th><strong>表中文名</strong></th>
+<th><strong>表名</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>全业务数据库</strong></td>
+<td>用户状态更改表</td>
+<td>JCDS</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>全业务数据库</strong></td>
+<td>项目预算调整日志表</td>
+<td>ZYYJC_T034</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>全业务数据库</strong></td>
+<td>项目状态表</td>
+<td>ZZXMZT</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>全业务数据库</strong></td>
+<td>项目业务表</td>
+<td>PROJ</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>全业务数据库</strong></td>
+<td>WBS元素主表</td>
+<td>PRPS</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>全业务数据库</strong></td>
+<td>项目计划管理表</td>
+<td>BPGE</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>全业务数据库</strong></td>
+<td>ERP项目信息数据表</td>
+<td>RPSCO</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>全业务数据库</strong></td>
+<td>ERP订单主表</td>
+<td>AUFK</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>全业务数据库</strong></td>
+<td>ERP订单结算表</td>
+<td>COBRB</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>全业务数据库</strong></td>
+<td>ERP资产表</td>
+<td>ANLC</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>基建管控系统</strong></td>
+<td>项目关键进度</td>
+<td>TJJ_XMGJJD</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>基建管控系统</strong></td>
+<td>开工投产实时查询明细</td>
+<td>TJJ_KGTCSSCHZMX</td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>经营辅助决策系统</strong></td>
+<td>项目阶段预算执行分析明细</td>
+<td>TJJYB_YSZXFXMX</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>MS系统建档数据</strong></td>
+<td>PMS系统建档数据明细</td>
+<td>TJJ_XMHG_PMSDATA</td>
+</tr>
+</tbody></table>
+<h2 id="4-2、技术架构"><a href="#4-2、技术架构" class="headerlink" title="4.2、技术架构"></a>4.2、技术架构</h2><h4 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h4><ul>
+<li>语言：Java 8</li>
+<li>IDE(JAVA)： 实验室vscode安装lombok插件 </li>
+<li>依赖管理：Maven</li>
+<li>数据库：MySQL5.7+ </li>
+<li>maven私服（<a target="_blank" rel="noopener" href="http://39.100.127.235:8081/%EF%BC%89">http://39.100.127.235:8081/）</a></li>
+</ul>
+<h4 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h4><ul>
+<li>基础框架：Spring Boot 2.1.9.RELEASE</li>
+<li>持久层框架：Mybatis-plus 3.4.1</li>
+<li>数据库连接池：HikariCP 3.2.0</li>
+<li>日志打印：logback</li>
+<li>其他：fastjson，poi，Swagger-ui，quartz, lombok（简化代码）,hutool(常用工具类)等。</li>
+</ul>
+<p><strong>前端</strong></p>
+<ul>
+<li>vue</li>
+<li>npm</li>
+</ul>
+<h2 id="4-3、代码层级结构"><a href="#4-3、代码层级结构" class="headerlink" title="4.3、代码层级结构"></a>4.3、代码层级结构</h2><ol>
+<li>业务代码的书写必须申明业务包</li>
+<li>控制层写在controller包下且命名后缀为<code>*Controller</code><ol>
+<li>接口路径统一为** /api/业务名/ **</li>
+</ol>
+</li>
+<li>业务具体实现写在service包下且命名后缀为<code>*Service</code> 和 <code>*ServiceImpl</code></li>
+<li>持久层具体实现写在 dao/mapper包下，目前架构兼容spring data jpa和mybatis-plus持久层架构，规定不是特殊要求，使用mybatis-plus,使用repository和mapper包来区分不同的持久层,命名后缀分别为*Repository 和 *Mapper</li>
+<li>实体类写在 pojo包下,目前规定必须至少定义2个层级：DTO层和DO层,DTO层代表和客户端交互层，DO层代表与数据库交互层，domain和mapper包分别代表spring data jpa和mybatis-plus持久层架构产生的DO,命名后缀为<code>*DO</code> </li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/09/%E5%85%AC%E5%8F%B8%E5%A4%A7%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E5%BB%BA%E8%AE%BE%E9%A1%B9%E7%9B%AE%E7%8E%AF%E8%8A%82%E5%90%88%E8%A7%84%E6%80%A7%E7%9B%91%E6%B5%8B/" data-id="clh04c6ds000mo4rg18g1c498" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-线上构建maven私服" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/26/%E7%BA%BF%E4%B8%8A%E6%9E%84%E5%BB%BAmaven%E7%A7%81%E6%9C%8D/" class="article-date">
+  <time datetime="2021-02-26T01:13:45.984Z" itemprop="datePublished">2021-02-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="实验室前后端私服部署手册"><a href="#实验室前后端私服部署手册" class="headerlink" title="实验室前后端私服部署手册"></a>实验室前后端私服部署手册</h1><h1 id="1、线上构建maven私服"><a href="#1、线上构建maven私服" class="headerlink" title="1、线上构建maven私服"></a>1、线上构建maven私服</h1><ul>
+<li>网络环境构建nexus3镜像，导出nexus3.tar</li>
+<li>创建挂载文件夹 ： mkdir -p /usr/local/maven/nexus-data</li>
+<li>修改权限：chmod 777 -R /usr/local/maven/nexus-data</li>
+<li>运行容器：docker run -d -p 8998:8998 –name nexus -v /usr/local/maven/nexus-data/nexus-data:/nexus-data  grid_sonatype/nexus3:v1</li>
+<li>查看日志：tail -f /usr/local/maven/nexus-data/log/nexus.log</li>
+</ul>
+<h2 id="2、私服批量上传"><a href="#2、私服批量上传" class="headerlink" title="2、私服批量上传"></a>2、私服批量上传</h2><ul>
+<li><p>进入当前需要部署的仓库根目录 例如：<img src="C:\Users\Hasee\AppData\Roaming\Typora\typora-user-images\image-20210408091231440.png" alt="image-20210408091231440"></p>
+</li>
+<li><p>构建mavenimport.sh批量上传脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># copy and run this script to the root of the repository directory containing files</span><br><span class="line"># this script attempts to exclude uploading itself explicitly so the script name is important</span><br><span class="line"># Get command line params</span><br><span class="line">while getopts &quot;:r:u:p:&quot; opt; do</span><br><span class="line">    case $opt in</span><br><span class="line">        r) REPO_URL=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">        u) USERNAME=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">        p) PASSWORD=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">    esac</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line">find . -type f -not -path &#x27;./mavenimport\.sh*&#x27; -not -path &#x27;*/\.*&#x27; -not -path &#x27;*/\^archetype\-catalog\.xml*&#x27; -not -path &#x27;*/\^maven\-metadata\-local*\.xml&#x27; -not -path &#x27;*/\^maven\-metadata\-deployment*\.xml&#x27; | sed &quot;s|^\./||&quot; | xargs -I &#x27;&#123;&#125;&#x27; curl -u &quot;$USERNAME:$PASSWORD&quot; -X PUT -v -T &#123;&#125; $&#123;REPO_URL&#125;/&#123;&#125; ;</span><br></pre></td></tr></table></figure></li>
+<li><p>运行部署命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./mavenimport.sh -u admin -p Hndl@2021 -r http://192.168.100.12:8081/repository/grid_repo/</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/26/%E7%BA%BF%E4%B8%8A%E6%9E%84%E5%BB%BAmaven%E7%A7%81%E6%9C%8D/" data-id="clh04c6dw000to4rgdb85glb2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-实验室开发规约" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/26/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E5%BC%80%E5%8F%91%E8%A7%84%E7%BA%A6/" class="article-date">
+  <time datetime="2021-01-26T02:42:46.748Z" itemprop="datePublished">2021-01-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="实验室开发规约"><a href="#实验室开发规约" class="headerlink" title="实验室开发规约"></a>实验室开发规约</h1><h2 id="1、背景"><a href="#1、背景" class="headerlink" title="1、背景"></a>1、背景</h2><p>本文档适用于选择应用创新平台实验室作为开发工具，且技术栈为java，用过springboot和maven做过项目的阅读（没有用过可自行百度简单了解下相关概念更方便对本文档的阅读），皆在为用户构建简单的工程项目提供一个一体化的开发环境。由于外网环境的限制，内部环境无法做到满足每一个用户随意的使用不用的版本，所以才有了本文档中的规约来进行JAR依赖的版本限制，文档中列出的版本是人工提前维护进去的，大家开发过程中只能使用约定的版本。</p>
+<h2 id="2、实验室简介"><a href="#2、实验室简介" class="headerlink" title="2、实验室简介"></a>2、实验室简介</h2><p>Visual Studio Code（简称“VS Code”）是Microsoft在2015年4月30日Build开发者大会上正式宣布一个运行于 Mac OS X、Windows和 Linux 之上的，针对于编写现代Web和云应用的跨平台源代码编辑器， 可在桌面上运行，并且可用于Windows，macOS和Linux。它具有对JavaScript，TypeScript和Node.js的内置支持，并具有丰富的其他语言（例如C++，C＃，Java，Python，PHP，Go）和运行时（例如.NET和Unity）扩展的生态系统。</p>
+<p>应用创新平台实验室就是镜像版的web端VS Code,对应c端的VS Code版本号为v1.45.1，用过VS Code的应该都了解它只是一个编译器，其真正的强大之处在于其支撑扩展的各种插件。成千上万的插件使得VS Code变得空前的强大和具有绝对的诱惑性，本实验室继承了VS Code大部分的功能，能让你像使用VS Code一样优雅的使用实验室功能，甚至相应版本的VS Code的配置教程都可适用于本实验室。</p>
+<h2 id="3、开发规约"><a href="#3、开发规约" class="headerlink" title="3、开发规约"></a>3、开发规约</h2><p><strong>由于内网环境的限制和相关依赖的限制，所有使用应用创新平台实验室的个人或者厂商都必须按照相应的规约进行开发。下边的环境仅当你需要时引入相应版本，主要是对版本的统一化控制，如果你用不到相应框架，可以忽视</strong>。</p>
+<h3 id="3-1、开发环境"><a href="#3-1、开发环境" class="headerlink" title="3.1、开发环境"></a>3.1、开发环境</h3><ul>
+<li>语言：Java 8 [^1]</li>
+<li>安装lombok插件 [^2]</li>
+<li>依赖管理：Maven [^3]</li>
+<li>数据库：MySQL5.7+  </li>
+</ul>
+<h3 id="3-2、后端"><a href="#3-2、后端" class="headerlink" title="3.2、后端"></a>3.2、后端</h3><ul>
+<li>基础框架：Spring Boot 2.1.9.RELEASE [^4]</li>
+<li>持久层框架：Mybatis-plus 3.4.1[^5]</li>
+<li>安全框架：Spring Security 5.1.6.RELEASE[^6]，JJwt 0.10.7[^7]</li>
+<li>数据库连接池：HikariCP 3.2.0[^8]</li>
+<li>日志打印：logback[^9]</li>
+</ul>
+<h3 id="3-3、pom-10-父类"><a href="#3-3、pom-10-父类" class="headerlink" title="3.3、pom[^10]父类"></a>3.3、pom[^10]父类</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.1.9.RELEASE&lt;/version&gt;</span><br><span class="line">        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">    &lt;/parent&gt;</span><br><span class="line">    &lt;groupId&gt;com.app.grid&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;inv-lab&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.0&lt;/version&gt;</span><br><span class="line">    &lt;packaging&gt;pom&lt;/packaging&gt;</span><br><span class="line">    &lt;description&gt;实验室开发环境的父类&lt;/description&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--使本project所有后辈module只需引入依赖无需设置version版本号，全部在这里设置version版本号--&gt;</span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;swagger.version&gt;2.9.2&lt;/swagger.version&gt;</span><br><span class="line">        &lt;mybatisplus.version&gt;3.4.1&lt;/mybatisplus.version&gt;</span><br><span class="line">        &lt;com.alibaba.easyexcel.version&gt;2.2.6&lt;/com.alibaba.easyexcel.version&gt;</span><br><span class="line">        &lt;hutool.version&gt;5.2.3&lt;/hutool.version&gt;</span><br><span class="line">        &lt;java.version&gt;1.8&lt;/java.version&gt;</span><br><span class="line">        &lt;druid-spring-boot-starter.version&gt;1.1.10&lt;/druid-spring-boot-starter.version&gt;</span><br><span class="line">    &lt;/properties&gt;</span><br><span class="line">    &lt;repositories&gt;</span><br><span class="line">        &lt;repository&gt;</span><br><span class="line">            &lt;id&gt;grid-repos-group&lt;/id&gt;</span><br><span class="line">            &lt;name&gt;grid repos group&lt;/name&gt;</span><br><span class="line">            &lt;url&gt;http://39.100.127.235:8081/repository/grid-repos-group/&lt;/url&gt;</span><br><span class="line">            &lt;snapshots&gt;</span><br><span class="line">                &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">            &lt;/snapshots&gt;</span><br><span class="line">            &lt;releases&gt;</span><br><span class="line">                &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">            &lt;/releases&gt;</span><br><span class="line">        &lt;/repository&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/repositories&gt;</span><br><span class="line"></span><br><span class="line">    &lt;pluginRepositories&gt;</span><br><span class="line">        &lt;!-- jhipster-needle-maven-plugin-repository --&gt;</span><br><span class="line">        &lt;pluginRepository&gt;</span><br><span class="line">            &lt;id&gt;grid-repos-group&lt;/id&gt;</span><br><span class="line">            &lt;name&gt;grid repos group&lt;/name&gt;</span><br><span class="line">            &lt;url&gt;http://39.100.127.235:8081/repository/grid-repos-group/&lt;/url&gt;</span><br><span class="line">            &lt;snapshots&gt;</span><br><span class="line">                &lt;enabled&gt;false&lt;/enabled&gt;</span><br><span class="line">            &lt;/snapshots&gt;</span><br><span class="line">            &lt;releases&gt;</span><br><span class="line">                &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">            &lt;/releases&gt;</span><br><span class="line">        &lt;/pluginRepository&gt;</span><br><span class="line">    &lt;/pluginRepositories&gt;</span><br><span class="line"></span><br><span class="line">    &lt;distributionManagement&gt;</span><br><span class="line">        &lt;repository&gt;</span><br><span class="line">            &lt;!--id的名字可以任意取，但是在setting文件中的属性&lt;server&gt;的ID与这里一致--&gt;</span><br><span class="line">            &lt;id&gt;grid-hosted-release&lt;/id&gt;</span><br><span class="line">            &lt;!--指向仓库类型为host(宿主仓库）的储存类型为Release的仓库--&gt;</span><br><span class="line">            &lt;url&gt;http://39.100.127.235:8081/repository/grid-hosted-release/&lt;/url&gt;</span><br><span class="line">        &lt;/repository&gt;</span><br><span class="line">        &lt;snapshotRepository&gt;</span><br><span class="line">            &lt;id&gt;grid-hosted-snapshot&lt;/id&gt;</span><br><span class="line">            &lt;!--指向仓库类型为host(宿主仓库）的储存类型为Snapshot的仓库--&gt;</span><br><span class="line">            &lt;url&gt;http://39.100.127.235:8081/repository/grid-hosted-snapshot/&lt;/url&gt;</span><br><span class="line">        &lt;/snapshotRepository&gt;</span><br><span class="line">    &lt;/distributionManagement&gt;</span><br><span class="line">    &lt;!-- 所有的依赖管理都提到父类进行管理，子类只管引用就好 --&gt;</span><br><span class="line">    &lt;dependencyManagement&gt;</span><br><span class="line">        &lt;dependencies&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- 整合mybatisplus --&gt;</span><br><span class="line">            &lt;dependency&gt;</span><br><span class="line">                &lt;groupId&gt;com.baomidou&lt;/groupId&gt;</span><br><span class="line">                &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;</span><br><span class="line">                &lt;version&gt;$&#123;mybatisplus.version&#125;&lt;/version&gt;</span><br><span class="line">            &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- 常用工具类引用 --&gt;</span><br><span class="line">            &lt;dependency&gt;</span><br><span class="line">                &lt;groupId&gt;cn.hutool&lt;/groupId&gt;</span><br><span class="line">                &lt;artifactId&gt;hutool-all&lt;/artifactId&gt;</span><br><span class="line">                &lt;version&gt;$&#123;hutool.version&#125;&lt;/version&gt;</span><br><span class="line">            &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- swagger-ui --&gt;</span><br><span class="line">            &lt;dependency&gt;</span><br><span class="line">                &lt;groupId&gt;io.springfox&lt;/groupId&gt;</span><br><span class="line">                &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;</span><br><span class="line">                &lt;version&gt;$&#123;swagger.version&#125;&lt;/version&gt;</span><br><span class="line">            &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">            &lt;!-- 整合easyexcel --&gt;</span><br><span class="line">            &lt;dependency&gt;</span><br><span class="line">                &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">                &lt;artifactId&gt;easyexcel&lt;/artifactId&gt;</span><br><span class="line">                &lt;version&gt;$&#123;com.alibaba.easyexcel.version&#125;&lt;/version&gt;</span><br><span class="line">            &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">            &lt;dependency&gt;</span><br><span class="line">                &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">                &lt;artifactId&gt;druid-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">                &lt;version&gt;$&#123;druid-spring-boot-starter.version&#125;&lt;/version&gt;</span><br><span class="line">            &lt;/dependency&gt;</span><br><span class="line">        &lt;/dependencies&gt;</span><br><span class="line">    &lt;/dependencyManagement&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4、项目引用示例"><a href="#3-4、项目引用示例" class="headerlink" title="3.4、项目引用示例"></a>3.4、项目引用示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;groupId&gt;com.app.grid&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;inv-lab&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;1.0&lt;/version&gt;</span><br><span class="line">    &lt;/parent&gt;</span><br><span class="line">    &lt;groupId&gt;com.example&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;demo&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</span><br><span class="line">    &lt;name&gt;demo&lt;/name&gt;</span><br><span class="line">    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;</span><br><span class="line"></span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;java.version&gt;1.8&lt;/java.version&gt;</span><br><span class="line">    &lt;/properties&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- 整合mybatisplus --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.baomidou&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 常用工具类引用 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;cn.hutool&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;hutool-all&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- swagger-ui --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;io.springfox&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 整合easyexcel --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;easyexcel&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 引入阿里的连接池 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;druid-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">    &lt;build&gt;</span><br><span class="line">        &lt;plugins&gt;</span><br><span class="line">            &lt;plugin&gt;</span><br><span class="line">                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">            &lt;/plugin&gt;</span><br><span class="line">        &lt;/plugins&gt;</span><br><span class="line">    &lt;/build&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="4、备注说明"><a href="#4、备注说明" class="headerlink" title="4、备注说明"></a>4、备注说明</h2><ul>
+<li>因为内网环境的限制，无法根据依赖实时去外网拉取相应的依赖，也无法实时根据每个人的技术栈去安装相应的VS Code插件，所有的操作都要有预装环境，所以才有了以上的规约。</li>
+<li>正常来说个人或者厂商根据提供的现有环境进行实验室的使用，如果实在有其他的需求，那么请联系项目组针对个体化进行定向定制。</li>
+</ul>
+<h2 id="5、jar引用列表"><a href="#5、jar引用列表" class="headerlink" title="5、jar引用列表"></a>5、jar引用列表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br></pre></td><td class="code"><pre><span class="line">accessors-smart-1.2.jar</span><br><span class="line">activation-1.1.jar</span><br><span class="line">animal-sniffer-annotations-1.18.jar</span><br><span class="line">annotations-17.0.0.jar</span><br><span class="line">antlr-2.7.7.jar</span><br><span class="line">aopalliance-1.0.jar</span><br><span class="line">apiguardian-api-1.0.0.jar</span><br><span class="line">apiguardian-api-1.1.0.jar</span><br><span class="line">archunit-0.11.0.jar</span><br><span class="line">archunit-junit5-api-0.11.0.jar</span><br><span class="line">archunit-junit5-engine-0.11.0.jar</span><br><span class="line">archunit-junit5-engine-api-0.11.0.jar</span><br><span class="line">asm-4.2.jar</span><br><span class="line">asm-5.0.4.jar</span><br><span class="line">aspectjweaver-1.9.4.jar</span><br><span class="line">assertj-core-3.11.1.jar</span><br><span class="line">attoparser-2.0.5.RELEASE.jar</span><br><span class="line">audience-annotations-0.5.0.jar</span><br><span class="line">avro-1.7.7.jar</span><br><span class="line">byte-buddy-1.9.16.jar</span><br><span class="line">byte-buddy-agent-1.9.16.jar</span><br><span class="line">cache-api-1.1.1.jar</span><br><span class="line">cglib-3.1.jar</span><br><span class="line">checker-qual-2.8.1.jar</span><br><span class="line">classmate-1.4.0.jar</span><br><span class="line">commons-beanutils-1.9.4.jar</span><br><span class="line">commons-cli-1.2.jar</span><br><span class="line">commons-codec-1.11.jar</span><br><span class="line">commons-collections-3.2.2.jar</span><br><span class="line">commons-collections4-4.1.jar</span><br><span class="line">commons-compress-1.18.jar</span><br><span class="line">commons-compress-1.19.jar</span><br><span class="line">commons-configuration2-2.1.1.jar</span><br><span class="line">commons-daemon-1.0.13.jar</span><br><span class="line">commons-io-2.6.jar</span><br><span class="line">commons-lang3-3.8.1.jar</span><br><span class="line">commons-logging-1.1.3.jar</span><br><span class="line">commons-math3-3.1.1.jar</span><br><span class="line">commons-net-3.6.jar</span><br><span class="line">commons-text-1.4.jar</span><br><span class="line">curator-client-4.2.0.jar</span><br><span class="line">curator-framework-4.0.1.jar</span><br><span class="line">curator-recipes-4.0.1.jar</span><br><span class="line">curvesapi-1.04.jar</span><br><span class="line">database-commons-1.12.2.jar</span><br><span class="line">dnsjava-2.1.7.jar</span><br><span class="line">dom4j-2.1.1.jar</span><br><span class="line">druid-1.1.10.jar</span><br><span class="line">druid-spring-boot-starter-1.1.10.jar</span><br><span class="line">duct-tape-1.0.8.jar</span><br><span class="line">easyexcel-2.2.6.jar</span><br><span class="line">ehcache-3.6.3.jar</span><br><span class="line">error_prone_annotations-2.3.2.jar</span><br><span class="line">failureaccess-1.0.1.jar</span><br><span class="line">FastInfoset-1.2.15.jar</span><br><span class="line">faux-pas-0.8.0.jar</span><br><span class="line">freemarker-2.3.29.jar</span><br><span class="line">fst-2.57.jar</span><br><span class="line">grid-app-common-0.0.1-SNAPSHOT.jar</span><br><span class="line">grid-app-dao-0.0.1-SNAPSHOT.jar</span><br><span class="line">grid-app-pojo-0.0.1-SNAPSHOT.jar</span><br><span class="line">grid-app-service-0.0.1-SNAPSHOT.jar</span><br><span class="line">gson-2.8.5.jar</span><br><span class="line">guava-28.1-jre.jar</span><br><span class="line">guice-4.0.jar</span><br><span class="line">guice-servlet-4.0.jar</span><br><span class="line">h2-1.4.199.jar</span><br><span class="line">hadoop-annotations-3.3.0.jar</span><br><span class="line">hadoop-auth-3.3.0.jar</span><br><span class="line">hadoop-client-3.3.0.jar</span><br><span class="line">hadoop-common-3.3.0.jar</span><br><span class="line">hadoop-hdfs-3.3.0.jar</span><br><span class="line">hadoop-hdfs-client-3.3.0.jar</span><br><span class="line">hadoop-mapreduce-client-common-3.3.0.jar</span><br><span class="line">hadoop-mapreduce-client-core-3.3.0.jar</span><br><span class="line">hadoop-mapreduce-client-jobclient-3.3.0.jar</span><br><span class="line">hadoop-shaded-protobuf_3_7-1.0.0.jar</span><br><span class="line">hadoop-yarn-api-3.3.0.jar</span><br><span class="line">hadoop-yarn-client-3.3.0.jar</span><br><span class="line">hadoop-yarn-common-3.3.0.jar</span><br><span class="line">hamcrest-core-1.3.jar</span><br><span class="line">hamcrest-library-1.3.jar</span><br><span class="line">HdrHistogram-2.1.11.jar</span><br><span class="line">hibernate-commons-annotations-5.0.4.Final.jar</span><br><span class="line">hibernate-core-5.3.12.Final.jar</span><br><span class="line">hibernate-jpamodelgen-5.3.12.Final.jar</span><br><span class="line">hibernate-validator-6.0.17.Final.jar</span><br><span class="line">HikariCP-3.2.0.jar</span><br><span class="line">hppc-0.7.1.jar</span><br><span class="line">htrace-core4-4.1.0-incubating.jar</span><br><span class="line">httpclient-4.5.10.jar</span><br><span class="line">httpcore-4.4.12.jar</span><br><span class="line">hutool-all-5.2.3.jar</span><br><span class="line">istack-commons-runtime-3.0.7.jar</span><br><span class="line">j2objc-annotations-1.3.jar</span><br><span class="line">jackson-annotations-2.9.0.jar</span><br><span class="line">jackson-core-2.9.9.jar</span><br><span class="line">jackson-core-asl-1.9.2.jar</span><br><span class="line">jackson-databind-2.9.9.3.jar</span><br><span class="line">jackson-dataformat-yaml-2.9.9.jar</span><br><span class="line">jackson-datatype-hibernate5-2.9.9.jar</span><br><span class="line">jackson-datatype-hppc-2.9.9.jar</span><br><span class="line">jackson-datatype-jdk8-2.9.9.jar</span><br><span class="line">jackson-datatype-jsr310-2.9.9.jar</span><br><span class="line">jackson-datatype-problem-0.23.0.jar</span><br><span class="line">jackson-jaxrs-1.9.2.jar</span><br><span class="line">jackson-jaxrs-base-2.9.9.jar</span><br><span class="line">jackson-jaxrs-json-provider-2.9.9.jar</span><br><span class="line">jackson-mapper-asl-1.9.2.jar</span><br><span class="line">jackson-module-afterburner-2.9.9.jar</span><br><span class="line">jackson-module-jaxb-annotations-2.9.9.jar</span><br><span class="line">jackson-module-parameter-names-2.9.9.jar</span><br><span class="line">jackson-xc-1.9.2.jar</span><br><span class="line">jandex-2.0.5.Final.jar</span><br><span class="line">javassist-3.21.0-GA.jar</span><br><span class="line">javassist-3.23.2-GA.jar</span><br><span class="line">javax.activation-api-1.2.0.jar</span><br><span class="line">javax.annotation-api-1.3.2.jar</span><br><span class="line">javax.el-3.0.0.jar</span><br><span class="line">javax.inject-1.jar</span><br><span class="line">javax.mail-1.6.2.jar</span><br><span class="line">javax.persistence-api-2.2.jar</span><br><span class="line">javax.servlet-api-4.0.1.jar</span><br><span class="line">javax.transaction-api-1.3.jar</span><br><span class="line">jaxb-api-2.3.1.jar</span><br><span class="line">jaxb-impl-2.2.3-1.jar</span><br><span class="line">jaxb-runtime-2.3.1.jar</span><br><span class="line">jboss-annotations-api_1.2_spec-1.0.2.Final.jar</span><br><span class="line">jboss-logging-3.3.3.Final.jar</span><br><span class="line">jboss-transaction-api_1.2_spec-1.1.1.Final.jar</span><br><span class="line">jboss-websocket-api_1.1_spec-1.1.4.Final.jar</span><br><span class="line">jcip-annotations-1.0-1.jar</span><br><span class="line">jersey-client-1.19.jar</span><br><span class="line">jersey-core-1.19.jar</span><br><span class="line">jersey-guice-1.19.jar</span><br><span class="line">jersey-json-1.19.jar</span><br><span class="line">jersey-server-1.19.jar</span><br><span class="line">jersey-servlet-1.19.jar</span><br><span class="line">jettison-1.1.jar</span><br><span class="line">jetty-client-9.4.19.v20190610.jar</span><br><span class="line">jetty-http-9.4.19.v20190610.jar</span><br><span class="line">jetty-io-9.4.19.v20190610.jar</span><br><span class="line">jetty-security-9.4.19.v20190610.jar</span><br><span class="line">jetty-server-9.4.19.v20190610.jar</span><br><span class="line">jetty-servlet-9.4.19.v20190610.jar</span><br><span class="line">jetty-util-9.4.19.v20190610.jar</span><br><span class="line">jetty-util-ajax-9.4.19.v20190610.jar</span><br><span class="line">jetty-webapp-9.4.19.v20190610.jar</span><br><span class="line">jetty-xml-9.4.19.v20190610.jar</span><br><span class="line">jhipster-framework-3.0.6.jar</span><br><span class="line">jjwt-api-0.10.7.jar</span><br><span class="line">jjwt-impl-0.10.7.jar</span><br><span class="line">jjwt-jackson-0.10.7.jar</span><br><span class="line">jline-3.9.0.jar</span><br><span class="line">jna-4.5.2.jar</span><br><span class="line">jna-platform-4.5.2.jar</span><br><span class="line">jodd-bean-5.0.13.jar</span><br><span class="line">jodd-core-5.0.13.jar</span><br><span class="line">jsch-0.1.54.jar</span><br><span class="line">json-path-2.4.0.jar</span><br><span class="line">json-smart-2.3.jar</span><br><span class="line">jsonassert-1.5.0.jar</span><br><span class="line">jsp-api-2.1.jar</span><br><span class="line">jsqlparser-3.2.jar</span><br><span class="line">jsr305-3.0.2.jar</span><br><span class="line">jsr311-api-1.1.1.jar</span><br><span class="line">jta-1.1.jar</span><br><span class="line">jul-to-slf4j-1.7.28.jar</span><br><span class="line">junit-4.12.jar</span><br><span class="line">junit-jupiter-api-5.3.2.jar</span><br><span class="line">junit-jupiter-engine-5.3.2.jar</span><br><span class="line">junit-platform-commons-1.3.2.jar</span><br><span class="line">junit-platform-engine-1.3.2.jar</span><br><span class="line">junixsocket-common-2.0.4.jar</span><br><span class="line">junixsocket-native-common-2.0.4.jar</span><br><span class="line">kerb-admin-1.0.1.jar</span><br><span class="line">kerb-client-1.0.1.jar</span><br><span class="line">kerb-common-1.0.1.jar</span><br><span class="line">kerb-core-1.0.1.jar</span><br><span class="line">kerb-crypto-1.0.1.jar</span><br><span class="line">kerb-identity-1.0.1.jar</span><br><span class="line">kerb-server-1.0.1.jar</span><br><span class="line">kerb-simplekdc-1.0.1.jar</span><br><span class="line">kerb-util-1.0.1.jar</span><br><span class="line">kerby-asn1-1.0.1.jar</span><br><span class="line">kerby-config-1.0.1.jar</span><br><span class="line">kerby-pkix-1.0.1.jar</span><br><span class="line">kerby-util-1.0.1.jar</span><br><span class="line">kerby-xdr-1.0.1.jar</span><br><span class="line">LatencyUtils-2.0.3.jar</span><br><span class="line">leveldbjni-all-1.8.jar</span><br><span class="line">liquibase-core-3.6.3.jar</span><br><span class="line">LIST.TXT</span><br><span class="line">listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar</span><br><span class="line">log4j-1.2.17.jar</span><br><span class="line">log4j-api-2.11.2.jar</span><br><span class="line">log4j-to-slf4j-2.11.2.jar</span><br><span class="line">logback-classic-1.2.3.jar</span><br><span class="line">logback-core-1.2.3.jar</span><br><span class="line">logstash-logback-encoder-6.2.jar</span><br><span class="line">lombok-1.18.10.jar</span><br><span class="line">mapstruct-1.3.1.Final.jar</span><br><span class="line">mapstruct-processor-1.3.1.Final.jar</span><br><span class="line">metrics-core-4.1.0.jar</span><br><span class="line">micrometer-core-1.3.0.jar</span><br><span class="line">micrometer-registry-prometheus-1.3.0.jar</span><br><span class="line">mockito-core-2.23.4.jar</span><br><span class="line">mybatis-3.5.6.jar</span><br><span class="line">mybatis-plus-3.4.1.jar</span><br><span class="line">mybatis-plus-annotation-3.4.1.jar</span><br><span class="line">mybatis-plus-boot-starter-3.4.1.jar</span><br><span class="line">mybatis-plus-core-3.4.1.jar</span><br><span class="line">mybatis-plus-extension-3.4.1.jar</span><br><span class="line">mybatis-plus-generator-3.4.1.jar</span><br><span class="line">mybatis-spring-2.0.5.jar</span><br><span class="line">mysql-connector-java-8.0.17.jar</span><br><span class="line">native-lib-loader-2.0.2.jar</span><br><span class="line">netty-3.10.6.Final.jar</span><br><span class="line">netty-all-4.1.39.Final.jar</span><br><span class="line">netty-buffer-4.1.39.Final.jar</span><br><span class="line">netty-codec-4.1.39.Final.jar</span><br><span class="line">netty-codec-dns-4.1.39.Final.jar</span><br><span class="line">netty-common-4.1.39.Final.jar</span><br><span class="line">netty-handler-4.1.39.Final.jar</span><br><span class="line">netty-resolver-4.1.39.Final.jar</span><br><span class="line">netty-resolver-dns-4.1.39.Final.jar</span><br><span class="line">netty-transport-4.1.39.Final.jar</span><br><span class="line">netty-transport-native-epoll-4.1.39.Final.jar</span><br><span class="line">netty-transport-native-unix-common-4.1.39.Final.jar</span><br><span class="line">nimbus-jose-jwt-7.9.jar</span><br><span class="line">objenesis-2.5.1.jar</span><br><span class="line">okhttp-2.7.5.jar</span><br><span class="line">okio-1.6.0.jar</span><br><span class="line">opentest4j-1.1.1.jar</span><br><span class="line">paranamer-2.3.jar</span><br><span class="line">poi-3.17.jar</span><br><span class="line">poi-ooxml-3.17.jar</span><br><span class="line">poi-ooxml-schemas-3.17.jar</span><br><span class="line">problem-0.23.0.jar</span><br><span class="line">problem-spring-common-0.25.0.jar</span><br><span class="line">problem-spring-web-0.25.0.jar</span><br><span class="line">problem-violations-0.25.0.jar</span><br><span class="line">protobuf-java-2.5.0.jar</span><br><span class="line">protobuf-java-3.6.1.jar</span><br><span class="line">re2j-1.1.jar</span><br><span class="line">reactive-streams-1.0.3.jar</span><br><span class="line">reactor-core-3.2.12.RELEASE.jar</span><br><span class="line">redisson-3.11.4.jar</span><br><span class="line">rxjava-2.2.12.jar</span><br><span class="line">simpleclient-0.7.0.jar</span><br><span class="line">simpleclient_common-0.7.0.jar</span><br><span class="line">slf4j-api-1.7.28.jar</span><br><span class="line">slf4j-log4j12-1.7.28.jar</span><br><span class="line">snakeyaml-1.23.jar</span><br><span class="line">snappy-java-1.0.5.jar</span><br><span class="line">spring-aop-5.1.10.RELEASE.jar</span><br><span class="line">spring-aspects-5.1.10.RELEASE.jar</span><br><span class="line">spring-beans-5.1.10.RELEASE.jar</span><br><span class="line">spring-boot-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-actuator-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-actuator-autoconfigure-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-autoconfigure-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-configuration-processor-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-devtools-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-loader-tools-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-actuator-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-aop-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-cache-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-cloud-connectors-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-data-jpa-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-jdbc-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-json-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-logging-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-mail-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-security-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-test-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-thymeleaf-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-undertow-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-starter-web-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-test-2.1.9.RELEASE.jar</span><br><span class="line">spring-boot-test-autoconfigure-2.1.9.RELEASE.jar</span><br><span class="line">spring-cloud-cloudfoundry-connector-2.0.6.RELEASE.jar</span><br><span class="line">spring-cloud-connectors-core-2.0.6.RELEASE.jar</span><br><span class="line">spring-cloud-heroku-connector-2.0.6.RELEASE.jar</span><br><span class="line">spring-cloud-localconfig-connector-2.0.6.RELEASE.jar</span><br><span class="line">spring-cloud-spring-service-connector-2.0.6.RELEASE.jar</span><br><span class="line">spring-context-5.1.10.RELEASE.jar</span><br><span class="line">spring-context-support-5.1.10.RELEASE.jar</span><br><span class="line">spring-core-5.1.10.RELEASE.jar</span><br><span class="line">spring-data-commons-2.1.11.RELEASE.jar</span><br><span class="line">spring-data-jpa-2.1.11.RELEASE.jar</span><br><span class="line">spring-expression-5.1.10.RELEASE.jar</span><br><span class="line">spring-jcl-5.1.10.RELEASE.jar</span><br><span class="line">spring-jdbc-5.1.10.RELEASE.jar</span><br><span class="line">spring-orm-5.1.10.RELEASE.jar</span><br><span class="line">spring-plugin-core-1.2.0.RELEASE.jar</span><br><span class="line">spring-plugin-metadata-1.2.0.RELEASE.jar</span><br><span class="line">spring-security-config-5.1.6.RELEASE.jar</span><br><span class="line">spring-security-core-5.1.6.RELEASE.jar</span><br><span class="line">spring-security-data-5.1.6.RELEASE.jar</span><br><span class="line">spring-security-test-5.1.6.RELEASE.jar</span><br><span class="line">spring-security-web-5.1.6.RELEASE.jar</span><br><span class="line">spring-test-5.1.10.RELEASE.jar</span><br><span class="line">spring-tx-5.1.10.RELEASE.jar</span><br><span class="line">spring-web-5.1.10.RELEASE.jar</span><br><span class="line">spring-webmvc-5.1.10.RELEASE.jar</span><br><span class="line">springfox-bean-validators-2.9.2.jar</span><br><span class="line">springfox-core-2.9.2.jar</span><br><span class="line">springfox-schema-2.9.2.jar</span><br><span class="line">springfox-spi-2.9.2.jar</span><br><span class="line">springfox-spring-web-2.9.2.jar</span><br><span class="line">springfox-swagger-common-2.9.2.jar</span><br><span class="line">springfox-swagger-ui-2.9.2.jar</span><br><span class="line">springfox-swagger2-2.9.2.jar</span><br><span class="line">stax-api-1.0.1.jar</span><br><span class="line">stax-ex-1.8.jar</span><br><span class="line">stax2-api-3.1.4.jar</span><br><span class="line">swagger-annotations-1.5.20.jar</span><br><span class="line">swagger-models-1.5.20.jar</span><br><span class="line">tcp-unix-socket-proxy-1.0.2.jar</span><br><span class="line">testcontainers-1.12.2.jar</span><br><span class="line">thymeleaf-3.0.11.RELEASE.jar</span><br><span class="line">thymeleaf-extras-java8time-3.0.4.RELEASE.jar</span><br><span class="line">thymeleaf-spring5-3.0.11.RELEASE.jar</span><br><span class="line">token-provider-1.0.1.jar</span><br><span class="line">txw2-2.3.1.jar</span><br><span class="line">unbescape-1.1.6.RELEASE.jar</span><br><span class="line">undertow-core-2.0.26.Final.jar</span><br><span class="line">undertow-servlet-2.0.26.Final.jar</span><br><span class="line">undertow-websockets-jsr-2.0.26.Final.jar</span><br><span class="line">validation-api-2.0.1.Final.jar</span><br><span class="line">visible-assertions-2.1.2.jar</span><br><span class="line">websocket-api-9.4.19.v20190610.jar</span><br><span class="line">websocket-client-9.4.19.v20190610.jar</span><br><span class="line">websocket-common-9.4.19.v20190610.jar</span><br><span class="line">woodstox-core-5.0.3.jar</span><br><span class="line">xmlbeans-2.6.0.jar</span><br><span class="line">xmlunit-core-2.6.3.jar</span><br><span class="line">xnio-api-3.3.8.Final.jar</span><br><span class="line">xnio-nio-3.3.8.Final.jar</span><br><span class="line">zookeeper-3.5.6.jar</span><br><span class="line">zookeeper-jute-3.5.6.jar</span><br></pre></td></tr></table></figure>
+
+<h2 id="6、名词解释"><a href="#6、名词解释" class="headerlink" title="6、名词解释"></a>6、名词解释</h2><p>[^1]: JDK是 Java 语言的软件开发工具包，JDK（TM）8 64位简而言之就是一款针对java编程的软件工具，是学习java编程的第一步。JDK作为Java语言的软件开发工具包，主要用于移动设备、嵌入设备的应用程序。JDK的全称Java Development Kit，是Java语言的软件开发工具包，是整个java开发的核心，包含了JAVA的运行环境（JVM+Java系统类库）和JAVA工具。<br>[^2]: Lombok 是一种 Java™ 实用工具，可用来帮助开发人员消除 Java 的冗长，尤其是对于简单的 Java 对象（POJO）。它通过注解实现这一目的。<br>[^3]: Maven 翻译为”专家”、”内行”，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。Maven 曾是 Jakarta 项目的子项目，现为由 Apache 软件基金会主持的独立 Apache 项目。<br>[^4]: Spring Boot 是由 Pivotal 团队提供的全新框架，其设计目的是用来简化新 Spring 应用的初始搭建以及开发过程。该框架使用了特定的方式来进行配置，从而使开发人员不再需要定义样板化的配置。用我的话来理解，就是 Spring Boot 其实不是什么新的框架，它默认配置了很多框架的使用方式，就像 Maven 整合了所有的 Jar 包，Spring Boot 整合了所有的框架。<br>[^5]: Mybatis-Plus（简称MP）是一个 Mybatis 的增强工具，在 Mybatis 的基础上只做增强不做改变，为简化开发、提高效率而生。这是官方给的定义，关于mybatis-plus的更多介绍及特性，可以参考<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://mp.baomidou.com/%23/">mybatis-plus官网</a>。那么它是怎么增强的呢？其实就是它已经封装好了一些crud方法，我们不需要再写xml了，直接调用这些方法就行，就类似于JPA。<br>[^6]: Spring Security 是 Spring 家族中的一个安全管理框架，实际上，在 Spring Boot 出现之前，Spring Security 就已经发展了多年了，但是使用的并不多，安全管理这个领域，一直是 Shiro 的天下。相对于 Shiro，在 SSM/SSH 中整合 Spring Security 都是比较麻烦的操作，所以，Spring Security 虽然功能比 Shiro 强大，但是使用反而没有 Shiro 多（Shiro 虽然功能没有 Spring Security 多，但是对于大部分项目而言，Shiro 也够用了）。自从有了 Spring Boot 之后，Spring Boot 对于 Spring Security 提供了 自动化配置方案，可以零配置使用 Spring Security。因此，一般来说，常见的安全管理技术栈的组合是这样的：SSM + ShiroSpring Boot/Spring Cloud + Spring Security<strong>注意，这只是一个推荐的组合而已，如果单纯从技术上来说，无论怎么组合，都是可以运行的。</strong><br>[^7]: Json web token (JWT), 是为了在网络应用环境间传递声明而执行的一种基于JSON的开放标准（<a target="_blank" rel="noopener" href="https://link.jianshu.com/?t=https://tools.ietf.org/html/rfc7519">(RFC 7519</a>).该token被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。JWT的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该token也可直接被用于认证，也可被加密。<br>[^8]: HiKariCP是数据库连接池的一个后起之秀，号称性能最好，可以完美地PK掉其他连接池，是一个高性能的JDBC连接池，基于BoneCP做了不少的改进和优化<br>[^9]: Logback是由log4j创始人设计的另一个开源日志组件,官方网站： <a href="http://logback.qos.ch。它当前分为下面下个模块：logback-core：其它两个模块的基础模块logback-classic：它是log4j的一个改良版本，同时它完整实现了slf4j">http://logback.qos.ch。它当前分为下面下个模块：logback-core：其它两个模块的基础模块logback-classic：它是log4j的一个改良版本，同时它完整实现了slf4j</a> API使你可以很方便地更换成其它日志系统如log4j或JDK14 Logginglogback-access：访问模块与Servlet容器集成提供通过Http来访问日志的功能<br>[^10]: POM是项目对象模型(Project Object Model)的简称,它是Maven项目中的文件，使用XML表示，名称叫做pom.xml。作用类似ant的build.xml文件，功能更强大。该文件用于管理：源代码、配置文件、开发者的信息和角色、问题追踪系统、组织信息、项目授权、项目的url、项目的依赖关系等等。事实上，在Maven世界中，project可以什么都没有，甚至没有代码，但是必须包含pom.xml文件。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/26/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E5%BC%80%E5%8F%91%E8%A7%84%E7%BA%A6/" data-id="clh04c6du000qo4rgeybjhcyb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-linux查看磁盘使用情况命令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/21/linux%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5%E5%91%BD%E4%BB%A4/" class="article-date">
+  <time datetime="2021-01-21T03:29:29.862Z" itemprop="datePublished">2021-01-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="linux运维常用命令"><a href="#linux运维常用命令" class="headerlink" title="linux运维常用命令"></a>linux运维常用命令</h1><h1 id="内存详细信息查看"><a href="#内存详细信息查看" class="headerlink" title="内存详细信息查看"></a>内存详细信息查看</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">linux查看内存信息命令: cat /proc/meminfo</span><br><span class="line">free命令是一个快速查看内存使用情况的方法，它是对 /proc/meminfo 收集到的信息的一个概述</span><br><span class="line">1. 内存</span><br><span class="line"></span><br><span class="line">total:内存总数</span><br><span class="line"></span><br><span class="line">used：已使用的内存数</span><br><span class="line"></span><br><span class="line">   free:空闲的内存数</span><br><span class="line"></span><br><span class="line">shared:当前已废弃不用</span><br><span class="line"></span><br><span class="line">buffers:系统分配但未被使用的缓冲区</span><br><span class="line"></span><br><span class="line">cached:系统分配但未被使用的缓存</span><br><span class="line"></span><br><span class="line">(buffers和cached区别：A buffer is something that has yet to be “written” to disk. A cache is something that has been “read” from the disk and stored for later use（缓冲区还没有被写入磁盘。 缓存是从磁盘“读取”并存储以备后用的）)</span><br><span class="line"></span><br><span class="line">2. 程序已用内存数：</span><br><span class="line"></span><br><span class="line">-(buffers/cached):used 第一部分mem行 used-buffers-cached (反应的被程序实实在在吃掉的内存)</span><br><span class="line"></span><br><span class="line">程序可用内存数</span><br><span class="line"></span><br><span class="line">+(buffers/cached):free 第一部分 mem行 free+buffers+cached （可以挪用的内存总数	</span><br></pre></td></tr></table></figure>
+
+<h1 id="查看CPU信息"><a href="#查看CPU信息" class="headerlink" title="查看CPU信息"></a>查看CPU信息</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">查看CPU个数:cat /proc/cpuinfo | grep &quot;physical id&quot; | uniq | wc -l  --uniq命令：删除重复行;wc –l命令：统计行数</span><br><span class="line">查看CPU核数:cat /proc/cpuinfo | grep &quot;cpu cores&quot; | uniq</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="linux查看磁盘使用情况命令"><a href="#linux查看磁盘使用情况命令" class="headerlink" title="linux查看磁盘使用情况命令"></a>linux查看磁盘使用情况命令</h1><h4 id="一、查看磁盘文件的可用空间"><a href="#一、查看磁盘文件的可用空间" class="headerlink" title="一、查看磁盘文件的可用空间"></a>一、查看磁盘文件的可用空间</h4><h6 id="1、df命令简介"><a href="#1、df命令简介" class="headerlink" title="1、df命令简介"></a>1、df命令简介</h6><p>linux中df命令的功能是用来检查linux服务器的文件系统的磁盘空间占用情况。可以利用该命令来获取硬盘被占用了多少空间，目前还剩下多少空间等信息。</p>
+<h6 id="2、命令格式："><a href="#2、命令格式：" class="headerlink" title="2、命令格式："></a>2、命令格式：</h6><p>df [选项] [文件]</p>
+<h6 id="3、使用示例"><a href="#3、使用示例" class="headerlink" title="3、使用示例"></a>3、使用示例</h6><p>查看当前目录磁盘使用情况：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure>
+
+<p>查看指定目录磁盘使用情况：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h /<span class="keyword">data</span>/</span><br></pre></td></tr></table></figure>
+
+<h4 id="二、具体查看文件夹的占用情况"><a href="#二、具体查看文件夹的占用情况" class="headerlink" title="二、具体查看文件夹的占用情况"></a>二、具体查看文件夹的占用情况</h4><h6 id="1、du命令简介"><a href="#1、du命令简介" class="headerlink" title="1、du命令简介"></a>1、du命令简介</h6><p>Linux中du命令用于显示目录或文件的大小，du会显示指定的目录或文件所占用的磁盘空间。</p>
+<h6 id="2、命令格式：-1"><a href="#2、命令格式：-1" class="headerlink" title="2、命令格式："></a>2、命令格式：</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du [-abcDhHklmsSx][-L &lt;符号连接&gt;][-X &lt;文件&gt;][--block-size][--exclude=&lt;目录或文件&gt;][--max-depth=&lt;目录层数&gt;][--help][--version][目录或文件]</span><br></pre></td></tr></table></figure>
+
+
+
+<h6 id="3、使用示例-1"><a href="#3、使用示例-1" class="headerlink" title="3、使用示例"></a>3、使用示例</h6><p>查看当前目录每个文件夹的情况：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du <span class="operator">--</span>max<span class="operator">-</span>depth<span class="operator">=</span><span class="number">1</span> <span class="operator">-</span>h </span><br></pre></td></tr></table></figure>
+
+<p>查看指定目录每个文件夹的情况：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du --max-depth=<span class="number">1</span> -h  /<span class="keyword">data</span>/</span><br></pre></td></tr></table></figure>
+
+<p>计算指定文件夹大小</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">du -sh /<span class="keyword">data</span>/</span><br></pre></td></tr></table></figure>
+
+<h1 id="查看端口占用情况"><a href="#查看端口占用情况" class="headerlink" title="查看端口占用情况"></a>查看端口占用情况</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunlp</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/21/linux%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5%E5%91%BD%E4%BB%A4/" data-id="clh04c6dp000io4rgg557caca" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-阿里云环境部署手册v1.0" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/19/%E9%98%BF%E9%87%8C%E4%BA%91%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8Cv1.0/" class="article-date">
+  <time datetime="2021-01-19T07:54:54.527Z" itemprop="datePublished">2021-01-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="阿里云环境部署手册v1-0"><a href="#阿里云环境部署手册v1-0" class="headerlink" title="阿里云环境部署手册v1.0"></a>阿里云环境部署手册v1.0</h1><h1 id="1、服务器shell连接账号密码"><a href="#1、服务器shell连接账号密码" class="headerlink" title="1、服务器shell连接账号密码"></a>1、服务器shell连接账号密码</h1><p>主机IP：</p>
+<p>39.100.127.235</p>
+<p>39.100.78.178</p>
+<p>47.92.23.16</p>
+<p>账号密码：</p>
+<p>grid1：test@12345</p>
+<p>47.92.23.16 </p>
+<p>grid2：test@13579 </p>
+<p>grid3：test@24680</p>
+<h1 id="2、mysql数据库账号密码"><a href="#2、mysql数据库账号密码" class="headerlink" title="2、mysql数据库账号密码"></a>2、mysql数据库账号密码</h1><p>39.100.127.235:13306</p>
+<p>dbadmin ：<a href="mailto:Grid@1qaz">Grid@1qaz</a></p>
+<p>39.100.78.178:13306（创新平台）</p>
+<p>root：grid@123456</p>
+<p>–使用rpm安装mysql的默认目录：</p>
+<p>数据库目录</p>
+<p>/var/lib/mysql/</p>
+<p>配置文件</p>
+<p>/usr/share/mysql(mysql.server命令及配置文件)</p>
+<p>相关命令</p>
+<p>/usr/bin(mysqladmin mysqldump等命令)</p>
+<p>启动脚本</p>
+<p>/etc/rc.d/init.d/(启动脚本文件mysql的目录)</p>
+<h1 id="3、创新平台-web服务器"><a href="#3、创新平台-web服务器" class="headerlink" title="3、创新平台-web服务器"></a>3、创新平台-web服务器</h1><p>39.100.127.235（前端）18080——18084</p>
+<p>39.100.78.178（前端）18080——18084</p>
+<p>47.92.23.16（文件预览）nginx：81</p>
+<p>#/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf</p>
+<h1 id="4、kafka-zookeeper-jdk"><a href="#4、kafka-zookeeper-jdk" class="headerlink" title="4、kafka+zookeeper+jdk"></a>4、kafka+zookeeper+jdk</h1><p>39.100.127.235（172.17.66.165）zookeeper leader：2888</p>
+<p>39.100.78.178（172.17.66.166）zookeeper follower：3888</p>
+<p>47.92.23.16（172.17.66.164）zookeeper follower：3888</p>
+<p>kafka：9092</p>
+<p>zookeeper集群：2181</p>
+<p># /opt/zookeeper-3.4.14/bin/zkServer.sh start</p>
+<p># /opt/zookeeper-3.4.14/bin/zkServer.sh status</p>
+<p>关闭防火墙systemctl stop firewalld</p>
+<p>#/opt/kafka_2.12-2.3.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.12-2.3.0/config/server.properties</p>
+<p># jps</p>
+<h1 id="5、redis集群"><a href="#5、redis集群" class="headerlink" title="5、redis集群"></a>5、redis集群</h1><p>39.100.127.235（172.17.66.165）从 redis-sentine：26380</p>
+<p>39.100.78.178（172.17.66.166）主 redis-sentine：26379</p>
+<p>47.92.23.16（172.17.66.164）从 redis-sentine：26381</p>
+<p>redis：6379</p>
+<p>#/opt/redis-5.0.5/src/redis-server /etc/redis/redis.conf</p>
+<p>#/opt/redis-5.0.5/src/redis-sentinel /etc/redis/sentinel.conf</p>
+<h1 id="6、fastdfs分布式文件系统"><a href="#6、fastdfs分布式文件系统" class="headerlink" title="6、fastdfs分布式文件系统"></a>6、fastdfs分布式文件系统</h1><p>47.92.23.16（172.17.66.164）</p>
+<p>跟踪器(Tracker)：22122</p>
+<p>存储 (Storage)：23000</p>
+<p>数据目录/home/fastdfs/tracker</p>
+<p>数据目录/home/fastdfs/storage</p>
+<p>store_path0=/home/fastdfs/file</p>
+<p># service fdfs_trackerd start</p>
+<p># service fdfs_storaged start</p>
+<p>查看Storage和Tracker是否在通信：</p>
+<p>#/usr/bin/fdfs_monitor /etc/fdfs/storage.conf</p>
+<h1 id="7、ELK"><a href="#7、ELK" class="headerlink" title="7、ELK"></a>7、ELK</h1><p>elasticsearch</p>
+<p>39.100.127.235（172.17.66.165）：9200</p>
+<p>39.100.78.178（172.17.66.166）：9200</p>
+<p>47.92.23.16（172.17.66.164）：9200</p>
+<p>ES集群：9300</p>
+<p>#su elsearch</p>
+<p>#cd /usr/local/elasticsearch-6.8.8/bin</p>
+<p>#./elasticsearch(前台启动)或</p>
+<p>#nohup ./elasticsearch &amp;(后台启动)</p>
+<p>Logstash</p>
+<p>39.100.127.235（172.17.66.165）：5000、9600</p>
+<p>启动logstash5000.conf</p>
+<p>#nohup /usr/local/logstash-6.8.8/bin/logstash -f /usr/local/logstash-6.8.8/config/logstash5000.conf &amp;</p>
+<p>39.100.78.178（172.17.66.166）</p>
+<p>启动 mysql_all.conf （全量）</p>
+<p>#nohup /usr/local/logstash-6.8.8/bin/logstash -f /usr/local/logstash-6.8.8/config/mysql_all.conf &amp;</p>
+<p>后续是mysql_increment.conf（增量）启动</p>
+<p>Kibana</p>
+<p>47.92.23.16（172.17.66.164）：5601</p>
+<p>#nohup ./kibana &amp;</p>
+<p>elasticsearch-head</p>
+<p>39.100.78.178（172.17.66.166）：9100</p>
+<p><a target="_blank" rel="noopener" href="http://39.100.78.178:9100/?auth_user=elastic&amp;auth_password=grid_elastic123">http://39.100.78.178:9100/?auth_user=elastic&amp;auth_password=grid_elastic123</a></p>
+<h1 id="8、文件预览服务"><a href="#8、文件预览服务" class="headerlink" title="8、文件预览服务"></a>8、文件预览服务</h1><p>47.92.23.16（172.17.66.164）</p>
+<p>openoffice：8100</p>
+<p>kkFileView：8012</p>
+<p>启动openOffice</p>
+<p>#nohup /opt/openoffice4/program/soffice -headless -accept=”socket,host=172.17.66.164,port=8100;urp;” -nofirststartwizard &amp;</p>
+<p>启动kkFile</p>
+<p>#/opt/kkFileView-2.2.0/bin/startup.sh</p>
+<h1 id="9、judger账户"><a href="#9、judger账户" class="headerlink" title="9、judger账户"></a>9、judger账户</h1><p>47.92.23.16（172.17.66.164）</p>
+<p>账号judger 密码111111</p>
+<h1 id="10、gitea"><a href="#10、gitea" class="headerlink" title="10、gitea"></a>10、gitea</h1><p>47.92.23.16（172.17.66.164）：3000</p>
+<p># cd /home/aip/gitea_deploy</p>
+<p># nohup ./gitea &gt;/dev/null 2&gt;&amp;1 &amp;</p>
+<h1 id="11、创新平台微服务架构部署"><a href="#11、创新平台微服务架构部署" class="headerlink" title="11、创新平台微服务架构部署"></a>11、创新平台微服务架构部署</h1><h2 id="1、jhipster-registry-注册中心"><a href="#1、jhipster-registry-注册中心" class="headerlink" title="1、jhipster-registry:注册中心"></a>1、jhipster-registry:注册中心</h2><p>39.100.78.178（172.17.66.166）：:8761</p>
+<p># nohup java -jar jhipster-registry.jar &amp;</p>
+<h2 id="2、uaa-权鉴服务"><a href="#2、uaa-权鉴服务" class="headerlink" title="2、uaa:权鉴服务"></a>2、uaa:权鉴服务</h2><p>39.100.78.178（172.17.66.166）：9999</p>
+<p># ../business.sh uaa</p>
+<h2 id="3、Zipkin链路跟踪"><a href="#3、Zipkin链路跟踪" class="headerlink" title="3、Zipkin链路跟踪"></a>3、Zipkin链路跟踪</h2><p>39.100.78.178（172.17.66.166）：9411</p>
+<p># nohup java -jar zipkinserver.jar &amp;</p>
+<h2 id="4、Seata-分布式事物服务"><a href="#4、Seata-分布式事物服务" class="headerlink" title="4、Seata: 分布式事物服务"></a>4、Seata: 分布式事物服务</h2><p>39.100.78.178（172.17.66.166）：8091</p>
+<p># nohup ./seata-server.sh &amp;</p>
+<h2 id="5、Gateway-网关服务"><a href="#5、Gateway-网关服务" class="headerlink" title="5、Gateway: 网关服务"></a>5、Gateway: 网关服务</h2><p>39.100.78.178（172.17.66.166）：8089</p>
+<p># ../business.sh gateway</p>
+<h1 id="12、创新平台业务微服务"><a href="#12、创新平台业务微服务" class="headerlink" title="12、创新平台业务微服务"></a>12、创新平台业务微服务</h1><h2 id="1、inv-file-server：分布式文件系统"><a href="#1、inv-file-server：分布式文件系统" class="headerlink" title="1、inv-file-server：分布式文件系统"></a>1、inv-file-server：分布式文件系统</h2><p>47.92.23.16（172.17.66.164）：9900</p>
+<p># ../business.sh inv-file-server</p>
+<h2 id="2、inv-personal-center：个人中心服务"><a href="#2、inv-personal-center：个人中心服务" class="headerlink" title="2、inv-personal-center：个人中心服务"></a>2、inv-personal-center：个人中心服务</h2><p>47.92.23.16（172.17.66.164）：8082</p>
+<p># ../business.sh inv-personal-center</p>
+<h2 id="3、inv-user：用户服务"><a href="#3、inv-user：用户服务" class="headerlink" title="3、inv-user：用户服务"></a>3、inv-user：用户服务</h2><p>39.100.78.178（172.17.66.166）：8151</p>
+<p># ../business.sh inv-user</p>
+<h2 id="4、inv-desk：管理后台服务"><a href="#4、inv-desk：管理后台服务" class="headerlink" title="4、inv-desk：管理后台服务"></a>4、inv-desk：管理后台服务</h2><p>47.92.23.16（172.17.66.164）：8063</p>
+<p># ../business.sh inv-desk</p>
+<h2 id="5、inv-judge：评测机服务"><a href="#5、inv-judge：评测机服务" class="headerlink" title="5、inv-judge：评测机服务"></a>5、inv-judge：评测机服务</h2><p>47.92.23.16（172.17.66.164）：8086</p>
+<h2 id="6、inv-integration：积分勋章服务"><a href="#6、inv-integration：积分勋章服务" class="headerlink" title="6、inv-integration：积分勋章服务"></a>6、inv-integration：积分勋章服务</h2><p>39.100.127.235（172.17.66.165）：8158</p>
+<h2 id="7、inv-lab：实验室服务"><a href="#7、inv-lab：实验室服务" class="headerlink" title="7、inv-lab：实验室服务"></a>7、inv-lab：实验室服务</h2><p>47.92.23.16（172.17.66.164）：8085</p>
+<h2 id="8、inv-study：文库，题库服务"><a href="#8、inv-study：文库，题库服务" class="headerlink" title="8、inv-study：文库，题库服务"></a>8、inv-study：文库，题库服务</h2><p>47.92.23.16（172.17.66.164）：8083</p>
+<h2 id="9、inv-reward：悬赏论坛服务"><a href="#9、inv-reward：悬赏论坛服务" class="headerlink" title="9、inv-reward：悬赏论坛服务"></a>9、inv-reward：悬赏论坛服务</h2><p>47.92.23.16（172.17.66.164）：8084</p>
+<h2 id="10、inv-workflow：工作流服务"><a href="#10、inv-workflow：工作流服务" class="headerlink" title="10、inv-workflow：工作流服务"></a>10、inv-workflow：工作流服务</h2><p>47.92.23.16（172.17.66.164）：8141</p>
+<h2 id="11、inv-elk：搜索引擎服务"><a href="#11、inv-elk：搜索引擎服务" class="headerlink" title="11、inv-elk：搜索引擎服务"></a>11、inv-elk：搜索引擎服务</h2><p>47.92.23.16（172.17.66.164）：8068</p>
+<h1 id="13、微服务架构部署（数智河南"><a href="#13、微服务架构部署（数智河南" class="headerlink" title="13、微服务架构部署（数智河南)"></a>13、微服务架构部署（数智河南)</h1><p>注册中心 39.100.127.235 8761</p>
+<p>Uaa 39.100.127.235 9999</p>
+<p>网关 39.100.127.235 8080</p>
+<p>tx-manager事务1 39.100.127.235 7970</p>
+<p>tx-manager事务2 39.100.127.235 7971</p>
+<p>其它业务服务</p>
+<p>用户服务 inv-user 39.100.127.235 8001</p>
+<p>系统服务 inv-system 39.100.127.235 8011</p>
+<p>工作流服务 inv-flow 39.100.127.235 8221</p>
+<p>应用服务 inv-scene 39.100.127.235 8231</p>
+<p>搜索服务 inv-search 39.100.127.235 8241</p>
+<p>分析服务 inv-analysis 39.100.127.235 8251</p>
+<p>评价服务 inv-evaluation 39.100.127.235 8261</p>
+<p>需求服务 inv-requirement 39.100.127.235 8271</p>
+<p>接口服务 inv-api 39.100.127.235 8281</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/19/%E9%98%BF%E9%87%8C%E4%BA%91%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8Cv1.0/" data-id="clh04c6e2000vo4rg98wg1g95" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-docker-desk(windows环境)下hpv和vmare之间的切换" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/18/docker-desk(windows%E7%8E%AF%E5%A2%83)%E4%B8%8Bhpv%E5%92%8Cvmare%E4%B9%8B%E9%97%B4%E7%9A%84%E5%88%87%E6%8D%A2/" class="article-date">
+  <time datetime="2021-01-18T09:06:38.000Z" itemprop="datePublished">2021-01-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​                                            docker-desk(windows环境)下hpv和vmare之间的切换</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bcdedit /set hypervisorlaunchtype auto  -- 启动hpv</span><br><span class="line">bcdedit /set hypervisorlaunchtype off  -- 关闭hpv</span><br></pre></td></tr></table></figure>
+
+<p>然后重启电脑</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/18/docker-desk(windows%E7%8E%AF%E5%A2%83)%E4%B8%8Bhpv%E5%92%8Cvmare%E4%B9%8B%E9%97%B4%E7%9A%84%E5%88%87%E6%8D%A2/" data-id="clh04c6dg0008o4rg5qnx6xqt" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/04/18/%E5%A4%8D%E4%B9%A0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/23/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/11/Spring%20Security%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E7%9A%84%E5%8E%9F%E7%90%86/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%20%EF%BC%88jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%89/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/06/Docker%20Volume/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

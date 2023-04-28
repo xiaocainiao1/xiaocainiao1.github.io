@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="springboot 各种配置文件的优先级：1.0  不用配置中心时的优先级：123456789101112131415161718191.1 springboot启动会扫描一下位置的application.properties或者application.yml作为默认的配置文件工程根目录:.&#x2F;config&#x2F;工程根目录：.&#x2F;classpath:&#x2F;config&#x2F;classpath:&#x2F;加载的优先级顺序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/01/09/springboot%20%E5%90%84%E7%A7%8D%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="springboot 各种配置文件的优先级：1.0  不用配置中心时的优先级：123456789101112131415161718191.1 springboot启动会扫描一下位置的application.properties或者application.yml作为默认的配置文件工程根目录:.&#x2F;config&#x2F;工程根目录：.&#x2F;classpath:&#x2F;config&#x2F;classpath:&#x2F;加载的优先级顺序">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-09T05:38:42.493Z">
+<meta property="article:modified_time" content="2020-12-07T02:07:30.265Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-springboot 各种配置文件的优先级" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/09/springboot%20%E5%90%84%E7%A7%8D%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7/" class="article-date">
+  <time datetime="2021-01-09T05:38:42.493Z" itemprop="datePublished">2021-01-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="springboot-各种配置文件的优先级："><a href="#springboot-各种配置文件的优先级：" class="headerlink" title="springboot 各种配置文件的优先级："></a>springboot 各种配置文件的优先级：</h3><h4 id="1-0-不用配置中心时的优先级："><a href="#1-0-不用配置中心时的优先级：" class="headerlink" title="1.0  不用配置中心时的优先级："></a>1.0  不用配置中心时的优先级：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">1.1 springboot启动会扫描一下位置的application.properties或者application.yml作为默认的配置文件</span><br><span class="line">工程根目录:./config/</span><br><span class="line">工程根目录：./</span><br><span class="line">classpath:/config/</span><br><span class="line">classpath:/</span><br><span class="line">加载的优先级顺序是从上向下加载，并且所有的文件都会被加载，高优先级的内容会覆盖底优先级的内容，形成互补配置</span><br><span class="line"></span><br><span class="line">也可以通过指定配置spring.config.location来改变默认配置，一般在项目已经打包后，我们可以通过指令 </span><br><span class="line">　　java -jar xxxx.jar --spring.config.location=D:/kawa/application.yml来加载外部的配置</span><br><span class="line">　　</span><br><span class="line">　　                            优先加载带profile</span><br><span class="line"> jar包外部的application-&#123;profile&#125;.propertie或application.yml(带spring.profile)配置文件           </span><br><span class="line"> jar包内部的application-&#123;profile&#125;.propertie或application.yml(带spring.profile)配置文件</span><br><span class="line"></span><br><span class="line">                                再来加载不带profile</span><br><span class="line"> jar包外部的application.propertie或application.yml(不带spring.profile)配置文件</span><br><span class="line"> jar包内部的application.propertie或application.yml(不带spring.profile)配置文件</span><br><span class="line"> </span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<h4 id="2-0-Springboot-中application-yml和bootStrap-yml-的加载顺序"><a href="#2-0-Springboot-中application-yml和bootStrap-yml-的加载顺序" class="headerlink" title="2.0  Springboot 中application.yml和bootStrap.yml 的加载顺序"></a>2.0  Springboot 中application.yml和bootStrap.yml 的加载顺序</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">1.2 若application.yml 和bootStrap.yml 在同一目录下，则bootStrap.yml 的加载顺序要高于application.yml,即bootStrap.yml  会优先被加载。</span><br><span class="line"></span><br><span class="line">   原理：bootstrap.yml 用于应用程序上下文的引导阶段。</span><br><span class="line"></span><br><span class="line">              bootstrap.yml 由父Spring ApplicationContext加载。</span><br><span class="line"></span><br><span class="line">            •bootstrap.yml 可以理解成系统级别的一些参数配置，这些参数一般是不会变动的。</span><br><span class="line">            •application.yml 可以用来定义应用级别的，如果搭配 spring-cloud-config 使用 application.yml 里面定义的文件可以实现动态替换。</span><br><span class="line"></span><br><span class="line">            使用Spring Cloud Config Server时，应在 bootstrap.yml 中指定：</span><br><span class="line"> 1.3  不同位置的配置文件的加载顺序</span><br><span class="line">   在不指定要被加载文件时，默认的加载顺序：由里向外加载，所以最外层的最后被加载，会覆盖里层的属性（参考官网介绍）</span><br><span class="line"></span><br><span class="line">SpringApplication will load properties from application.properties files in the following locations and add them to the Spring Environment: </span><br><span class="line"></span><br><span class="line">A /config subdirectory of the current directory.    //位于与jar包同级目录下的config文件夹，</span><br><span class="line">The current directory                             //位于与jar包同级目录下</span><br><span class="line">A classpath /config package          //idea 环境下，resource文件夹下的config文件夹</span><br><span class="line">The classpath root                                //idea 环境下，resource文件夹下  （1-&gt;4, 外-&gt;里）</span><br><span class="line">The list is ordered by precedence (properties defined in locations higher in the list override those defined in lower locations).</span><br><span class="line"></span><br><span class="line">3. 可以通过属性指定加载某一文件：</span><br><span class="line"></span><br><span class="line"> java -jar myproject.jar --spring.config.location=classpath:/default.properties,classpath:/override.properties</span><br><span class="line">当通过spring.config.location 指定一个配置文件时，配置文件的搜索顺序如下：</span><br><span class="line"></span><br><span class="line">file:./custom-config/</span><br><span class="line">classpath:custom-config/</span><br><span class="line">file:./config/</span><br><span class="line">file:./</span><br><span class="line">classpath:/config/</span><br><span class="line">classpath:/</span><br><span class="line">最下层的优先加载，所以最上层的属性会覆盖下层的属性；</span><br><span class="line"></span><br><span class="line">4. 如果使用spring-cloud-config时，项目内部的resource下有bootstrap.yml文件，并且在bootstrap.yml 里配置spring.application.name, git.url,spring.active.profies. 将项目打成jar包，放到服务器上，与jar包并列的位置，有start.sh脚本， </span><br><span class="line"></span><br><span class="line">a. 在start 脚本里指定了配置文件：spring.config.location=./bootstrap.yml, 则配置文件的加载顺序将为：</span><br><span class="line"></span><br><span class="line">1. cloud-config 仓库里指定的yml 配置；</span><br><span class="line"></span><br><span class="line">2. ./bootstrap.yml</span><br><span class="line"></span><br><span class="line">3. classpath:/bootstrap.yml</span><br><span class="line"></span><br><span class="line">4. 外部application.yml</span><br><span class="line"></span><br><span class="line">5. 内部application.yml</span><br><span class="line"></span><br><span class="line">b. 在start 脚本里指定了配置文件：spring.config.location=./application.yml, 则配置文件的加载顺序将为：</span><br><span class="line"></span><br><span class="line">1. cloud-config 仓库里指定的yml 配置；</span><br><span class="line"></span><br><span class="line">2. ./application.yml</span><br><span class="line"></span><br><span class="line">3.  classpath:/application.yml</span><br><span class="line"></span><br><span class="line">4. ./bootstrap.yml</span><br><span class="line"></span><br><span class="line">5. classpath:/bootstrap.yml</span><br><span class="line"></span><br><span class="line">所以，不管是jar包内还是jar运行的同级目录下，只要包含bootstrap.yml ，且为云配置，则云配置文件会覆盖其他配置文件；</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/09/springboot%20%E5%90%84%E7%A7%8D%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7/" data-id="clh04c6dr000lo4rgc2581vw9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/01/09/%E8%AE%BF%E9%97%AEdocker%20desktop%E5%88%9B%E5%BB%BA%E7%9A%84Hyper-v%E8%99%9A%E6%8B%9F%E6%9C%BADockerDesktopVM/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/01/09/mvn%E6%8F%92%E4%BB%B6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/04/18/%E5%A4%8D%E4%B9%A0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/23/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/11/Spring%20Security%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E7%9A%84%E5%8E%9F%E7%90%86/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%20%EF%BC%88jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%89/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/06/Docker%20Volume/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

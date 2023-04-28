@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-复习" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/04/18/%E5%A4%8D%E4%B9%A0/" class="article-date">
+  <time datetime="2022-04-18T07:17:15.399Z" itemprop="datePublished">2022-04-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="复习"><a href="#复习" class="headerlink" title="复习"></a>复习</h1><p>spring-cloud-Gateway是spring-cloud的一个子项目。而zuul则是netflix公司的项目，只是spring将zuul集成在spring-cloud中使用而已。<br>因为zuul2.0连续跳票和zuul1的性能表现不是很理想，所以催生了spring团队开发了Gateway项目。</p>
+<p>Zuul：</p>
+<p>使用的是阻塞式的 API，不支持长连接，比如 websockets。</p>
+<p>底层是servlet，Zuul处理的是http请求</p>
+<p>没有提供异步支持，流控等均由hystrix支持。</p>
+<p>依赖包spring-cloud-starter-netflix-zuul。</p>
+<p>Gateway：</p>
+<p>Spring Boot和Spring Webflux提供的Netty底层环境，不能和传统的Servlet容器一起使用，也不能打包成一个WAR包。</p>
+<p>依赖spring-boot-starter-webflux和/ spring-cloud-starter-gateway</p>
+<p>提供了异步支持，提供了抽象负载均衡，提供了抽象流控，并默认实现了RedisRateLimiter。</p>
+<p>二、相同点：<br>1、底层都是servlet</p>
+<p>2、两者均是web网关，处理的是http请求</p>
+<p>三、不同点：</p>
+<p>1、内部实现：</p>
+<p>　　gateway对比zuul多依赖了spring-webflux，在spring的支持下，功能更强大，内部实现了限流、负载均衡等，扩展性也更强，但同时也限制了仅适合于Spring Cloud套件<br>　　zuul则可以扩展至其他微服务框架中，其内部没有实现限流、负载均衡等。<br>2、是否支持异步<br>　　zuul仅支持同步<br>　　gateway支持异步。理论上gateway则更适合于提高系统吞吐量（但不一定能有更好的性能），最终性能还需要通过严密的压测来决定<br>3、框架设计的角度<br>　　gateway具有更好的扩展性，并且其已经发布了2.0.0的RELESE版本，稳定性也是非常好的<br>4、性能<br>　　WebFlux 模块的名称是 spring-webflux，名称中的 Flux 来源于 Reactor 中的类 Flux。Spring webflux 有一个全新的非堵塞的函数式 Reactive Web 框架，可以用来构建异步的、非堵塞的、事件驱动的服务，在伸缩性方面表现非常好。使用非阻塞API。 Websockets得到支持，并且由于它与Spring紧密集成，所以将会是一个更好的 开发 体验。<br>　　Zuul 1.x，是一个基于阻塞io的API Gateway。Zuul已经发布了Zuul 2.x，基于Netty，也是非阻塞的，支持长连接，但Spring Cloud暂时还没有整合计划。</p>
+<p>四、总结<br>　　总的来说，在微服务架构，如果使用了Spring Cloud生态的基础组件，则Spring Cloud Gateway相比而言更加具备优势，单从流式编程+支持异步上就足以让开发者选择它了。<br>　　对于小型微服务架构或是复杂架构（不仅包括微服务应用还有其他非Spring Cloud服务节点），zuul也是一个不错的选择。</p>
+<p>Spring  WebFlux是随Spring 5推出的响应式Web框架。</p>
+<p>1、spring-webflux支持两种开发模式：</p>
+<pre><code>    （1）类似于Spring WebMVC的基于注解（@Controller、@RequestMapping）的开发模式；
+
+    （2）Java 8 lambda风格的函数式开发模式。
+</code></pre>
+<p>2、WebFlux是基于响应式流的，可以用来建立异步、非阻塞、事件驱动的服务。默认采用Reactor作为响应式流的实现库，也提供对RxJava的支持</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/04/18/%E5%A4%8D%E4%B9%A0/" data-id="clh04c6dt000po4rght19hi18" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-git使用教程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/23/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="article-date">
+  <time datetime="2022-03-23T03:44:23.159Z" itemprop="datePublished">2022-03-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Git使用教程"><a href="#Git使用教程" class="headerlink" title="Git使用教程"></a>Git使用教程</h1><h4 id="必须记住的六条命令。"><a href="#必须记住的六条命令。" class="headerlink" title="必须记住的六条命令。"></a><em>必须记住的六条命令。</em></h4><blockquote>
+<ul>
+<li><code>cd</code>:用来切换工作目录,最常用的一个命令。简单来讲，<code>cd A文件夹</code>就是进入到<code>A文件夹</code>里面的意思。</li>
+<li><code>git status .</code>：查看当前路径下的的状态。git下<strong>最最常用</strong>的一个命令。</li>
+<li><code>git add .</code>: 把工作区的所有变化，(就是你的所有改动)，都添加到 版本库/暂存区。</li>
+<li><code>git commit -m &quot;提交时说明信息&quot;</code>: 更进一步提交，并说明提交log。</li>
+<li><code>git push</code>: 把版本库的所有更新内容， 都推送到远程服务器。(就是推代码/推上去)</li>
+<li><code>git pull</code>: 把代码从远程服务器拉取到本地。(俗称拉代码)</li>
+</ul>
+</blockquote>
+<p><strong>当我们修改了本地代码，向远程服务器推送时，我们的操作步骤如下:</strong></p>
+<ol>
+<li><code>git add .</code></li>
+<li><code>git commit -m &quot;提交时说明信息&quot;</code></li>
+<li><code>git push</code><br><strong>当我们想更新本地代码，就是把服务器上最新的代码拉取下来，只需要执行一个命令。</strong><br><code>git pull</code></li>
+</ol>
+<h4 id="这三条命令建议记住。"><a href="#这三条命令建议记住。" class="headerlink" title="这三条命令建议记住。"></a><em>这三条命令建议记住。</em></h4><blockquote>
+<ul>
+<li><code>git log</code>:查看提交历史，与各次的提交说明。</li>
+<li><code>git diff</code>:比较工作区与暂存区的差异，就是比较看看你到底都做了什么修改。</li>
+<li><code>git clone url地址</code>: 将远程服务器上项目克隆到新创建的目录中（第一次拉项目时使用， 后面的更新都用 <code>git pull</code>了）。</li>
+</ul>
+</blockquote>
+<h4 id="其他问题"><a href="#其他问题" class="headerlink" title="其他问题"></a><em>其他问题</em></h4><blockquote>
+<ul>
+<li>操作时 双击<code>tab</code>键的自动提示/补全功能。</li>
+<li><code>q</code>或者<code>:q</code>等命令代表退出(quit)。</li>
+<li><code>ctrl+f</code>,<code>ctrl+b</code>快捷键在termial可以翻页，就是 上一页，下一页</li>
+</ul>
+</blockquote>
+<h1 id="文章正文"><a href="#文章正文" class="headerlink" title="文章正文"></a>文章正文</h1><p>git是一个分布式版本控制系统。简单来讲，如果有几个人同时开发维护一个项目的代码，那么我们就找个中央服务器，放置一份公共的代码，每个人在各自的电脑上去修改各自的代码，然后修改完，提交到中央服务器。这样大家拉代码时，就能更新到其他人修改的内容了。。</p>
+<blockquote>
+<p>Notice:代码只是为了便于说明。版本控制系统，管理的是文件，所以任何文件都可以。图片啦，视频文件啦，二进制文件啦，没有什么不可以的。只是我们为了行文方便，直接说代码文件。</p>
+</blockquote>
+<blockquote>
+<p>本教程会讲述 命令行 操作。不过也有很多人 使用图形化界面软件 比如<code>source tree</code>或者 俗称的<code>小乌龟</code>软件 来操作。但是基底的原理是一样的。<code>source tree</code> 软件操作也只是命令行的 封装。并且图形化操作更加直观一些。熟悉了命令行，图形化软件操作自然也会。不会命令行，图形化软件操作也可以会，但是会理解的比较肤浅。更重要的是会了其中一个，学习另一个就非常容易了。</p>
+</blockquote>
+<blockquote>
+<p>本篇文章之所以采用 终端(termial)命令行的方式，除了我本人平时一直使用命令行操作之外，还有重要的一点，命令行具有更广泛的适用性。换句话说，你熟悉了 git的命令行，那么利用命令行进行其他操作，比如java，python，运行测试脚本等，对你来说很easy，理解了最底层的原理，学习图形化软件也会很容易，毕竟图形化软件那么多，你永远学不完的，但是理解了底层的，就能以不变应万变。</p>
+</blockquote>
+<h2 id="理解几个概念"><a href="#理解几个概念" class="headerlink" title="理解几个概念"></a>理解几个概念</h2><p>工作区（Working Directory）， 版本库（Repository）/暂存区 ，（中央/远程）服务器.</p>
+<ul>
+<li><strong>服务器</strong>的概念已经清楚了。叫做 中央服务器/远程服务器都行。</li>
+<li><strong>工作区</strong>:就是你电脑的工作目录</li>
+<li><strong>版本库</strong>:工作区有一个隐藏的 <code>.git</code>文件夹，这个是叫做 版本库(有些文章也叫 <strong>暂存区</strong>，不管叫什么，知道这个意思就好)。<code>.git</code> 是隐藏文件夹。该文件内的内容很重要，因为git的控制配置等信息，都在这个隐藏文件夹里。电脑如果设置不显示隐藏文件夹，那么就会看不到。</li>
+</ul>
+<p>我电脑上的一个项目，可以看到什么是工作区，暂存区.</p>
+<p><em>图片名称：工作区与暂存区.png</em></p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107125105768-428728899.png" alt="å·¥ä½åºä¸æå­åº.png-65.6kB"></p>
+<h4 id="为什么存在一个-版本库？"><a href="#为什么存在一个-版本库？" class="headerlink" title="为什么存在一个 版本库？"></a>为什么存在一个 <strong>版本库</strong>？</h4><p>我修改过的代码，直接从 <strong>工作区</strong>提交到<strong>服务器</strong>不就行了嘛，为什么还要这么麻烦。<code>svn</code> 等集中式版本管理系统就是这么做的，简单明了，但是如果你没网络时怎么办？所以有了 <strong>版本库</strong>，那么你可以把代码先从工作区提交到版本库，等待有网络了，可以再提交到服务器。</p>
+<h4 id="gitignore文件是干啥的"><a href="#gitignore文件是干啥的" class="headerlink" title=".gitignore文件是干啥的?"></a><code>.gitignore</code>文件是干啥的?</h4><p>工作区的目录下面，总会存在很多乱七八糟的文件，比如你本地的配置，编译生成的中间文件等，这些文件你不想(或不能)提交到 服务器。那怎么办呢。就把这些文件的规则写到<code>.gitignore</code>文件中，这样git就会 ignore(忽略)这些文件，git就会像没看到这些文件一样。</p>
+<p>比如我的<code>.gitignore</code>文件有些内容如下：</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107125311065-1084858984.png" alt="gitå¿½ç¥æä»¶.png-3.6kB">    </p>
+<p>这几句话的意思是 所有apk后缀的文件，class后缀的文件都忽略，<code>bin/</code>和<code>gen/</code>目录下的文件也忽略。说的通俗一点，就是你git别管这些文件了，这些和git没屁关系。我不管怎么倒腾这些文件，都和git没关系。另外, <code>.gitignore</code> 文件中，<code>#</code>号开头的行 代表注释，就像 编程文件中的<code>//</code>开头的行一样。</p>
+<h2 id="几个简单的命令"><a href="#几个简单的命令" class="headerlink" title="几个简单的命令"></a>几个简单的命令</h2><p>怎么创建一个被git控制的项目，后面再讲，这里先讲述几个基本命令。</p>
+<p>在此之前，先熟悉一个 <code>cd</code>命令。</p>
+<blockquote>
+<p><code>cd</code>命令用来切换工作目录,linux,mac环境下最常用的一个命令。 简单来讲，<code>cd A文件夹</code>就是进入到A文件夹里面的意思。比如我要进入d盘我的代码文件夹, 输入命令 <code>cd /d/code/github_blog/</code>然后回车。</p>
+</blockquote>
+<p>假设你在一个项目中修改了某些文件。</p>
+<p>你想看看当前目录下是什么状态，命令 <code>git status .</code>。</p>
+<blockquote>
+<p><code>.</code> : 一个点代表当前目录，<code>..</code>：两个点 代表上级目录。 (这和git无关，这是 计算机基本的常识)。那么请思考,<code>cd ..</code>,这个命令是啥意思？</p>
+</blockquote>
+<p>但是你敲命令的时候，记不清楚了，或者 打错了了。看看termial会有什么反应?</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git satds</span><br><span class="line">git: &#x27;satds&#x27; is not a git command. See &#x27;git --help&#x27;.</span><br><span class="line"></span><br><span class="line">Did you mean this?</span><br><span class="line">        status</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>有很多的概念和操作，都和什么git无关,都是计算机领域中的基本常识，或者 所有(至少绝大部分)软件都遵循的操作常识，git自然也同样遵循这样概念和操作，这些内容我会用斜体的 <em>计算机常识</em> 来标注。</p>
+</blockquote>
+<blockquote>
+<p><code>$ git satds</code>一行，**$** 代表的是命令行的开始，后面的内容代表的就是你的输入内容。而 它的下一行就是系统反馈/回应 你的内容。(或者说系统输出)。(<em>计算机常识</em>)</p>
+</blockquote>
+<p>你看到什么？git会问你， 它不认识这个命令啊，你是不是敲错了，你可以用<code>git --help</code>寻求帮助哦。另外你是不是想打 <code>status</code> 这个词呢？ 所以git的命令根本 不用背，有个简单的印象就好。</p>
+<p>甚至，你在敲打命令的时候，根本不用敲完，输入头几个字符，然后直接 敲击 <code>tab</code>键，看看会发生什么?</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git sta //敲击 tab</span><br><span class="line">stage    stash    status</span><br></pre></td></tr></table></figure>
+
+<p>系统直接提示你了，<code>sta</code>开头的命令有三个，就看你想用哪个了，这是为了你记忆。<br>而你敲击 <code>git stat</code>之后，再敲击 <code>tab</code>,再看看 会发生什么。因为此时 <code>stat</code>开头的命令只剩下一个了<code>status</code>,所以你也只能打这个命令了。所以git自动帮你补全了。。</p>
+<blockquote>
+<p>点击<code>tab</code>键的 自动提示/补全功能很有用，绝大部分命令行操作都有这个快捷键，毕竟那么长的命令，文件路径等，记忆很难，打字也很累。不过有些termial情况，是点击一次<code>tab</code>键，而有些则是双击<code>tab</code>键，反正你可以总是双击<code>tab</code>键，这总不会错。(<em>计算机常识</em>)</p>
+</blockquote>
+<p>费了好大劲，我们终于输入了正确的字符。看看 命令行 会输出什么内容。</p>
+<p><em>图片名称：git_status.png</em></p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107125432753-1060517396.png" alt="git_status.png-11.5kB">    </p>
+<p>我在测试前，做了以下几件事情：</p>
+<ul>
+<li>新建立一个 <code> test0908.txt</code> 文件。</li>
+<li><code>CachedThreadPool.java</code> 文件中修改了一些内容。</li>
+<li>删除了 <code>DirectThread</code>文件。</li>
+</ul>
+<p>然后你看看 git 输出的内容。我们逐行进行分析。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">On branch master</span><br><span class="line">Your branch is up-to-date with &#x27;origin/master&#x27;.  </span><br></pre></td></tr></table></figure>
+
+<p>第一行不用管，这是 分支(branch)的概念，基础教程不涉及分支。<br>第二行：你的分支与远程分支已经同步了。（就是远程服务器并不比你的代码新）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Changes not staged for commit:</span><br><span class="line">  (use &quot;git add/rm &lt;file&gt;...&quot; to update what will be committed)</span><br><span class="line">  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)</span><br><span class="line"></span><br><span class="line">        modified:   java/src/thread_runnable/CachedThreadPool.java</span><br><span class="line">        deleted:    java/src/thread_runnable/DirectThread.java</span><br></pre></td></tr></table></figure>
+
+<p>翻译一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">改变还没有到提交阶段呢。</span><br><span class="line">(使用   `git add &lt;file&gt;...`  命令 来更新 你的提交。)</span><br><span class="line">(使用 `git checkout -- &lt;file&gt;...`命令来放弃你工作区的修改 )</span><br><span class="line"> 然后下面 列出了你修改的具体文件。</span><br><span class="line"> `modified`代表修改，`deleted`代表 删除。(还有add表示增加，像svn中就直接简写M，D，A了，如果如果看到了这些简写了,要明白什么意思)</span><br></pre></td></tr></table></figure>
+
+<p>提示内容已经非常明明白白的告诉你了，你的修改内容，以及你下一步可以怎么做了。<br>你可以 使用<code>git add</code>命令来提交;也可以使用 <code>git checkout</code> 来放弃修改。(就是 把工作区重新变干净,把你修改的东西都恢复了，就像 <code>ctrl+z</code>一样)。</p>
+<p>然后还有几行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Untracked files:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span><br><span class="line"></span><br><span class="line">        test0908.txt</span><br><span class="line"></span><br><span class="line">no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>翻译如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">未跟踪的文件</span><br><span class="line">(使用 `git add &lt;file&gt;...` 命令会包括下面这些提交)</span><br><span class="line">  你添加的文件名</span><br><span class="line"> 现在还没走到commit地步呢。(可以使用 `git add` 或者  `git commit -a`)</span><br></pre></td></tr></table></figure>
+
+<p>首先 <code>test0908.txt</code>为什么是 <code>Untracked files</code>,因为我刚才就说了，我的这个文件是 新添加的，git之前没见过这个文件(git刚刚第一次见到这个文件，所以感觉很面生，不认识啊)。所以它说这个文件未跟踪，而上面那两个文件 <code>CachedThreadPool.java</code>和<code>DirectThread.java</code>这两个文件，因为之前早就添加了,所以git系统会认识这两个文件。</p>
+<p>那么现在工作区就是这个样子了。</p>
+<p>我想看看我具体到某个文件进行了什么修改。该怎么操作呢。<br><code>git diff</code> 操作。</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107125630503-127603544.png" alt="git_diff.png-38kB"></p>
+<p>这个内容显示的有些乱七八糟。</p>
+<p>首先你看到 它列出了第一个文件<br><code>diff --git a/java/src/thread_runnable/CachedThreadPool.java b/java/src/thread_runnable/CachedThreadPool.java </code><br>前面一个a，后面一个b，其实就是代表你修改前后的文件。(不用关心这些)。<br>然后下面，是具体内容，</p>
+<ul>
+<li>所有 <code>+</code> 开头的，代表的都是你添加的内容，</li>
+<li>所有 <code>-</code>开头的，代表的都是你删除的内容。</li>
+<li>那些既没有”+”也没有”-“开头的行，就是和你修改区域的相关上下文，有了这些上下文，可以更好的帮你回想起来，你到底都修改了什么了。</li>
+</ul>
+<p>并且它们显示的颜色也不同。</p>
+<p>然后它列出了你修改的的第二个文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/java/src/thread_runnable/DirectThread.java b/java/src/thread_runnable/DirectThread.java</span><br><span class="line">deleted file mode 100644</span><br></pre></td></tr></table></figure>
+
+<p>它也提示你了，你把这个文件删除了。<br>而具体的提示，则全部是红色的 <code>-</code>号区域。为什么是全部是 <code>-</code>号区域，因为你把这个文件都删除了，那自然是相当于你把所有的内容都删除了。</p>
+<p>为什么 你添加的 <code>test0908.txt</code> 文件没有被这个命令提示，因为 这个文件还没有被跟踪，再说，也没必要显示啊。因为这个文件的所有内容 都是你新添加的。</p>
+<blockquote>
+<p>我把termial的界面调整到最大了。所以可以全部输出，如果文件改动很多/termial界面太小，一屏幕输出不完。那么 <code>ctrl+f</code>,<code>ctrl+b</code>快捷键分别显示 上一页，下一页，<code>q</code>或者<code>:q</code>等命令代表退出(quit)。(<em>计算机常识</em>)</p>
+</blockquote>
+<p>上面虽然解释了<code>git diff</code> 命令的意思。但是这个显示的确让人眼花缭乱。而 <code>source tree</code>等图形化工具，关于这个对比显示，的确直观了很多。</p>
+<p>图形化界面是类似下面这样显示的，看着 直观了许多。</p>
+<p><em>图片名称：git_diff_图形化界面.png</em></p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107125630503-127603544.png" alt="git_diff.png-38kB"></p>
+<p>(其实eclipse等IDE，都附带了类似的工具帮助你比较你都修改了什么，显示结果用图形化界面形式来显示，比较直观，不过这里就不做具体说明了。但是<code>git diff</code>的确比较少用，因为这种termial输出看的眼睛都花了)</p>
+<p>我们 已经知道了工作区的状态，也知道修改了哪些内容。<br>那么下面该做什么呢。</p>
+<p><code>git status .</code>时，已经很清楚的提示下一步命令是什么了。</p>
+<p>我们先把文件从 工作区提交到 版本库。<br>本次提交时，你可以只添加某一个文件，其他文件你没修完还不想提交呢: <code>git add java/src/thread_runnable/CachedThreadPool.java</code><br>也可以 一次提交两个文件(文件中间空格分割): <code> git add java/src/thread_runnable/CachedThreadPool.java test0908.txt</code><br>你当然也可以一起提交所有的修改。<code>git add .</code>(一般常用的就是这个命令,修改了就全部添加，省的麻烦)</p>
+<blockquote>
+<p>思考一下最后一个命令为什么是这样，不要忘记一个点<code>.</code>代表什么。<br>更别忘记了刚才强调的<code>tab</code>快捷键， 否则那么长的文件路径打字累不累啊。(当然，你复制粘贴也可以的)</p>
+</blockquote>
+<p>好。我们把 所有文件提交了，<br><code>$ git add .</code></p>
+<p>这一步没有没有任何输出。</p>
+<p>此时 <code>git status .</code>看看 什么状态。</p>
+<p><em>图片名称：git_status_after_add.png</em><br><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107125821237-1636389232.png" alt="git_status_after_add.png-19.4kB"></p>
+<p>提示区域已经告诉我们了可以怎么做了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你可以使用 `git reset HEAD &lt;file&gt;...` 来恢复上一步操作。</span><br></pre></td></tr></table></figure>
+
+<p>这里提示了怎么进行恢复。而上面那句话是啥？你可以进行<code>committed</code>啊,(当然，git直接提示使用<code>git commit </code>进行更进一步的提交才完美。)<br>然后 我执行 下面命令，进行更进一步的提交操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;我这只是一次提交测试，进行教学的提交测试&quot;</span><br></pre></td></tr></table></figure>
+
+<p>命令的 <code>-m &quot;提交说明&quot;</code> 是添加说明的。</p>
+<p>此时你的代码改动都已经放到了 <strong>版本库</strong>了。</p>
+<p>然后再 <code>git status .</code>,看看提示了什么:</p>
+<p><em>图片名称：git_status_after_commit.png</em><br><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107132912034-1410430464.png" alt="git_status_after_commit.png-25.5kB"></p>
+<p>下面几句话值得注意：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Your branch is ahead of &#x27;origin/master&#x27; by 1 commit.</span><br><span class="line">  (use &quot;git push&quot; to publish your local commits)</span><br><span class="line">nothing to commit, working directory clean</span><br></pre></td></tr></table></figure>
+
+<p><code>origin</code>是原点，远程的意思。所以这句话是这个意思。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你可以 使用 `git push` 来向远程 发布你的 变化。(其实就是推送到远程服务器&gt;)</span><br></pre></td></tr></table></figure>
+
+<p>那么我们就 <code>git push</code>吧。。把 版本库的东西，推送到远程服务器。因为你写了代码，本来就是为了提交到远程服务器嘛。。</p>
+<p>我们来看看 <code>git push</code>之后，提示了什么。</p>
+<p><em>图片名称：git_push .png</em><br><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107125932987-924155777.png" alt="git_push .png-30.6kB"></p>
+<p>这次操作输出的内容也是让人眼花缭乱，上面的那一部分同样是相关提示，告诉我们可以使用更详细的命令，这个区域不用管。我也没研究过什么内容，关注一下我红框画出来的内容。</p>
+<p>其实在输入<code>git push</code>命令时，输出会停留在下面这一行，等待你输入密码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Enter passphrase for key &#x27;/c/Users/Administrator/.ssh/id_rsa&#x27;:</span><br></pre></td></tr></table></figure>
+
+<p>这个是我们在最初设置git环境时，设置的ssh密码，比如我的电脑上设置的是 123456。输入了密码，然后才能输出下面那些内容，代表此时我们的操作已经完成了。</p>
+<blockquote>
+<p>有些人的电脑上，使用 <code>git push</code>时， 并没有输入密码这一步骤，那是因为他们在最初配置git环境时，把密码这步省略了(或者记住了密码)，所以他们不用输入密码。</p>
+</blockquote>
+<p>下面这几句内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Counting objects: 7, done.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (5/5), done.</span><br><span class="line">Writing objects: 100% (7/7), 671 bytes | 0 bytes/s, done.</span><br><span class="line">Total 7 (delta 4), reused 0 (delta 0)</span><br></pre></td></tr></table></figure>
+
+<p>是一些push时的 提示内容，不必关心(反正我也看不懂)。。<br>再下面两句。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">To git@git.oschina.net:yaowen369/ConcurrentDemo.git</span><br><span class="line">   5c53c8f..0e522fe  master -&gt; master</span><br></pre></td></tr></table></figure>
+
+<p>To 代表的意思是目的地，你本地提交到了哪里？因为我的这个项目放在了 <code>oschina</code> 托管网站上了，(oschina地址:<a target="_blank" rel="noopener" href="http://git.oschina.net/">http://git.oschina.net/</a>) 所以就是说，我的代码被提交到了 那个地址了。 本地master分支到 远程master分支。</p>
+<blockquote>
+<p><code>oschina</code>和github一样，都是代码托管网站。（当然，你托管其他文件自然也可以）。类似的网站有很多，还有<code>gitlab</code>之类的， 不过github最有名罢了。 所谓托管，意思就是相当于他们提供了一个远程服务器，供你放置你的文件。这个问题下面的内容会讲到。</p>
+</blockquote>
+<p>到了这个步骤，我们修改的内容，都已经被提交到了远程服务器上，虽然有时候敲击命令时，<code>termial</code>提示了我们很多乱七八糟看不懂的内容，但是这不重要，看不懂也很正常，完全看懂也没必要，因为我们的目的已经达到了，就是 把本地修改 提交到了 远程服务器上了。</p>
+<p>此时我们再使用 <code>git status</code>，看看当前状态是什么。</p>
+<p><em>图片名称：git_status_after_pull.png</em><br><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107130053831-965346904.png" alt="git_status_after_pull.png-14.9kB"></p>
+<p>上面的意思是说</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">你当前的分支已经和`origin/master`一样新了(就是内容一致了)。</span><br><span class="line">没有什么东西要提交，你的工作区很干净。</span><br></pre></td></tr></table></figure>
+
+<p>此时，我打开了我的mac电脑，我的mac电脑上也有这个项目。我有时候在公司电脑上写代码，有时候在自己的mac电脑上写代码，所以有了git，都可以方便的在不同电脑上切换。</p>
+<p>我在自己的mac电脑上，进入到对应的代码目录，使用了 <code>git pull</code>命令，看看什么反应。</p>
+<blockquote>
+<p>有些时候，也会要求你输入<code>ssh</code>的命令，才能拉代码，直接输入之前设置的123456密码就行了。</p>
+</blockquote>
+<p><em>图片名称：git_pull.png-</em><br><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107130155987-1191666878.png" alt="git_pull.png-149.1kB"></p>
+<p>最上面的那几句话不用看(我也看不懂,也完全没看懂的必要)。<br>只看最重要的部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">From https://git.oschina.net/yaowen369/ConcurrentDemo </span><br><span class="line"></span><br><span class="line">   5c53c8f..0e522fe  master     -&gt; origin/master</span><br><span class="line">Updating 5c53c8f..0e522fe</span><br><span class="line">Fast-forward</span><br><span class="line"> java/src/thread_runnable/CachedThreadPool.java |  5 ++++-</span><br><span class="line"> java/src/thread_runnable/DirectThread.java     | 24 ------------------------</span><br><span class="line"> test0908.txt                                   |  1 +</span><br></pre></td></tr></table></figure>
+
+<p>这个文件从 <code>oschina</code>远程服务器拉下来了，并且这次 拉取 更新了那些文件呢。。就是下面三个。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java/src/thread_runnable/CachedThreadPool.java |  5 ++++-</span><br><span class="line">java/src/thread_runnable/DirectThread.java     | 24 ------------------------</span><br><span class="line">test0908.txt                                   |  1 +</span><br></pre></td></tr></table></figure>
+
+<p>这不就是我在自己办公电脑上修改的那三个文件吗？并且看到后面的 <code>+</code>,<code>-</code> 符号，它还告诉你了，有些我们添加内容了，有些我们删除内容了。所以到了这个时候，<br>我们通过<code>status</code>,<code>add</code>,<code>commit</code>，<code>push</code>,<code>pull</code>这五个简单的命令，我们就能简单的使用 git了。。这已经能满足我们日常80%的需求了。（对于一个人开发的项目，而不是 团队多人开发模式来讲，这五个命令已经能满足95%的日常需求了）</p>
+<p>至于有些命令的提示输出内容等，看不懂就看不懂了，都看懂又有啥用。我们只要会用就可以了。比如 <code>git push</code>命令之后，termial提示输出了那么多的内容，你只要简单的能看懂，我们推送成功(还是失败)了这就ok了。其他的不用管。</p>
+<h2 id="冲突问题"><a href="#冲突问题" class="headerlink" title="冲突问题"></a>冲突问题</h2><p>可是人生哪有处处都如意的时候呢，代码也是如此。如果A和B都同时修改了同一个文件会发生什么呢，此时就会发生冲突。</p>
+<p>比如张三修改了 A.java文件上传到了中央服务器，然后李四在本地也修改了 A.java文件，李四想提交文件时，会提示因为冲突而无法提交。系统要求你先把代码拉下来，合并了A.java的冲突(这个合并过程，其实有时候git会自动合并，但是复杂的合并git做不了，所以就要求李四自己去合并冲突)，然后李四才能提交上去。。。</p>
+<blockquote>
+<p>当然，你工作电脑上提交，然后 自己私人笔记本上又修改了同一个文件，这和上面是同样的意思，只是 我们用张三李四来方便表达。</p>
+</blockquote>
+<blockquote>
+<p>所以为了避免潜在冲突一个好习惯就是 你在修改你的代码之前，先<code>git pull</code>一下，把服务器的最新代码拉下来,这是一个好习惯。</p>
+</blockquote>
+<blockquote>
+<p>因此我们开发时，有时候早晨来了第一件事情，就是先把代码<code>git pull</code>一下，进行更新。这是个好的开发习惯。避免你写了很多代码，你同事也写了很多代码，然后冲突了，你们俩合并的时候，比较浪费时间。</p>
+</blockquote>
+<p>我现在就实际做一个冲突的demo，演示冲突是怎么发生的，又怎么解决。其实都很好解决。。</p>
+<p>我在自己的mac电脑上修改了 <code>FixedThreadPool.java</code>文件，然后 在mac电脑上 操作了 <code>add</code>,<code>commit</code>,<code>push</code>操作，提交到了远程服务器上。</p>
+<p>而同时，我在自己的工作电脑上， 也对 <code>FixedThreadPool.java</code>文件 进行了修改。然后我在自己的工作电脑上， 执行了<code>add</code>,<code>commit</code>操作，现在我要提交了，我执行了 <code>push</code>操作，看看会发生什么。</p>
+<p><em>图片名称：git_push_error_because_confilt.png</em><br><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107130318362-1966304377.png" alt="git_push_error_because_confilt.png-63.2kB"></p>
+<p>此时再看看对方 termial提示了什么。输出了一大串内容，前面的内容不用关心。<br>我们只看最后一段主要内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">To git@git.oschina.net:yaowen369/ConcurrentDemo.git</span><br><span class="line"> ! [rejected]        master -&gt; master (fetch first)</span><br><span class="line">error: failed to push some refs to &#x27;git@git.oschina.net:yaowen369/ConcurrentDemo.git&#x27;</span><br><span class="line">hint: Updates were rejected because the remote contains work that you do</span><br><span class="line">hint: not have locally. This is usually caused by another repository pushing</span><br><span class="line">hint: to the same ref. You may want to first integrate the remote changes</span><br><span class="line">hint: (e.g., &#x27;git pull ...&#x27;) before pushing again.</span><br><span class="line">hint: See the &#x27;Note about fast-forwards&#x27; in &#x27;git push --help&#x27; for details.</span><br></pre></td></tr></table></figure>
+
+<p>翻译其中的主要内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> ! [拒绝]        master -&gt; master (fetch first)</span><br><span class="line">错误：向&#x27;git@git.oschina.net:yaowen369/ConcurrentDemo.git&#x27;执行 `push`时，发生了某些错误。</span><br><span class="line">提示：更新之所以被拒绝是因为 远程分支包含了你本地没有的内容，这通常是因为 另一个库推送了同样的文件(ref是索引的意思，可以翻译成文件)。你可以在推送之前先合并这些远程的变化(比如，试试 git pull)。</span><br><span class="line"></span><br><span class="line">你可以看看 `git push --help`中的 `Note about fast-forwards`了解更多的细节。</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>其实在命令行中，help是很有用的，可以提示很多有用的帮助信息，不过有些termial要求直接 命令后面输入 help就好了，有些要求输入 <code>-help</code>,有些要求输入 <code>--help</code>,或者有些直接输入 <code>-h</code>/<code>--h</code>也行，但是我们始终要有这个意识，因为太多东西不用记忆，有个大概的印象就好。(<em>计算机常识</em>)</p>
+</blockquote>
+<p>看到这些提示内容，即使你第一次碰到这个问题，你下一步准备怎么做？人家已经给你提示了啊。直接 <code>git pull</code>啊。</p>
+<p><strong>Notice</strong>:在你输入 <code>git pull</code>时，有时候termial会要求你输入密码，有时候不会，但是 很快的，termial就会完全的跳转到一个新的页面，这应该是你第一个碰到这种情况。</p>
+<p><em>图片名称：git_pull_confilit_vi.png</em><br><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107130439206-526349209.png" alt="git_pull_confilit_vi.png-35kB"></p>
+<p>这其实是个<code>vi</code>编辑器，(<code>vim</code>是<code>vi</code>的升级版，因为<code>vim</code>颜色高亮做的比较好，看起来更舒服)。<br>我们在之前执行 <code>git commit -m &quot;相关提交的log内容&quot;</code>这个命令时， 直接输入 一行提交说明内容，所以没那么复杂，我们就写一句话 说明一下而已(搞那么复杂干啥子)。但是你如果执行 <code>git commit</code>, 不带<code>-m</code> 然后你直接敲击回车，也会进入这个vi页面。(因为你没使用一行的提交说明模式，系统会以为你想长篇大论的去写提交信息呢，所以专门给你准备个编译器，你好好写吧，想写多少，就写多少)</p>
+<p>说简单点，vi和你的<code>word</code>,<code>notepad</code>,<code>sublime text</code>没啥区别，包括和你电脑上新建个 <code>文本文档</code>，都是一回事， 都只是一个<strong>文本编译器</strong>， 但是这个 vi的历史可比后面的那几个历史早太多了，上世纪八十年代，电脑图形化界面还没发明呢，当时电脑操作都是黑乎乎的命令行窗口操作(其实现在window，linux也可以直接黑乎乎的termial操作，只是那么多命令，大家都记不住，有了鼠标和图形化界面，黑乎乎的命令行操作都被忘记了，只剩下程序员使用termial了)。<code>word</code> 等更无从谈起，但是大家很多时候也要 编译文本啊，又没有word等，所以vi就是一个当时环境下的 termial环境操作的 <strong>文本编译器</strong>，完全 键盘操作，有无数复杂的 快捷键，你使用vi操作，完全不用接触鼠标，所以操作也比较快(当然是在你比较熟悉快捷键的情况下，否则你就尴尬了)。</p>
+<p>我们这里呢，不讨论vi。vi的操作是另一个话题。(其实也不是难，而是那么多复杂的快捷键组记忆着比较困难而已)。</p>
+<p>我们可以看看 它上面的内容说了什么。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Please enter a commit message to explain why this merge is necessary, </span><br><span class="line"></span><br><span class="line">Lines starting with &#x27;#&#x27; will be ignored</span><br></pre></td></tr></table></figure>
+
+<p>翻译内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">请输入一些提交内容来解释为什么这次合并是必须的。</span><br><span class="line">以`#`号开头的行都会被忽略（注释的作用）</span><br></pre></td></tr></table></figure>
+
+<p>其实上面那句<code>Merge branch &#39;master&#39; of git.oschina.net:yaowen369/ConcurrentDemo</code>,就是它默认帮你生成的 提交信息。<br>反正你不用管（因为你要搞定这个，这是另一个学习内容，但是你学习这些完全没必要，虽然也不难。这也是source tree等软件的好处，使用了 source tree等图形化软件，你怎么着也不会碰到vi界面），还记得 怎么退出不？</p>
+<blockquote>
+<p>输入<code>:q</code>, 字符<code>q</code>代表是退出(quit)的意思，不过这个 <code>vi</code>的退出要 一个冒号+q，所以你输入 <code>:q</code>，直接退出就好了。(git有些界面退出也是<code>:q</code>,只是你输入命令操作的时候，git自动帮你前缀一个冒号了，所以给你省事了而已)</p>
+</blockquote>
+<p>你输入 <code>:q</code>，注意左下角。</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107130604628-1960249763.png" alt="vi_q.png-60.2kB">    </p>
+<p>vi当中<code>:</code> 开头的都是命令模式，命令模式显示都在左下角。你输入 <code>:q</code>回车后， 左下角出现了这么一行红色的文字。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E37: No write since last change (add ! to override)</span><br></pre></td></tr></table></figure>
+
+<p>你输入<code>:q</code>竟然没用，相关区域提示你，因为这个文件你啥都没改动，所以你要加个<code>!</code>号去覆盖(其实就是强制退出模式)。 然后你直接输入 <code>:q!</code>就好了。(直接输入<code>:</code>号就好了，那行红色的提示就消失了，然后你接着输入<code>q!</code>就好了，你试图用键盘上的<code>delte</code>等按键去删除红色文字没用的)</p>
+<p>还要讨论vi的相关内容。但是不讨论用户十有八九又会碰到这个问题，当年我第一次碰到vi问题，连怎么退出都搞不定，急的满头大汗。所以不得不讨论。</p>
+<p>终于我们退出了 <code>vi</code>，看看具体提示了什么。。</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107130703753-298527112.png" alt="confilit_after_vi.png-29.1kB">    </p>
+<blockquote>
+<p>红色方框内的内容不要管，那是因为我第一次在vi中输入命令 时，输错了 <code>:!q</code>，所以vi提示 q命令找不到，我又重新进入输入了 <code>:q!</code>，就ok了。。</p>
+</blockquote>
+<p>我们看重点内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Auto-merging java/src/thread_runnable/FixedThreadPool.java</span><br><span class="line"></span><br><span class="line">Merge made by the &#x27;recursive&#x27; strategy.</span><br><span class="line"> java/src/thread_runnable/FixedThreadPool.java | 4 ++--</span><br><span class="line"> 1 file changed, 2 insertions(+), 2 deletions(-)</span><br></pre></td></tr></table></figure>
+
+<p>注意：<code>Auto-merging </code>自动合并了。也就是说， 因为我刚才测试的冲突比较简单，所以 git自动比较合并了。(比如张三修改了文件的第一行，李四修改了文件的最后一行，这种简单的，git就能自动合并，但是张三李四都修改了 文件的第一行，那就只能手动合并了)。</p>
+<p>那么此时你使用<code>git status</code>来查看状态，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git status .</span><br><span class="line">On branch master</span><br><span class="line">Your branch is ahead of &#x27;origin/master&#x27; by 2 commits.</span><br><span class="line">  (use &quot;git push&quot; to publish your local commits)</span><br><span class="line">nothing to commit, working directory clean</span><br></pre></td></tr></table></figure>
+
+<p>你的工作区很干净，没啥可commit的，但是 注意上面那句话<br><code>Your branch is ahead of &#39;origin/master&#39; by 2 commits.</code><br>你当前的分支领先 远程分支 两次提交。</p>
+<blockquote>
+<p>为啥是两次，因为本来你就commit了一次，然后 <code>git pull</code>时，又自动合并commit一次，所以就两次了。</p>
+</blockquote>
+<p>不用关心几次，看到重点就对了，你当前的分支领先远程分支。<br>另外，扯了这么大一段，别忘记了最初咱们的目的是什么，咱们最初的目标就是 推送代码到远程服务器。</p>
+<p>所以接下来直接 <code>git push</code>，将 代码直接推送到远程服务器就好了。</p>
+<p>这次的冲突因为我制造的比较简单，所以自动合并了，但是有些冲突比较复杂，git无法自动合并，<br>那么此时就需要你手动合并了。</p>
+<p>下面的demo直接借用了网上别人的代码冲突内容 ，我针对输出进行解释。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git pull</span><br><span class="line">Auto-merging test.txt</span><br><span class="line">CONFLICT (content): Merge conflict in test.txt</span><br><span class="line">Automatic merge failed; fix conflicts and then commit the result.</span><br></pre></td></tr></table></figure>
+
+<p>系统提示你，<code>test.txt</code>文件冲突了，自动合并失败了，你需要解决冲突，然后并提交。。</p>
+<p>好，我打开<code>test.txt</code>文件，会看到下面的情况。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Git has a mutable index called stage.</span><br><span class="line">Git tracks changes of files.</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span><br><span class="line">Creating a new branch is quick &amp; simple.</span><br><span class="line">=======</span><br><span class="line">Creating a new branch is quick AND simple.</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature1</span><br></pre></td></tr></table></figure>
+
+<p>其中冲突的部分都是用 <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>，<code>=======</code>，<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>来进行标记了，他们都代表了不同分支(或者远程/本地)不同的内容，你自己看着代码，把<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>，<code>=======</code>，<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>进行删除，该删除的代码部分也进行删除。</p>
+<blockquote>
+<p>如果是你自己写的代码，你肯定知道该删除那些内容，如果不是你写的代码，比如李四写的，那么你要叫着李四讨论，把你们两个的代码合并掉。李四写的代码你又不了解业务逻辑，你不和他讨论， 就瞎合并，这在多人团队中，是大忌。</p>
+</blockquote>
+<blockquote>
+<p>因为你可能把李四写的代码给覆盖掉。而程序员基本上写完某个文件就不再关心了，所以李四也不知道你把他的内容覆盖掉了，这肯定会引起问题，如果测试人员能发现业务逻辑不对，那还好,最多被测试人员提个代码臭骂一顿，但如果测试不能发现，那等着线上事故吧。</p>
+</blockquote>
+<p>比如上面的那段冲突，我们合并成如下形式，并进行文件保存。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Creating a new branch is quick and simple.</span><br></pre></td></tr></table></figure>
+
+<p>合并之后，相当于你又重新 修改了文件。<br>所以在此重新进行提交步骤。。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add readme.txt </span><br><span class="line">$ git commit -m &quot;老子把冲突合并了&quot;</span><br><span class="line">[master 59bc1cb] 老子把冲突合并了</span><br></pre></td></tr></table></figure>
+
+<p>最后再push就好了。。</p>
+<p>到了这里我们就理解了平时的提交代码，拉取代码的步骤，以及怎么解决冲突。<br>我们再来学习一个命令。<code>git log</code>：</p>
+<p><code>git log</code>: 查看之前每次提交的说明信息:</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107130829846-390932882.png" alt="git_log.png-78kB">    </p>
+<p>直接看输出应该一目了然了。每次提交的版本号。作者，时间，提交的信息说明 都直接列出来了。咱们之前在 <code>git commit -m &quot;说明信息&quot;</code>，这里就有用了，否则那么多次提交，谁也没本事都记住啊。</p>
+<p>尤其是你注意最上面那个 说明信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">commit fb095209cc6adf53a98035cc7661d109a2024de9</span><br><span class="line">Merge: 5b90fa3 c63c40b</span><br><span class="line">Author: yaowen &lt;yw43194@ly.com&gt;</span><br><span class="line">Date:   Sat Sep 9 11:45:40 2017 +0800</span><br><span class="line"></span><br><span class="line">    Merge branch &#x27;master&#x27; of git.oschina.net:yaowen369/ConcurrentDemo</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>最上面的是 版本号(就是那一长串奇怪的字符串),git的版本号是一长串字符串，而svn的版本号就是很简单的1，2 ，3, 4阿拉伯数字,简单来讲，因为svn你每次提交拉取时，都是直接与中央服务器交互，而git则是先与版本库(暂存区)交互，多人都使用git来提交代码，他们本地的电脑时间都不一定准确，不能使用1, 2, 3，4作为版本号，因为不能简单的依据时间戳来比较。而svn则可以直接使用服务器时间。</p>
+</blockquote>
+<p>这次提交信息，还很贴心的给你提示了，你这次提交其实是一个 合并冲突操作<code>merge</code>，并且提交的说明信息<code>Merge branch &#39;master&#39; of git.oschina.net:yaowen369/ConcurrentDemo</code>,就是刚才合并时系统帮我们生成的。（因为当时我们在vi界面并没有修改默认的提交说明信息啊）。</p>
+<blockquote>
+<p>注意右下角的冒号, 因为我这个项目提交很多次了，所以log说明比较多，一页显示不完，你还记得怎么上下翻页，怎么退出log提示不？(翻页一般用不到，因为我们一般看提交log也都是看最近的几次说明，不过怎么退出这肯定是要知道额)</p>
+</blockquote>
+<p>那么下面我们要讨论怎么结合github使用。</p>
+<h2 id="github"><a href="#github" class="headerlink" title="github"></a>github</h2><p>我们为什么要使用github，因为我们需要一个远程服务器啊。</p>
+<p>在本文最初的时候，就说了需要一个远程服务器，我们上面那么多的操作，都是客服端的操作。都是假设我们已经搭建好了远程服务器，而在公司里，也已经搭建好了代码服务器，所以我们平时的代码等都是发布到那里的，但是单独的个人的小项目，你代码托管到哪里呢？当然，你可以用自己的电脑搭建个git服务器，但是这是一个非常复杂的过程。所以我们就可以托管到github上之类的，这样不就给我们省了很多事情吗？反正又不要钱，对吧。</p>
+<p>github账号的创建，ssh key的上传自己去google搜索吧，我们就直接来创建一个项目..</p>
+<p>图片名字：github_new_repository.png</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107131615612-660605808.png" alt="github_new_repository.png-65kB"></p>
+<p>注意那个箭头，点击加号， <code>New repository</code>， 这就是创建一个新项目的意思。</p>
+<p>关于这个界面：</p>
+<ul>
+<li><code>Repository name</code>: 项目的名字，我这次的项目就叫做 <code>TeachDemo</code>(这个名字后面会说明，和你eclipse的项目名字保持一致最好)。</li>
+<li><code>Description (optional)</code>，描述(可选)，这个不用多介绍了。</li>
+<li>我们只能创建<code>Public</code>,因为 private是要money的。(不过oschina上你可以免费创建私有项目，你可以创建个项目，放你的一些电子书之类的不那么隐私的资料)。</li>
+<li><code>Initialize this repository with a README</code>,是否初始化一个 readme文件，是markdown格式的， 建议 勾选吧。</li>
+<li><code>Add .gitigonre</code>：这时候再说看不懂这栏啥意思，那就说明之前的文章都白写了。既然你写java代码，那就选择个java的。</li>
+<li><code>Add a license</code>:这个不用管。</li>
+</ul>
+<p>此时我们填写和勾选都已经完毕了, 点击蓝色确认按钮吧 <strong>Create repository</strong>,<br>此时进入了这个页面。</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107132111846-1665594008.png" alt="github_teachDemo_ok.png-60kB"><br>此时该项目创建ok了。。。你会看到项目当中给你初始化了两个文件，<code>.gitignore</code>，<code>README.md</code>文件，这都是刚才我们勾选要求创建的。注意左边的蓝色的 <strong>Clone or download</strong>按钮，点击会出现下面界面，然后鼠标放在右边那个小图标上，会直接给予提示 <code>Copy to clipboard</code>。(这几个英文要是还看不懂，那让别学编程了)。</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107132207128-571635648.png" alt="github_ok_can_clone.png-21.4kB">    </p>
+<p>也就是说，我们点击那个 小图标，会把前面的那个 ssh地址。<code>git@github.com:yaowen369/TeachDemo.git</code>复制到剪切板，(这不就是<code>ctrl+c</code>嘛)。</p>
+<p>我们的项目已经创建完毕了，换句话说，我们已经在远程服务器上创建了这个项目，那么下面我们的本地就已经可以用了。</p>
+<p>在你的电脑上，看你平时喜欢把代码项目放在哪里，就像我平时代码都是放在D盘的某个文件夹，所以我是这样操作的。</p>
+<p><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107132344018-1905791989.png" alt="termial_git_clone.png-24.7kB">    </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /d/code/github_blog/</span><br><span class="line"></span><br><span class="line">git clone git@github.com:yaowen369/TeachDemo.git</span><br></pre></td></tr></table></figure>
+
+<p>我先通过cd命令进入了 d盘的<code>code/github_blog/</code>文件夹下，然后我再clone这个代码。</p>
+<p>先来解释这两条命令。</p>
+<blockquote>
+<ul>
+<li><code>git clone</code> : 将远程服务器上的项目克隆到新创建的目录中，解释简单点，将你在远程服务器上的项目，第一次拉到本地,供你在本地使用。其实严格来讲， 该过程是将 项目代码，从服务器拉到 本地版本库，然后再从 版本库解析到 工作区。不过你关心那么多干嘛？记得 这个命令是 你在第一次想拉取某个本地没有的项目时使用就行了。(为什么是第一次？ 因为你第一次使用 <code>git clone</code>在本地弄好之后，今后再更新服务器上的代码就使用 <code>git pull</code>了。)。</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>那么现在你理解github那个 标签为什么叫做 <code>Clone or download</code>了吧。(如果你想查看github项目，直接下载也行。clone也行)</li>
+</ul>
+</blockquote>
+<p>好的。现在我们已经将 服务器上的代码，拉到本地了。 但是这个目录不是你eclipse下的项目目录。你又不想重现创建项目，我想将eclipse下的某个项目直接和github的远程服务器发生关联，因为你平时写代码都是用eclipse啊。其实很简单，将我D盘这个文件夹的所有文件，都复制到 你eclipse的某个项目的目录下，就好了。。</p>
+<p><em>图片名称：teach_demo_on_d.png</em><br><img src="file:///F:/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E4%BE%9D%E8%B5%96%E7%8E%AF%E5%A2%83/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/%E5%88%9B%E6%96%B0%E5%B9%B3%E5%8F%B0/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/%E9%80%82%E5%90%88%E5%B0%8F%E7%99%BD_%E5%A4%96%E8%A1%8C%E7%9A%84git%E4%B8%8Egithub%E6%9C%80%E5%9F%BA%E7%A1%80%E6%9C%80%E6%B5%85%E6%98%BE%E6%95%99%E7%A8%8B%20_files/918357-20180107132504268-1031816118.png" alt="teach_demo_on_d.png-61.8kB"></p>
+<p>说简单点，将该目录下的 所有文件 都复制到 你eclipse的项目的代码路径下就ok了。。。<br>注意以下几点：</p>
+<blockquote>
+<p>某些人的电脑上可能没有打开 <code>显示隐藏文件</code>选项，所以要打开这个，因为你复制过程中，真正起作用的就是 <code>.git</code>文件夹，最重要的隐藏文件都漏掉了，那你复制还有啥用？</p>
+</blockquote>
+<blockquote>
+<p>因为我们在 github上给项目取的名字就叫做 <code>TeachDemo</code>,为了保险起见，我们建议这个名字和eclipse工程中你的项目名称保持一致。</p>
+</blockquote>
+<blockquote>
+<p>另外 关于代码路径，建议不要带中文字符，因为有些时候，带中文路径的代码，编译等可能有很奇怪的问题，所以你看我的电脑中代码的文件路径全都是英文的。</p>
+</blockquote>
+<p>我们已经拷贝完成了，然后你再 利用termial 进入到 你的 eclipse下的项目路径，然后 <code>git status</code>，你看看会发生什么。下面的操作就会了吧。</p>
+<h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>到了这里，我们的基础教程都已经讲完了,只要求你记住六个名字，六个英文字符而已。会了以上的内容，对于你一个人开发项目来说，基本上 已经能应付95%的需求了。更进一步的内容，你可以去<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/">廖雪峰的博客</a>上学习。他写的比较通俗易懂，并且涵盖了平时团队多人开发所使用的所有基本操作了。</p>
+<p>有以下几点想说:</p>
+<blockquote>
+<ul>
+<li>整篇文章，就是在讲述 <code>status</code>,<code>add</code>,<code>commit</code>,<code>push</code>,<code>pull</code>,外加一个<code>cd</code>,记住这六个命令，六个单词就够了，</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>更重要的是,这几个命令，借助 <code>git status</code>,<code>tab</code>键自动补全/提示功能，下一步该做什么很简单啊，有些东西掌握了方法剩下的学习成本很低的。</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>包括什么学习java，学习python，你会了其中任何一门，剩下的掌握其他的，都很容易。 你学习java，那么多的api方法你怎么记得住? 所以要知道查询API文档的重要性，只要有个大概印象，然后知道怎么搜索，能上google，百度这就够了了，否则那么多东西谁能记得住呢？</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>当然， 不管是git，还是java，或者任何一个领域学科。你要想深入的去理解学习，那真的很难，要想精通，那对于我们这种人来说基本是不可能的，git的命令多如牛毛，你要想成为git的专家级人才，那学习过程，难的令人发指，但是问题是，对于我们平时使用来说，就那几个命令就够了啊，你要想成为该领域的专家那就是 另外一回事了。</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li><p>另外，英语水平不要太差，不过我想大学出来的，再加上各种翻译软件，google，百度，这也不是个什么难的问题<em>必须记住的六条命令。</em></p>
+<blockquote>
+<ul>
+<li><code>cd</code>:用来切换工作目录,最常用的一个命令。简单来讲，<code>cd A文件夹</code>就是进入到<code>A文件夹</code>里面的意思。</li>
+<li><code>git status .</code>：查看当前路径下的的状态。git下<strong>最最常用</strong>的一个命令。</li>
+<li><code>git add .</code>: 把工作区的所有变化，(就是你的所有改动)，都添加到 版本库/暂存区。</li>
+<li><code>git commit -m &quot;提交时说明信息&quot;</code>: 更进一步提交，并说明提交log。</li>
+<li><code>git push</code>: 把版本库的所有更新内容， 都推送到远程服务器。(就是推代码/推上去)</li>
+<li><code>git pull</code>: 把代码从远程服务器拉取到本地。(俗称拉代码)</li>
+</ul>
+</blockquote>
+<p><strong>当我们修改了本地代码，向远程服务器推送时，我们的操作步骤如下:</strong></p>
+<ol>
+<li><code>git add .</code></li>
+<li><code>git commit -m &quot;提交时说明信息&quot;</code></li>
+<li><code>git push</code><br><strong>当我们想更新本地代码，就是把服务器上最新的代码拉取下来，只需要执行一个命令。</strong><br><code>git pull</code></li>
+</ol>
+<h4 id="这三条命令建议记住。-1"><a href="#这三条命令建议记住。-1" class="headerlink" title="这三条命令建议记住。"></a><em>这三条命令建议记住。</em></h4><blockquote>
+<ul>
+<li><code>git log</code>:查看提交历史，与各次的提交说明。</li>
+<li><code>git diff</code>:比较工作区与暂存区的差异，就是比较看看你到底都做了什么修改。</li>
+<li><code>git clone url地址</code>: 将远程服务器上项目克隆到新创建的目录中（第一次拉项目时使用， 后面的更新都用 <code>git pull</code>了）。</li>
+</ul>
+</blockquote>
+<h4 id="其他问题-1"><a href="#其他问题-1" class="headerlink" title="其他问题"></a><em>其他问题</em></h4><blockquote>
+<ul>
+<li>操作时 双击<code>tab</code>键的自动提示/补全功能。</li>
+<li><code>q</code>或者<code>:q</code>等命令代表退出(quit)。</li>
+<li><code>ctrl+f</code>,<code>ctrl+b</code>快捷键在termial可以翻页，就是 上一页，下一页</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/03/23/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" data-id="clh04c6dj000bo4rg0c39fqpi" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Spring Security认证与授权的原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/03/11/Spring%20Security%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E7%9A%84%E5%8E%9F%E7%90%86/" class="article-date">
+  <time datetime="2022-03-11T07:14:19.712Z" itemprop="datePublished">2022-03-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Spring-Security认证与授权的原理"><a href="#Spring-Security认证与授权的原理" class="headerlink" title="Spring Security认证与授权的原理"></a>Spring Security认证与授权的原理</h1><h3 id="一、概念："><a href="#一、概念：" class="headerlink" title="一、概念："></a>一、概念：</h3><p>Spring Security所解决的问题就是安全访问控制，而安全访问控制功能其实就是所有进入系统的请求进行拦截，校验每一个请求是否能够访问它所期望的资源，可以通过Filter或AOP等技术来实现，Spring Security对web资源的保护是靠Filter来实现的。</p>
+<p>当初始化Spring Security时，会创建一个名为SpringSecurityFilterChain的servlet过滤器，类型是org.springframework.security.web.FilterChainProxy（有doFilter方法），它实现了javax.servlet.Filter，因此外部请求的类都会经过此类。如图：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200503191744839.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>实际上，看源代码我们知道FilterChainProxy是一个代理，真正起作用的是FilterChainProxy中SecurityFilterChain所包含的各个Filter，同时 这些Filter作为Bean被Spring管理，它们是Spring Security核心，各有各的职责，但他们并不直接处理用户的认证，也不直接处理用户的授权，而是把它们交给了认证管理器（AuthenticationManager）和决策管理器（AccessDecisionManager）进行处理，下图是FilterChainProxy相关类的UML图示（直接网上找图）。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200514222157974.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>不知道UML图的小伙伴们，可以去学一波这个姿势。</p>
+<p>Spring Security功能的实现主要是由一系列过滤器链相互配合完成。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200503192522763.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>（1）SecurityContextPersistenceFilter：这个Filter是整个拦截过程的入口和出口(也就是第一个和最后- 一个拦截器) , 会在请求开始时从配置好的SecurityContextRepository中获取SecurityContext ,然后把它设置给SecurityContextHolder.在请求完成后将SecurityContextHolder持有的SecurityContext再保存到配置好的SecurityContextRepository ,同时清除securityContextHolder所持有的SecurityContext ; .</p>
+<p>（2）UsernamePasswordAuthenticationFilter：用于处理来自表单提交的认证。该表单必须提供对应的用户名和密码,其内部还有登录成功或失败后进行处理的AuthenticationSuccessHandler和AuthenticationFailureHandler ,这些都可以根据需求做相关改变;</p>
+<p>（3）FilteSecurityInterceptor：是用于保护web资源的,使用AccessDecisionManager对当前用户进行授权访问,前面已经详细介绍过了;</p>
+<p>（4）ExceptionTranslationFilter：ExceptionTranslationFilter能够捕获来自FilterChain 所有的异常,并进行处理。但是它只会处理两类异常:ExceptionTranslationFilter能够捕获来自FilterChain 所有的异常,并进行处理。但是它只会处理两类异常:<br>AuthenticationException和AccessDeniedException ,其它的异常它会继续抛出。</p>
+<h3 id="二、认证流程："><a href="#二、认证流程：" class="headerlink" title="二、认证流程："></a>二、认证流程：</h3><p><img src="https://img-blog.csdnimg.cn/20200503193813635.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>（1）用户提交用户名和密码被UsernamePasswordAuthenticationFilter获取到，然后请求的信息被封装为Authentication的实现类UsernamePasswordAuthenticationToken对象。我们来看一下这个源码：UsernamePasswordAuthenticationFilter类的attemptAuthentication方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">public class UsernamePasswordAuthenticationFilter extends</span><br><span class="line">		AbstractAuthenticationProcessingFilter &#123;</span><br><span class="line">	</span><br><span class="line">	public static final String SPRING_SECURITY_FORM_USERNAME_KEY = &quot;username&quot;;</span><br><span class="line">	public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = &quot;password&quot;;</span><br><span class="line"> </span><br><span class="line">	private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;</span><br><span class="line">	private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;</span><br><span class="line">	private boolean postOnly = true;</span><br><span class="line"> </span><br><span class="line">	</span><br><span class="line"> </span><br><span class="line">	public UsernamePasswordAuthenticationFilter() &#123;</span><br><span class="line">		super(new AntPathRequestMatcher(&quot;/login&quot;, &quot;POST&quot;));</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	//设置Authentication</span><br><span class="line">	public Authentication attemptAuthentication(HttpServletRequest request,</span><br><span class="line">			HttpServletResponse response) throws AuthenticationException &#123;</span><br><span class="line">		if (postOnly &amp;&amp; !request.getMethod().equals(&quot;POST&quot;)) &#123;</span><br><span class="line">			throw new AuthenticationServiceException(</span><br><span class="line">					&quot;Authentication method not supported: &quot; + request.getMethod());</span><br><span class="line">		&#125;</span><br><span class="line">        //获取参数</span><br><span class="line">		String username = obtainUsername(request);</span><br><span class="line">		String password = obtainPassword(request);</span><br><span class="line"> </span><br><span class="line">		if (username == null) &#123;</span><br><span class="line">			username = &quot;&quot;;</span><br><span class="line">		&#125;</span><br><span class="line"> </span><br><span class="line">		if (password == null) &#123;</span><br><span class="line">			password = &quot;&quot;;</span><br><span class="line">		&#125;</span><br><span class="line"> </span><br><span class="line">		username = username.trim();</span><br><span class="line">        //创建Authentication</span><br><span class="line">		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(</span><br><span class="line">				username, password);</span><br><span class="line"> </span><br><span class="line">		//设置主机地址和sessionId</span><br><span class="line">		setDetails(request, authRequest);</span><br><span class="line">        //通过这个方法去找到AuthenticationManager认证。</span><br><span class="line">		return this.getAuthenticationManager().authenticate(authRequest);</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	</span><br><span class="line">	@Nullable</span><br><span class="line">	protected String obtainPassword(HttpServletRequest request) &#123;</span><br><span class="line">		return request.getParameter(passwordParameter);</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	</span><br><span class="line">	@Nullable</span><br><span class="line">	protected String obtainUsername(HttpServletRequest request) &#123;</span><br><span class="line">		return request.getParameter(usernameParameter);</span><br><span class="line">	&#125;</span><br><span class="line">	//设置主机地址和sessionId</span><br><span class="line">	protected void setDetails(HttpServletRequest request,</span><br><span class="line">			UsernamePasswordAuthenticationToken authRequest) &#123;</span><br><span class="line">		authRequest.setDetails(authenticationDetailsSource.buildDetails(request));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（2）将Authentication（也就是上面的authRequest）交给AuthenticationManager去认证。之后我们就到了AuthenticationManager的子类ProviderManager这个类。经过辗转到DaoAuthenticationProvider的retrieveUser方法。通过loadUserByUsername找到对应的用户信息，实际上就是通过UserDetailService来办到的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">protected final UserDetails retrieveUser(String username,</span><br><span class="line">			UsernamePasswordAuthenticationToken authentication)</span><br><span class="line">			throws AuthenticationException &#123;</span><br><span class="line">		prepareTimingAttackProtection();</span><br><span class="line">		try &#123;</span><br><span class="line">//查询对应的用户信息</span><br><span class="line">			UserDetails loadedUser = this.getUserDetailsService().loadUserByUsername(username);</span><br><span class="line">			if (loadedUser == null) &#123;</span><br><span class="line">				throw new InternalAuthenticationServiceException(</span><br><span class="line">						&quot;UserDetailsService returned null, which is an interface contract violation&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">//返回</span><br><span class="line">			return loadedUser;</span><br><span class="line">		&#125;</span><br><span class="line">		catch (UsernameNotFoundException ex) &#123;</span><br><span class="line">			mitigateAgainstTimingAttack(authentication);</span><br><span class="line">			throw ex;</span><br><span class="line">		&#125;</span><br><span class="line">		catch (InternalAuthenticationServiceException ex) &#123;</span><br><span class="line">			throw ex;</span><br><span class="line">		&#125;</span><br><span class="line">		catch (Exception ex) &#123;</span><br><span class="line">			throw new InternalAuthenticationServiceException(ex.getMessage(), ex);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/2020051423151314.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>（3）核对认证：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">protected void additionalAuthenticationChecks(UserDetails userDetails,</span><br><span class="line">			UsernamePasswordAuthenticationToken authentication)</span><br><span class="line">			throws AuthenticationException &#123;</span><br><span class="line">//如果用户没输入密码，直接抛出异常！</span><br><span class="line">		if (authentication.getCredentials() == null) &#123;</span><br><span class="line">			logger.debug(&quot;Authentication failed: no credentials provided&quot;);</span><br><span class="line"> </span><br><span class="line">			throw new BadCredentialsException(messages.getMessage(</span><br><span class="line">					&quot;AbstractUserDetailsAuthenticationProvider.badCredentials&quot;,</span><br><span class="line">					&quot;Bad credentials&quot;));</span><br><span class="line">		&#125;</span><br><span class="line">//获取用户的密码</span><br><span class="line">		String presentedPassword = authentication.getCredentials().toString();</span><br><span class="line">//用编码器去匹配</span><br><span class="line">		if (!passwordEncoder.matches(presentedPassword, userDetails.getPassword())) &#123;</span><br><span class="line">			logger.debug(&quot;Authentication failed: password does not match stored value&quot;);</span><br><span class="line"> </span><br><span class="line">			throw new BadCredentialsException(messages.getMessage(</span><br><span class="line">					&quot;AbstractUserDetailsAuthenticationProvider.badCredentials&quot;,</span><br><span class="line">					&quot;Bad credentials&quot;));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只要不抛出异常就是正确了。</p>
+<p>（4）重新封装Authentication返回UsernamePasswordAuthenticationFilter。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200514232459603.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>（5）封装到上下文（AbstractAuthenticationProcessingFilter）：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200514233644210.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>我们再来看一下这里涉及的类：</p>
+<p>（1）AuthenticationProvider ： AuthenticationManager委托这个接口的实现类来处理认证。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public interface AuthenticationProvider &#123; </span><br><span class="line">    Authentication authenticate(Authentication authentication) throws         </span><br><span class="line">    AuthenticationException; boolean supports(Class&lt;?&gt; var1); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>authenticate () 方法定义了 认证的实现过程 ，它的参数是一个 Authentication ，里面包含了登录用户所提交的用<br>户、密码等。而返回值也是一个 Authentication ，这个 Authentication 则是在认证成功后，将用户的权限及其他信<br>息重新组装后生成。</p>
+<p>Spring Security 中维护着一个 List<AuthenticationProvider> 列表，存放多种认证方式，不同的认证方式使用不<br>同的 AuthenticationProvider 。如使用用户名密码登录时，使用 AuthenticationProvider1 ，短信登录时使用<br>AuthenticationProvider2。</p>
+<p>每个 AuthenticationProvider 需要实现 supports （） 方法来表明自己支持的认证方式，如我们使用表单方式认证，<br>在提交请求时 Spring Security 会生成 UsernamePasswordAuthenticationToken ，它是一个 Authentication ，里面<br>封装着用户提交的用户名、密码信息。而对应的，哪个 AuthenticationProvider 来处理它。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//DaoAuthenticationProvider的基类AbstractUserDetailsAuthenticationProvider</span><br><span class="line">public boolean supports(Class&lt;?&gt; authentication) &#123; </span><br><span class="line">    return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>也就是说当 web 表单提交用户名密码时， Spring Security 由 DaoAuthenticationProvider 处理。</p>
+<p>（1）Authentication： 认证信息结构</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public interface Authentication extends Principal, Serializable &#123;</span><br><span class="line">    //权限信息  </span><br><span class="line">    Collection&lt;? extends GrantedAuthority&gt; getAuthorities(); </span><br><span class="line">    //密码</span><br><span class="line">    Object getCredentials(); </span><br><span class="line">    //细节信息:ip，sessionId</span><br><span class="line">    Object getDetails(); </span><br><span class="line">    //账号</span><br><span class="line">    Object getPrincipal(); </span><br><span class="line">    boolean isAuthenticated(); void setAuthenticated(boolean var1) throws IllegalArgumentException; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过上面给大家debug的时候，不知道大家发现没有，principal这个字段在封装请求信息的时候是username，但是在认证通过后返回信息的时候就封装住了账号、密码以及权限等信息。</p>
+<p>（3）UserDetailsService：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface UserDetailsService &#123; </span><br><span class="line">    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它的作用就是从数据库或者内存中查询出账号密码，封装成UserDetails，然后返回给我们DaoAuthenticationProvider，进行认证。我们可以实现一个类去继承这个Service，然后从数据库中查询出信息。之前在上篇文章中是用的内存的方式@Bean注入到IOC中了。</p>
+<p>（4）UserDetails</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public interface UserDetails extends Serializable &#123; </span><br><span class="line">//权限</span><br><span class="line">    Collection&lt;? extends GrantedAuthority&gt; getAuthorities(); </span><br><span class="line">//用户名</span><br><span class="line">    String getPassword(); </span><br><span class="line">//密码</span><br><span class="line">    String getUsername(); </span><br><span class="line">//</span><br><span class="line">    boolean isAccountNonExpired(); </span><br><span class="line">    boolean isAccountNonLocked(); </span><br><span class="line">    boolean isCredentialsNonExpired(); </span><br><span class="line">    boolean isEnabled(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>我们来扩展一下UserDetailService，从数据库中查询出信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class SpringDataUserDetailService implements UserDetailsService &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private IUserService userService;</span><br><span class="line">    @Autowired</span><br><span class="line">    private PermissionMapper permissionMapper;</span><br><span class="line">     </span><br><span class="line">    @Override</span><br><span class="line">    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException &#123;</span><br><span class="line">        //查询用户信息</span><br><span class="line">        UserAdmin userAmin = userService.selectUserByUsername(s);</span><br><span class="line">        log.info(&quot;user =&gt; &#123;&#125;&quot;,userAmin);</span><br><span class="line">        if(userAmin == null)&#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        //查询权限</span><br><span class="line">        List&lt;String&gt; list =  permissionMapper.selectPermissionByUser(userAmin.getId());</span><br><span class="line">        String[] arr = new String[list.size()];</span><br><span class="line">        list.toArray(arr);</span><br><span class="line">        UserDetails user = User.withUsername(userAmin.getUsername()).password(userAmin.getPassword()).authorities(arr).build();</span><br><span class="line">        return user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查询对应的用户信息和权限！！！</p>
+<p>（4）PasswordEncoder：</p>
+<p>DaoAuthenticationProvider 认证处理器通过 UserDetailsService 获取到 UserDetails 后，它是如何与请求 Authentication中的密码做对比呢？ 在这里Spring Security 为了适应多种多样的加密类型，又做了抽象， DaoAuthenticationProvider 通过 PasswordEncoder接口的 matches 方法进行密码的对比，而具体的密码对比细节取决于实现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public interface PasswordEncoder &#123; </span><br><span class="line">    String encode(CharSequence var1); </span><br><span class="line">    boolean matches(CharSequence var1, String var2); </span><br><span class="line">    default boolean upgradeEncoding(String encodedPassword) &#123; return false; &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而 Spring Security 提供很多内置的 PasswordEncoder ，能够开箱即用，使用某种 PasswordEncoder 只需要进行如<br>下声明即可，如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Bean </span><br><span class="line">public PasswordEncoder passwordEncoder() &#123; </span><br><span class="line">    return NoOpPasswordEncoder.getInstance(); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>NoOpPasswordEncoder 采用字符串匹配方法，不对密码进行加密比较处理，密码比较流程如下：</p>
+<p>（1）用户输入密码（明文 ）<br>（2）DaoAuthenticationProvider 获取 UserDetails （其中存储了用户的正确密码）<br>（3）DaoAuthenticationProvider 使用 PasswordEncoder 对输入的密码和正确的密码进行校验，密码一致则校验通<br>过，否则校验失败。 NoOpPasswordEncoder 的校验规则拿 输入的密码和 UserDetails 中的正确密码进行字符串比较，字符串内容一致 则校验通过，否则 校验失败。</p>
+<p>三、授权流程：<br>Spring Security 可以通过 http.authorizeRequests() 对 web 请求进行授权保护。 Spring Security使用标准 Filter 建立了对 web 请求的拦截，最终实现对资源的授权访问。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200503214152166.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>分析授权流程：<br>（1） 拦截请求： 已认证用户访问受保护的 web 资源将被 SecurityFilterChain 中的 FilterSecurityInterceptor 的子 类拦截。</p>
+<p> <img src="https://img-blog.csdnimg.cn/20200515195318922.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200515195732146.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>这里面1就是授权的具体步骤，2是如果授权通过执行的真正的业务，3是后续处理。</p>
+<p>（2）获取资源访问策略：FilterSecurityInterceptor 会从 SecurityMetadataSource 的子类<br>DefaultFilterInvocationSecurityMetadataSource 获取要访问当前资源所需要的权限 Collection<ConfigAttribute>。 SecurityMetadataSource 其实就是读取访问策略的抽象，而读取的内容，其实就是我们配置的访问规则， 读<br>取访问策略如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">protected void configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">       http.csrf().disable()</span><br><span class="line">               .authorizeRequests()</span><br><span class="line">               .antMatchers(&quot;/r/r1&quot;).hasAuthority(&quot;r1&quot;)</span><br><span class="line">               .antMatchers(&quot;/r/r2&quot;).hasAuthority(&quot;r2&quot;)</span><br><span class="line">               ....</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>进入AbstractSecurityInterceptor的beforeInvocation方法，获取对应的需要的权限：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200515195959248.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200515201311361.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200515201431315.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>p1和p2是用户现在拥有的权限。r1是要求的权限</p>
+<p>（3）授权决策：FilterSecurityInterceptor 会调用 AccessDecisionManager 进行授权决策，若决策通过，则允许访问资<br>源，否则将禁止访问。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200515200038401.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>稍后我们会具体的介绍都有哪些决策方式，这里我们以默认的为例AffirmativeBased是AccessDecisionManager子类</p>
+<p><img src="https://img-blog.csdnimg.cn/20200515200254950.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200515201531678.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDU4ODQ5NQ==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>result就是决策投票的结果，如果是1代表赞成、-1代表反对、0代表弃权。如果通过，那么用户就可以访问到对应的资源。</p>
+<p>三种授权决策 ：<br>AccessDecisionManager 采用 投票 的方式来确定是否能够访问受保护资源。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public interface AccessDecisionVoter&lt;S&gt; &#123; </span><br><span class="line">    int ACCESS_GRANTED = 1; </span><br><span class="line">    int ACCESS_ABSTAIN = 0; </span><br><span class="line">    int ACCESS_DENIED = ‐1; </span><br><span class="line">    boolean supports(ConfigAttribute var1);     </span><br><span class="line">    boolean supports(Class&lt;?&gt; var1); </span><br><span class="line">    int vote(Authentication var1, S var2, Collection&lt;ConfigAttribute&gt; var3); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>vote() 方法的返回结果会是 AccessDecisionVoter 中定义的三个常量之一。 ACCESS_GRANTED 表示同意， ACCESS_DENIED表示拒绝， ACCESS_ABSTAIN 表示弃权。如果一个 AccessDecisionVoter 不能判定当前 Authentication是否拥有访问对应受保护对象的权限，则其 vote() 方法的返回值应当为弃权 ACCESS_ABSTAIN 。</p>
+<p>三个实现类：</p>
+<p>1、AffiffiffirmativeBased：</p>
+<p>（1）只要有AccessDecisionVoter的投票为ACCESS_GRANTED则同意用户进行访问；</p>
+<p>（2）如果全部弃权也表示通过；</p>
+<p>（3）如果没有一个人投赞成票，但是有人投反对票，则将抛出AccessDeniedException。</p>
+<p>2、 ConsensusBased：<br>（1）如果赞成票多于反对票则表示通过。</p>
+<p>（2）反过来，如果反对票多于赞成票则将抛出AccessDeniedException。</p>
+<p>（3）如果赞成票与反对票相同且不等于0，并且属性allowIfEqualGrantedDeniedDecisions的值为true，则表 示通过，否则将抛出异常AccessDeniedException。参数allowIfEqualGrantedDeniedDecisions的值默认为true。</p>
+<p>（4）如果所有的AccessDecisionVoter都弃权了，则将视参数allowIfAllAbstainDecisions的值而定，如果该值 为true则表示通过，否则将抛出异常AccessDeniedException。参数allowIfAllAbstainDecisions的值默认为false。</p>
+<p>3、 UnanimousBased<br>逻辑与另外两种实现有点不一样，另外两种会一次性把受保护对象的配置属性全部传递 给AccessDecisionVoter进行投票，而UnanimousBased会一次只传递一个ConfifigAttribute给 AccessDecisionVoter进行投票。这也就意味着如果我们的AccessDecisionVoter的逻辑是只要传递进来的 ConfifigAttribute中有一个能够匹配则投赞成票，但是放到UnanimousBased中其投票结果就不一定是赞成了。 UnanimousBased的逻辑具体来说是这样的：</p>
+<p>（1）如果受保护对象配置的某一个ConfifigAttribute被任意的AccessDecisionVoter反对了，则将抛出<br>AccessDeniedException。</p>
+<p>（2）如果没有反对票，但是有赞成票，则表示通过。</p>
+<p>（3）如果全部弃权了，则将视参数allowIfAllAbstainDecisions的值而定，true则通过，false则抛出<br>AccessDeniedException</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/03/11/Spring%20Security%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E7%9A%84%E5%8E%9F%E7%90%86/" data-id="clh04c6dg0007o4rg1ga0bmjf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java动态代理实现与原理详细分析 （jdk动态代理）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/02/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%20%EF%BC%88jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%89/" class="article-date">
+  <time datetime="2022-02-16T07:30:49.870Z" itemprop="datePublished">2022-02-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="java动态代理实现与原理详细分析-（jdk动态代理）"><a href="#java动态代理实现与原理详细分析-（jdk动态代理）" class="headerlink" title="java动态代理实现与原理详细分析 （jdk动态代理）"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gonjan-blog/p/6685611.html">java动态代理实现与原理详细分析 </a>（jdk动态代理）</h1><p>关于Java中的动态代理，我们首先需要了解的是一种常用的设计模式–代理模式，而对于代理，根据创建代理类的时间点，又可以分为静态代理和动态代理。</p>
+<h2 id="一、代理模式"><a href="#一、代理模式" class="headerlink" title="一、代理模式"></a>一、代理模式</h2><p>  代理模式是常用的java设计模式，他的特征是代理类与委托类有同样的接口，代理类主要负责为委托类预处理消息、过滤消息、把消息转发给委托类，以及事后处理消息等。代理类与委托类之间通常会存在关联关系，一个代理类的对象与一个委托类的对象关联，代理类的对象本身并不真正实现服务，而是通过调用委托类的对象的相关方法，来提供特定的服务。简单的说就是，我们在访问实际对象时，是通过代理对象来访问的，代理模式就是在访问实际对象时引入一定程度的间接性，因为这种间接性，可以附加多种用途。在后面我会</p>
+<p>解释这种间接性带来的好处。代理模式结构图（图片来自《大话设计模式》）：</p>
+<p><img src="https://images2015.cnblogs.com/blog/1085268/201704/1085268-20170409105440082-1652546649.jpg" alt="img">                             </p>
+<h2 id="二、静态代理"><a href="#二、静态代理" class="headerlink" title="二、静态代理"></a>二、静态代理</h2><p>  <strong>1、静态代理</strong></p>
+<p>静态代理：由程序员创建或特定工具自动生成源代码，也就是在编译时就已经将接口，被代理类，代理类等确定下来。在程序运行之前，代理类的.class文件就已经生成。</p>
+<p>  <strong>2、静态代理简单实现</strong></p>
+<p> 根据上面代理模式的类图，来写一个简单的静态代理的例子。我这儿举一个比较粗糙的例子，假如一个班的同学要向老师交班费，但是都是通过班长把自己的钱转交给老师。这里，班长就是代理学生上交班费，</p>
+<p>班长就是学生的代理。</p>
+<p>  首先，我们创建一个Person接口。这个接口就是学生（被代理类），和班长（代理类）的公共接口，他们都有上交班费的行为。这样，学生上交班费就可以让班长来代理执行。</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 创建Person接口</span><br><span class="line"> * @author Gonjan</span><br><span class="line"> */</span><br><span class="line">public interface Person &#123;</span><br><span class="line">    //上交班费</span><br><span class="line">    void giveMoney();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>Student类实现Person接口。Student可以具体实施上交班费的动作。</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Student implements Person &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    public Student(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public void giveMoney() &#123;</span><br><span class="line">       System.out.println(name + &quot;上交班费50元&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>StudentsProxy类，这个类也实现了Person接口，但是还另外持有一个学生类对象，由于实现了Peson接口，同时持有一个学生对象，那么他可以代理学生类对象执行上交班费（执行giveMoney()方法）行为。</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 学生代理类，也实现了Person接口，保存一个学生实体，这样既可以代理学生产生行为</span><br><span class="line"> * @author Gonjan</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">public class StudentsProxy implements Person&#123;</span><br><span class="line">    //被代理的学生</span><br><span class="line">    Student stu;</span><br><span class="line">    </span><br><span class="line">    public StudentsProxy(Person stu) &#123;</span><br><span class="line">        // 只代理学生对象</span><br><span class="line">        if(stu.getClass() == Student.class) &#123;</span><br><span class="line">            this.stu = (Student)stu;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //代理上交班费，调用被代理学生的上交班费行为</span><br><span class="line">    public void giveMoney() &#123;</span><br><span class="line">        stu.giveMoney();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>下面测试一下，看如何使用代理模式：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class StaticProxyTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        //被代理的学生张三，他的班费上交有代理对象monitor（班长）完成</span><br><span class="line">        Person zhangsan = new Student(&quot;张三&quot;);</span><br><span class="line">        </span><br><span class="line">        //生成代理对象，并将张三传给代理对象</span><br><span class="line">        Person monitor = new StudentsProxy(zhangsan);</span><br><span class="line">        </span><br><span class="line">        //班长代理上交班费</span><br><span class="line">        monitor.giveMoney();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>运行结果：</p>
+<p><img src="https://images2015.cnblogs.com/blog/1085268/201704/1085268-20170409141805347-556037068.png" alt="img"></p>
+<p>这里并没有直接通过张三（被代理对象）来执行上交班费的行为，而是通过班长（代理对象）来代理执行了。这就是代理模式。</p>
+<p>代理模式最主要的就是有一个公共接口（Person），一个具体的类（Student），一个代理类（StudentsProxy）,代理类持有具体类的实例，代为执行具体类实例方法。上面说到，代理模式就是在访问实际对象时引入一定程度的间接性，因为这种间接性，可以附加多种用途。这里的间接性就是指不直接调用实际对象的方法，那么我们在代理过程中就可以加上一些其他用途。就这个例子来说，加入班长在帮张三上交班费之前想要先反映一下张三最近学习有很大进步，通过代理模式很轻松就能办到：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public class StudentsProxy implements Person&#123;</span><br><span class="line">    //被代理的学生</span><br><span class="line">    Student stu;</span><br><span class="line">    </span><br><span class="line">    public StudentsProxy(Person stu) &#123;</span><br><span class="line">        // 只代理学生对象</span><br><span class="line">        if(stu.getClass() == Student.class) &#123;</span><br><span class="line">            this.stu = (Student)stu;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //代理上交班费，调用被代理学生的上交班费行为</span><br><span class="line">    public void giveMoney() &#123;</span><br><span class="line">        System.out.println(&quot;张三最近学习有进步！&quot;);</span><br><span class="line">        stu.giveMoney();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>运行结果：</p>
+<p><img src="https://images2015.cnblogs.com/blog/1085268/201704/1085268-20170409143428488-1662654340.png" alt="img"></p>
+<p>可以看到，只需要在代理类中帮张三上交班费之前，执行其他操作就可以了。这种操作，也是使用代理模式的一个很大的优点。最直白的就是在Spring中的面向切面编程（AOP），我们能在一个切点之前执行一些操作，在一个切点之后执行一些操作，这个切点就是一个个方法。这些方法所在类肯定就是被代理了，在代理过程中切入了一些其他操作。</p>
+<h2 id="三、动态代理"><a href="#三、动态代理" class="headerlink" title="三、动态代理"></a><strong>三、动态代理</strong></h2><p>   <strong>1.动态代理</strong></p>
+<p>  代理类在程序运行时创建的代理方式被成为动态代理。 我们上面静态代理的例子中，代理类(studentProxy)是自己定义好的，在程序运行之前就已经编译完成。然而动态代理，代理类并不是在Java代码中定义的，而是在运行时根据我们在Java代码中的“指示”动态生成的。相比于静态代理， 动态代理的优势在于可以很方便的对代理类的函数进行统一的处理，而不用修改每个代理类中的方法。 比如说，想要在每个代理的方法前都加上一个处理方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public void giveMoney() &#123;</span><br><span class="line">       //调用被代理方法前加入处理方法</span><br><span class="line">       beforeMethod();</span><br><span class="line">       stu.giveMoney();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里只有一个giveMoney方法，就写一次beforeMethod方法，但是如果出了giveMonney还有很多其他的方法，那就需要写很多次beforeMethod方法，麻烦。那看看下面动态代理如何实现。</p>
+<p>   <strong>2、动态代理简单实现</strong></p>
+<p>在java的java.lang.reflect包下提供了一个Proxy类和一个InvocationHandler接口，通过这个类和这个接口可以生成JDK动态代理类和动态代理对象。</p>
+<p>创建一个动态代理对象步骤，具体代码见后面：</p>
+<ul>
+<li>创建一个InvocationHandler对象</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//创建一个与代理对象相关联的InvocationHandler</span><br><span class="line"> InvocationHandler stuHandler = new MyInvocationHandler&lt;Person&gt;(stu);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用Proxy类的getProxyClass静态方法生成一个动态代理类stuProxyClass </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; stuProxyClass = Proxy.getProxyClass(Person.class.getClassLoader(), new Class&lt;?&gt;[] &#123;Person.class&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获得stuProxyClass 中一个带InvocationHandler参数的构造器constructor</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Constructor&lt;?&gt; constructor = PersonProxy.getConstructor(InvocationHandler.class);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过构造器constructor来创建一个动态实例stuProxy</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person stuProxy = (Person) cons.newInstance(stuHandler);</span><br></pre></td></tr></table></figure>
+
+<p>就此，一个动态代理对象就创建完毕，当然，上面四个步骤可以通过Proxy类的newProxyInstances方法来简化：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> //创建一个与代理对象相关联的InvocationHandler</span><br><span class="line">  InvocationHandler stuHandler = new MyInvocationHandler&lt;Person&gt;(stu);</span><br><span class="line">//创建一个代理对象stuProxy，代理对象的每个执行方法都会替换执行Invocation中的invoke方法</span><br><span class="line">  Person stuProxy= (Person) Proxy.newProxyInstance(Person.class.getClassLoader(), new Class&lt;?&gt;[]&#123;Person.class&#125;, stuHandler);</span><br></pre></td></tr></table></figure>
+
+<p>到这里肯定都会很疑惑，这动态代理到底是如何执行的，是如何通过代理对象来执行被代理对象的方法的，先不急，我们先看看一个简单的完整的动态代理的例子。还是上面静态代理的例子，班长需要帮学生代交班费。**<br>**首先是定义一个Person接口:</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 创建Person接口</span><br><span class="line"> * @author Gonjan</span><br><span class="line"> */</span><br><span class="line">public interface Person &#123;</span><br><span class="line">    //上交班费</span><br><span class="line">    void giveMoney();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>创建需要被代理的实际类：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public class Student implements Person &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    public Student(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public void giveMoney() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">          //假设数钱花了一秒时间</span><br><span class="line">            Thread.sleep(1000);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">       System.out.println(name + &quot;上交班费50元&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">        </span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>再定义一个检测方法执行时间的工具类，在任何方法执行前先调用start方法，执行后调用finsh方法，就可以计算出该方法的运行时间，这也是一个最简单的方法执行时间检测工具。</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class MonitorUtil &#123;</span><br><span class="line">    </span><br><span class="line">    private static ThreadLocal&lt;Long&gt; tl = new ThreadLocal&lt;&gt;();</span><br><span class="line">    </span><br><span class="line">    public static void start() &#123;</span><br><span class="line">        tl.set(System.currentTimeMillis());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //结束时打印耗时</span><br><span class="line">    public static void finish(String methodName) &#123;</span><br><span class="line">        long finishTime = System.currentTimeMillis();</span><br><span class="line">        System.out.println(methodName + &quot;方法耗时&quot; + (finishTime - tl.get()) + &quot;ms&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>创建StuInvocationHandler类，实现InvocationHandler接口，这个类中持有一个被代理对象的实例target。InvocationHandler中有一个invoke方法，所有执行代理对象的方法都会被替换成执行invoke方法。</p>
+<p>再再invoke方法中执行被代理对象target的相应方法。当然，在代理过程中，我们在真正执行被代理对象的方法前加入自己其他处理。这也是Spring中的AOP实现的主要原理，这里还涉及到一个很重要的关于java反射方面的基础知识。</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class StuInvocationHandler&lt;T&gt; implements InvocationHandler &#123;</span><br><span class="line">   //invocationHandler持有的被代理对象</span><br><span class="line">    T target;</span><br><span class="line">    </span><br><span class="line">    public StuInvocationHandler(T target) &#123;</span><br><span class="line">       this.target = target;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    /**</span><br><span class="line">     * proxy:代表动态代理对象</span><br><span class="line">     * method：代表正在执行的方法</span><br><span class="line">     * args：代表调用目标方法时传入的实参</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;</span><br><span class="line">        System.out.println(&quot;代理执行&quot; +method.getName() + &quot;方法&quot;);</span><br><span class="line">     */   </span><br><span class="line">        //代理过程中插入监测方法,计算该方法耗时</span><br><span class="line">        MonitorUtil.start();</span><br><span class="line">        Object result = method.invoke(target, args);</span><br><span class="line">        MonitorUtil.finish(method.getName());</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>做完上面的工作后，我们就可以具体来创建动态代理对象了，上面简单介绍了如何创建动态代理对象，我们使用简化的方式创建动态代理对象：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class ProxyTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        </span><br><span class="line">        //创建一个实例对象，这个对象是被代理的对象</span><br><span class="line">        Person zhangsan = new Student(&quot;张三&quot;);</span><br><span class="line">        </span><br><span class="line">        //创建一个与代理对象相关联的InvocationHandler</span><br><span class="line">        InvocationHandler stuHandler = new StuInvocationHandler&lt;Person&gt;(zhangsan);</span><br><span class="line">        </span><br><span class="line">        //创建一个代理对象stuProxy来代理zhangsan，代理对象的每个执行方法都会替换执行Invocation中的invoke方法</span><br><span class="line">        Person stuProxy = (Person) Proxy.newProxyInstance(Person.class.getClassLoader(), new Class&lt;?&gt;[]&#123;Person.class&#125;, stuHandler)；</span><br><span class="line"></span><br><span class="line">       //代理执行上交班费的方法</span><br><span class="line">        stuProxy.giveMoney();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>我们执行这个ProxyTest类，先想一下，我们创建了一个需要被代理的学生张三，将zhangsan对象传给了stuHandler中，我们在创建代理对象stuProxy时，将stuHandler作为参数了的，上面也有说到所有执行代理对象的方法都会被替换成执行invoke方法，也就是说，最后执行的是StuInvocationHandler中的invoke方法。所以在看到下面的运行结果也就理所当然了。</p>
+<p>运行结果：</p>
+<p><img src="https://images2015.cnblogs.com/blog/1085268/201704/1085268-20170409164136175-1515319571.png" alt="img"></p>
+<p>上面说到，动态代理的优势在于可以很方便的对代理类的函数进行统一的处理，而不用修改每个代理类中的方法。是因为所有被代理执行的方法，都是通过在InvocationHandler中的invoke方法调用的，所以我们只要在invoke方法中统一处理，就可以对所有被代理的方法进行相同的操作了。例如，这里的方法计时，所有的被代理对象执行的方法都会被计时，然而我只做了很少的代码量。</p>
+<p>动态代理的过程，代理对象和被代理对象的关系不像静态代理那样一目了然，清晰明了。因为动态代理的过程中，我们并没有实际看到代理类，也没有很清晰地的看到代理类的具体样子，而且动态代理中被代理对象和代理对象是通过InvocationHandler来完成的代理过程的，其中具体是怎样操作的，为什么代理对象执行的方法都会通过InvocationHandler中的invoke方法来执行。带着这些问题，我们就需要对java动态代理的源码进行简要的分析，弄清楚其中缘由。</p>
+<h2 id="四、动态代理原理分析"><a href="#四、动态代理原理分析" class="headerlink" title="四、动态代理原理分析"></a><strong>四、动态代理原理分析</strong></h2><p>  <strong>1、Java动态代理创建出来的动态代理类</strong></p>
+<p>上面我们利用Proxy类的newProxyInstance方法创建了一个动态代理对象，查看该方法的源码，发现它只是封装了创建动态代理类的步骤(红色标准部分)：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public static Object newProxyInstance(ClassLoader loader,</span><br><span class="line">                                      Class&lt;?&gt;[] interfaces,</span><br><span class="line">                                      InvocationHandler h)</span><br><span class="line">    throws IllegalArgumentException</span><br><span class="line">&#123;</span><br><span class="line">    Objects.requireNonNull(h);</span><br><span class="line"></span><br><span class="line">    final Class&lt;?&gt;[] intfs = interfaces.clone();</span><br><span class="line">    final SecurityManager sm = System.getSecurityManager();</span><br><span class="line">    if (sm != null) &#123;</span><br><span class="line">        checkProxyAccess(Reflection.getCallerClass(), loader, intfs);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * Look up or generate the designated proxy class.</span><br><span class="line">     */</span><br><span class="line">    Class&lt;?&gt; cl = getProxyClass0(loader, intfs);</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * Invoke its constructor with the designated invocation handler.</span><br><span class="line">     */</span><br><span class="line">    try &#123;</span><br><span class="line">        if (sm != null) &#123;</span><br><span class="line">            checkNewProxyPermission(Reflection.getCallerClass(), cl);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        final Constructor&lt;?&gt; cons = cl.getConstructor(constructorParams);</span><br><span class="line">        final InvocationHandler ih = h;</span><br><span class="line">        if (!Modifier.isPublic(cl.getModifiers())) &#123;</span><br><span class="line">            AccessController.doPrivileged(new PrivilegedAction&lt;Void&gt;() &#123;</span><br><span class="line">                public Void run() &#123;</span><br><span class="line">                    cons.setAccessible(true);</span><br><span class="line">                    return null;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        return cons.newInstance(new Object[]&#123;h&#125;);</span><br><span class="line">    &#125; catch (IllegalAccessException|InstantiationException e) &#123;</span><br><span class="line">        throw new InternalError(e.toString(), e);</span><br><span class="line">    &#125; catch (InvocationTargetException e) &#123;</span><br><span class="line">        Throwable t = e.getCause();</span><br><span class="line">        if (t instanceof RuntimeException) &#123;</span><br><span class="line">            throw (RuntimeException) t;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw new InternalError(t.toString(), t);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; catch (NoSuchMethodException e) &#123;</span><br><span class="line">        throw new InternalError(e.toString(), e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>其实，我们最应该关注的是 Class&lt;?&gt; cl = getProxyClass0(loader, intfs);这句，这里产生了代理类，后面代码中的构造器也是通过这里产生的类来获得，可以看出，这个类的产生就是整个动态代理的关键，由于是动态生成的类文件，我这里不具体进入分析如何产生的这个类文件，只需要知道这个类文件时缓存在java虚拟机中的，我们可以通过下面的方法将其打印到文件里面，一睹真容：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">byte[] classFile = ProxyGenerator.generateProxyClass(&quot;$Proxy0&quot;, Student.class.getInterfaces());</span><br><span class="line">String path = &quot;G:/javacode/javase/Test/bin/proxy/StuProxy.class&quot;;</span><br><span class="line">try(FileOutputStream fos = new FileOutputStream(path)) &#123;</span><br><span class="line">    fos.write(classFile);</span><br><span class="line">    fos.flush();</span><br><span class="line">    System.out.println(&quot;代理类class文件写入成功&quot;);</span><br><span class="line">&#125; catch (Exception e) &#123;</span><br><span class="line">   System.out.println(&quot;写文件错误&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>对这个class文件进行反编译，我们看看jdk为我们生成了什么样的内容：</p>
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">import java.lang.reflect.InvocationHandler;</span><br><span class="line">import java.lang.reflect.Method;</span><br><span class="line">import java.lang.reflect.Proxy;</span><br><span class="line">import java.lang.reflect.UndeclaredThrowableException;</span><br><span class="line">import proxy.Person;</span><br><span class="line"></span><br><span class="line">public final class $Proxy0 extends Proxy implements Person</span><br><span class="line">&#123;</span><br><span class="line">  private static Method m1;</span><br><span class="line">  private static Method m2;</span><br><span class="line">  private static Method m3;</span><br><span class="line">  private static Method m0;</span><br><span class="line">  </span><br><span class="line">  /**</span><br><span class="line">  *注意这里是生成代理类的构造方法，方法参数为InvocationHandler类型，看到这，是不是就有点明白</span><br><span class="line">  *为何代理对象调用方法都是执行InvocationHandler中的invoke方法，而InvocationHandler又持有一个</span><br><span class="line">  *被代理对象的实例，不禁会想难道是....？ 没错，就是你想的那样。</span><br><span class="line">  *</span><br><span class="line">  *super(paramInvocationHandler)，是调用父类Proxy的构造方法。</span><br><span class="line">  *父类持有：protected InvocationHandler h;</span><br><span class="line">  *Proxy构造方法：</span><br><span class="line">  *    protected Proxy(InvocationHandler h) &#123;</span><br><span class="line">  *         Objects.requireNonNull(h);</span><br><span class="line">  *         this.h = h;</span><br><span class="line">  *     &#125;</span><br><span class="line">  *</span><br><span class="line">  */</span><br><span class="line">  public $Proxy0(InvocationHandler paramInvocationHandler)</span><br><span class="line">    throws </span><br><span class="line">  &#123;</span><br><span class="line">    super(paramInvocationHandler);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  //这个静态块本来是在最后的，我把它拿到前面来，方便描述</span><br><span class="line">   static</span><br><span class="line">  &#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">      //看看这儿静态块儿里面有什么，是不是找到了giveMoney方法。请记住giveMoney通过反射得到的名字m3，其他的先不管</span><br><span class="line">      m1 = Class.forName(&quot;java.lang.Object&quot;).getMethod(&quot;equals&quot;, new Class[] &#123; Class.forName(&quot;java.lang.Object&quot;) &#125;);</span><br><span class="line">      m2 = Class.forName(&quot;java.lang.Object&quot;).getMethod(&quot;toString&quot;, new Class[0]);</span><br><span class="line">      m3 = Class.forName(&quot;proxy.Person&quot;).getMethod(&quot;giveMoney&quot;, new Class[0]);</span><br><span class="line">      m0 = Class.forName(&quot;java.lang.Object&quot;).getMethod(&quot;hashCode&quot;, new Class[0]);</span><br><span class="line">      return;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (NoSuchMethodException localNoSuchMethodException)</span><br><span class="line">    &#123;</span><br><span class="line">      throw new NoSuchMethodError(localNoSuchMethodException.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">    catch (ClassNotFoundException localClassNotFoundException)</span><br><span class="line">    &#123;</span><br><span class="line">      throw new NoClassDefFoundError(localClassNotFoundException.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  /**</span><br><span class="line">  * </span><br><span class="line">  *这里调用代理对象的giveMoney方法，直接就调用了InvocationHandler中的invoke方法，并把m3传了进去。</span><br><span class="line">  *this.h.invoke(this, m3, null);这里简单，明了。</span><br><span class="line">  *来，再想想，代理对象持有一个InvocationHandler对象，InvocationHandler对象持有一个被代理的对象，</span><br><span class="line">  *再联系到InvacationHandler中的invoke方法。嗯，就是这样。</span><br><span class="line">  */</span><br><span class="line">  public final void giveMoney()</span><br><span class="line">    throws </span><br><span class="line">  &#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">      this.h.invoke(this, m3, null);</span><br><span class="line">      return;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Error|RuntimeException localError)</span><br><span class="line">    &#123;</span><br><span class="line">      throw localError;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (Throwable localThrowable)</span><br><span class="line">    &#123;</span><br><span class="line">      throw new UndeclaredThrowableException(localThrowable);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  //注意，这里为了节省篇幅，省去了toString，hashCode、equals方法的内容。原理和giveMoney方法一毛一样。</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>jdk为我们的生成了一个叫$Proxy0（这个名字后面的0是编号，有多个代理类会一次递增）的代理类，这个类文件时放在内存中的，我们在创建代理对象时，就是通过反射获得这个类的构造方法，然后创建的代理实例。通过对这个生成的代理类源码的查看，我们很容易能看出，动态代理实现的具体过程。</p>
+<p>我们可以对InvocationHandler看做一个中介类，中介类持有一个被代理对象，在invoke方法中调用了被代理对象的相应方法。通过聚合方式持有被代理对象的引用，把外部对invoke的调用最终都转为对被代理对象的调用。</p>
+<p>代理类调用自己方法时，通过自身持有的中介类对象来调用中介类对象的invoke方法，从而达到代理执行被代理对象的方法。也就是说，动态代理通过中介类实现了具体的代理功能。</p>
+<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a><strong>五、总结</strong></h2><p>生成的代理类：$Proxy0 extends Proxy implements Person，我们看到代理类继承了Proxy类，所以也就决定了java动态代理只能对接口进行代理，Java的继承机制(因为默认生成的代理类已经继承了Proxy ，而JAVA的机制，只能有一个继承，所以注定无法再继承，只能实现，而实现的只能是接口)注定了这些动态代理类们无法实现对class的动态代理。<br>上面的动态代理的例子，其实就是AOP的一个简单实现了，在目标对象的方法执行之前和执行之后进行了处理，对方法耗时统计。Spring的AOP实现其实也是用了Proxy和InvocationHandler这两个东西的。</p>
+<p>后面补充，知其然，还要知其所以然。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/02/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%20%EF%BC%88jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%89/" data-id="clh04c6dn000fo4rg2r685um2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Docker Volume" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/01/06/Docker%20Volume/" class="article-date">
+  <time datetime="2022-01-06T02:26:23.962Z" itemprop="datePublished">2022-01-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Docker-Volume"><a href="#Docker-Volume" class="headerlink" title="Docker Volume"></a>Docker Volume</h1><p>Docker的数据持久化主要有两种方式：</p>
+<ul>
+<li>bind mount</li>
+<li>volume</li>
+</ul>
+<p>Docker的数据持久化即使数据不随着container的结束而结束，数据存在于host机器上——要么存在于host的某个指定目录中（使用bind mount），要么使用docker自己管理的volume（/var/lib/docker/volumes下）。</p>
+<h3 id="bind-mount"><a href="#bind-mount" class="headerlink" title="bind mount"></a>bind mount</h3><p>bind mount自docker早期便开始为人们使用了，用于将host机器的目录mount到container中。但是bind mount在不同的宿主机系统时不可移植的，比如Windows和Linux的目录结构是不一样的，bind mount所指向的host目录也不能一样。这也是为什么bind mount不能出现在Dockerfile中的原因，因为这样Dockerfile就不可移植了。</p>
+<p>将host机器上当前目录下的host-data目录mount到container中的/container-data目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v $(<span class="built_in">pwd</span>)/host-dava:/container-data alpine sh</span><br></pre></td></tr></table></figure>
+
+<p>有几点需要注意：</p>
+<ul>
+<li>host机器的目录路径必须为全路径(准确的说需要以<code>/</code>或<code>~/</code>开始的路径)，不然docker会将其当做volume而不是bind mount处理</li>
+<li>如果host机器上的目录不存在，docker会自动创建该目录</li>
+<li>如果container中的目录不存在，docker会自动创建该目录</li>
+<li>如果container中的目录已经有内容，那么docker会使用host上的目录将其覆盖掉</li>
+</ul>
+<h3 id="使用volume"><a href="#使用volume" class="headerlink" title="使用volume"></a>使用volume</h3><p>volume也是绕过container的文件系统，直接将数据写到host机器上，只是volume是被docker管理的，docker下所有的volume都在host机器上的指定目录下/var/lib/docker/volumes。</p>
+<p>将my-volume挂载到container中的/mydata目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v my-volume:/mydata alpine sh</span><br></pre></td></tr></table></figure>
+
+<p>然后可以查看到给my-volume的volume：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker volume inspect my-volume</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;CreatedAt&quot;</span>: <span class="string">&quot;2018-03-28T14:52:49Z&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Driver&quot;</span>: <span class="string">&quot;local&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Labels&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">        <span class="string">&quot;Mountpoint&quot;</span>: <span class="string">&quot;/var/lib/docker/volumes/my-volume/_data&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Name&quot;</span>: <span class="string">&quot;my-volume&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Options&quot;</span>: &#123;&#125;,</span><br><span class="line">        <span class="string">&quot;Scope&quot;</span>: <span class="string">&quot;local&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，volume在host机器的目录为<code>/var/lib/docker/volumes/my-volume/_data</code>。此时，如果my-volume不存在，那么docker会自动创建my-volume，然后再挂载。</p>
+<p>也可以不指定host上的volume：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v /mydata alpine sh</span><br></pre></td></tr></table></figure>
+
+<p>此时docker将自动创建一个匿名的volume，并将其挂载到container中的/mydata目录。匿名volume在host机器上的目录路径类似于：<code>/var/lib/docker/volumes/300c2264cd0acfe862507eedf156eb61c197720f69e7e9a053c87c2182b2e7d8/_data</code>。</p>
+<p>除了让docker帮我们自动创建volume，我们也可以自行创建：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker volume create my-volume-2</span><br></pre></td></tr></table></figure>
+
+<p>然后将这个已有的my-volume-2挂载到container中:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -v my-volume-<span class="number">2</span><span class="symbol">:/mydata</span> alpine sh</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，与bind mount不同的是，如果volume是空的而container中的目录有内容，那么docker会将container目录中的内容拷贝到volume中，但是如果volume中已经有内容，则会将container中的目录覆盖。请参考<a target="_blank" rel="noopener" href="https://medium.com/@yaofei/docker-volume-what-i-learned-27134081d6d9">这里</a>。</p>
+<h3 id="Dockerfile中的VOLUME"><a href="#Dockerfile中的VOLUME" class="headerlink" title="Dockerfile中的VOLUME"></a>Dockerfile中的VOLUME</h3><p>在Dockerfile中，我们也可以使用VOLUME指令来申明contaienr中的某个目录需要映射到某个volume：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Dockerfile</span></span><br><span class="line">VOLUME /foo</span><br></pre></td></tr></table></figure>
+
+<p>这表示，在docker运行时，docker会创建一个匿名的volume，并将此volume绑定到container的/foo目录中，如果container的/foo目录下已经有内容，则会将内容拷贝的volume中。也即，Dockerfile中的<code>VOLUME /foo</code>与<code>docker run -v /foo alpine</code>的效果一样。</p>
+<p>Dockerfile中的VOLUME使每次运行一个新的container时，都会为其自动创建一个匿名的volume，如果需要在不同container之间共享数据，那么我们依然需要通过<code>docker run -it -v my-volume:/foo</code>的方式将/foo中数据存放于指定的my-volume中。</p>
+<p>因此，VOLUME /foo在某些时候会产生歧义，如果不了解的话将导致问题。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/01/06/Docker%20Volume/" data-id="clh04c6cr0000o4rgfaym4o7f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java开发经验分享" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/12/15/java%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/" class="article-date">
+  <time datetime="2021-12-15T08:09:05.414Z" itemprop="datePublished">2021-12-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="java开发经验分享"><a href="#java开发经验分享" class="headerlink" title="java开发经验分享"></a>java开发经验分享</h1><h1 id="一、-编码"><a href="#一、-编码" class="headerlink" title="一、 编码"></a>一、 编码</h1><ol>
+<li>约束自己，规范编码习惯</li>
+</ol>
+<p>充足的代码注释、标准缩进的格式、注意命名规范。参考《开发规约》</p>
+<p>“看上去”专业能促进代码质量。越是难看的代码，在它的演化过程中会越来越差。因为当你看到你要bugfix的代码很乱，那么在bugfix的时候一般也会草草了事。一个方法有400行，在修改这个方法的时候大家不会在意再加上几十行代码。因为它看起来很差，它就是很差，我没必要美化它。反过来说，如果待改的代码很整洁很规范，那么修改者也会比较小心。</p>
+<ol start="2">
+<li>避免冗长的方法和类</li>
+</ol>
+<p>应将方法设计成简要的、功能性单元，用它描述和实现一个不连续的类接口部分。理想情况下，方法应简明扼要。若长度很大，可考虑通过某种方式将其分割成较短的几个方法。这样做也便于类内代码的重复使用（有些时候，方法必须非常大，但它们仍应只做同样的一件事情）。</p>
+<ol start="3">
+<li>不要向标准输出写无用数据</li>
+</ol>
+<p>System.out.println(); 此语句在程序中随处可见，都是在调试时使用的，在程序正式运行时也没有将其去掉，结果就是日志中有大量的无用数据，不仅使得日志不易分析，也增加了系统的开销。</p>
+<ol start="4">
+<li><p>调用方法前注意参数校验，判断参数是否为空或无意义的值</p>
+</li>
+<li><p>使用对象前，检查对象是否为空</p>
+</li>
+</ol>
+<p>if(names!=null&amp;&amp;names.length&gt;0){</p>
+<p>String[] nameArray = names.split(‘,’);</p>
+<p>}</p>
+<p>if(userEn!=null){</p>
+<p>String name = userEn.getName();</p>
+<p>}</p>
+<ol start="6">
+<li>避免过多过常的创建java对象</li>
+</ol>
+<p>尽量避免在经常调用的方法、循环中new对象，由于系统不仅要花费时间来创建对象，而且还要花时间对这些对象进行垃圾回收和处理，在我们可以控制的范围内，最大限度的重用对象，最好能用基本的数据类型或数组来替代对象。</p>
+<ol start="7">
+<li>尽量避免随意使用类成员变量</li>
+</ol>
+<p>当某个对象被定义为static变量所引用，那么gc通常是不会回收这个对象所占有的内存的。此时类成员变量的生命周期与类同步，如果类不卸载，那么该对象会常驻内存，直到程序终止</p>
+<ol start="8">
+<li>减少对变量的重复计算</li>
+</ol>
+<p>如</p>
+<p>for(int i=0;i&lt;list.size();i++)</p>
+<p>应该改为</p>
+<p>for(int i=0,len=list.size();i&lt;len;i++)</p>
+<p>并且在循环中应该避免使用复杂的表达式，在循环中，循环条件会被反复计算，如果不使用复杂表达式，而使循环条件值不变的话，程序将会运行的更快</p>
+<ol start="9">
+<li>避免不必要的创建对象</li>
+</ol>
+<p>如</p>
+<p>A a = new A();</p>
+<p>if(i==1){</p>
+<p>list.add(a);</p>
+<p>}</p>
+<p>应该改为</p>
+<p>if(i==1){</p>
+<p>A a = new A();</p>
+<p>list.add(a);</p>
+<p>}</p>
+<ol start="10">
+<li>原则上循环里面不要声明对象，一律在循环外面声明</li>
+</ol>
+<p>for(int i=0;i&lt;size;i++){</p>
+<p>String title = “标题”;</p>
+<p>}</p>
+<p>改为</p>
+<p>String title = null;</p>
+<p>for(int i=0;i&lt;size;i++){</p>
+<p>title = “标题”；</p>
+<p>}</p>
+<ol start="11">
+<li>尽量在finally块中释放资源</li>
+</ol>
+<p>程序中使用到的资源应当被释放，以避免资源泄漏。这最好在finally块中去做。不管程序执行的结果如何，finally块总是会执行的，以确保资源的正确关闭。</p>
+<ol start="12">
+<li>使用StringBuilder和StringBuffer进行字符串连接</li>
+</ol>
+<p>StringBuffer提供了同步机制，所以并发线程访问是线程安全的，适合多线程。</p>
+<p>StringBuilder没有提同步机制，所以线程不安全，适合单线程，但如果是单线程的话，要比StringBuffer快。</p>
+<ol start="13">
+<li>遍历HashMap使用entrySet</li>
+</ol>
+<p>当需要遍历HashMap的时候，请尽量使用entrySet，而不要用keySet，entrySet的效率要比keySet高，实际上使用entrySet是只需要遍历一次hash，即将key和value的映射关系放入到entry中，再取之；而keySet需要两次遍历hash，第一次取所有的key，第二次用key去取出对应的value。</p>
+<p>Iterator iter = hashMap.entrySet().iterator();</p>
+<p>while (iter.hasNext()) {</p>
+<p>Map.Entry entry = (Map.Entry) iter.next();</p>
+<p>String key = String.valueOf(entry.getKey());</p>
+<p>String val = String.valueOf(entry.getValue());</p>
+<p>}</p>
+<ol start="14">
+<li>尽量缓存经常使用的对象</li>
+</ol>
+<p>尽可能将经常使用的对象进行缓存，可以使用数组，或HashMap的容器来进行缓存，但这种方式可能导致系统占用过多的缓存，性能下降。</p>
+<ol start="15">
+<li>使用统一的工具类</li>
+</ol>
+<p>使用hanwebcommon.jar中的通用方法</p>
+<p>使用项目中已经存在的工具类，不要重复创造功能近似的类和方法，如果必要可进行扩展</p>
+<p>如：接收参数使用Convert.getParameter(request, 参数名);</p>
+<ol start="16">
+<li><p>减少不必要的空格和空行</p>
+</li>
+<li><p>java代码中不要出现黄色警告。注释或删除未使用的变量；保存时去掉多余的import；…</p>
+</li>
+<li><p>前台接收Stirng类型参数，要进行跨站脚本和sql注入过滤</p>
+</li>
+</ol>
+<p>Convert.getParameter(request,”keyword”,””,true,true);</p>
+<ol start="19">
+<li>不要在controller中实现业务逻辑，放到service类中去完成</li>
+</ol>
+<p>分层设计实现了软件之间的解耦；便于进行分工；便于维护；提高软件组件的重用；</p>
+<ol start="20">
+<li><p>避免在循环体中使用try-catch 块,最好在循环体外使用try–catch 块以提高系统性</p>
+</li>
+<li><p>oracle大字段操作</p>
+</li>
+</ol>
+<p>先插入一个空的clob类型 empty_clob()，然后再单独更新clob字段</p>
+<p>InsertSql insql = new InsertSql( strTableName ); </p>
+<p>  insql.addString(“vc_name”, name);</p>
+<p>  if ((“oracle”).equals(SysInit.getM_strDB_Type())){</p>
+<p>   insql.addClob(“vc_adress”);</p>
+<p>   insql.addClob(“vc_path”);</p>
+<p>  }else{</p>
+<p>​    insql.addString(“vc_adress”, address);</p>
+<p>​    insql.addString(“vc_path”, path);</p>
+<p>}</p>
+<p>boolean bl = Manager.doExcute(strAppID , insql.getSql());</p>
+<p>if(bl){</p>
+<p>if ((“oracle”).equals(SysInit.getM_strDB_Type())){</p>
+<p>String[] strFieldValue = {address, path};</p>
+<p>String[] strFieldName ={“vc_adress”,”vc_path”};</p>
+<p>Manager.doClob(strAppID, strFieldName, strFieldValue, strTableName, “ WHERE i_id = “ + getMaxId());</p>
+<p>}</p>
+<p>}</p>
+<ol start="22">
+<li>使用统一的&lt;!DOCTYPE&gt;，保证不同浏览器下的页面兼容</li>
+</ol>
+<p>建议使用：</p>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ol start="23">
+<li>HTML结构要完整、正确</li>
+</ol>
+<p>标准的HTML文档结构：<br><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"></p>
+<html>
+
+<head>
+
+<p><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></p>
+<title>Insert title here</title>
+
+<p>……</p>
+</head>
+
+<body>
+
+<p>……</p>
+</body>
+
+</html>
+
+<p>其它：</p>
+<ul>
+
+<li>……</li>
+
+<li>……</li>
+
+</ul>
+
+<table>
+
+<tr>
+
+<td>……</td>
+
+</tr>
+
+</table>
+
+<ol start="24">
+<li>HTML标签要完整</li>
+</ol>
+<p>标签名称及属性统一使用小写，标签要成对出现，如：</p>
+<p><div id=”search”>………</div></p>
+<p>不用于包含内容的标签，可在标签结尾使用“/”标记结束，如：</p>
+<input type=”text” name=”username” value=”tony” />
+
+<br/> 
+
+<ol start="25">
+<li><p>标签属性值必须用双引号包住</p>
+</li>
+<li><p>HTML代码使用标准缩进</p>
+</li>
+<li><p>脚本每一条语句都要以分号结尾</p>
+</li>
+<li><p>具有独特性、不需要重复使用的样式，使用内嵌样式：</p>
+</li>
+</ol>
+<p><div style=”title”>标题<div></p>
+<p>能够重复使用的样式，在样式表中定义：</p>
+<li class=”menu”>菜单</li>
+
+<p>页面内使用的样式，使用内嵌样式表：</p>
+<style type="text/css">
+
+.menu{
+
+color:black;
+
+font-size:13px;
+
+}
+
+</style>
+
+<p>多个页面公用的样式使用链入外部样式表：</p>
+<link href="../global.css" rel="stylesheet" type="text/css" />
+
+<ol start="29">
+<li>页面内使用的脚本函数，在head中定义：</li>
+</ol>
+<script type=”text/javascript”>
+
+function checkForm(){
+
+……
+
+}
+
+</script>
+
+<p>重复使用的脚本函数或代码较多的脚本，写到外本脚本文件中，在head中链接：</p>
+<script type=”text/javascript” src=”../checkform.js” />
+
+不影响页面本身展示的脚本可考虑放在body结束的位置调用，如广告代码：
+
+……
+
+<script type=”text/javascript” src=”../adv.js” />
+
+</body>
+
+30. 风格统一，保存时要对代码进行格式化，Ctrl+Shift+F
+
+31. 养成程序优化的意识
+
+现在我们经常遇到的一个问题是，程序在开发阶段，执行的完全正常，找测试人员测试也没问题，但是一到上线后，性能马上出问题了，运行速度像蜗牛，客 户不堪忍受，为什么？简单的说，开发人员自测，估计也就几条数据，测试人员测试，估计也就几十上百条数据，一般的程序代码，在这个数量级，性能瓶颈根本就 表现不出来。但是上线后，客户的数据一般都上升到10000级别的，如果程序代码中没有做到细微之处都很严谨的话，问题就马上暴露出来了。
+
+# 二、 数据库
+
+1. SQL语句中保留字、函数名要大写，表明、字段名全部小写
+
+如：SELECT vc_name,vc_sex,i_age FROM user WHERE i_id = 100 AND i_type = 2
+
+2. 使用标准SQL语句，防止数据库兼容问题
+
+3. 循环里面（包括循环调用方法内）避免过多操作数据库
+
+4. 选择最有效率的表名顺序
+
+ORACLE 的解析器按照从右到左的顺序处理FROM子句中的表名，FROM子句中写在最后的表(基础表 driving table)将被最先处理，在FROM子句中包含多个表的情况下,必须选择记录条数最少的表作为基础表。如果有3个以上的表连接查询, 那就需要选择交叉表(intersection table)作为基础表, 交叉表是指那个被其他表所引用的表
+
+5. 注意WHERE子句中的连接顺序
+
+ORACLE采用自下而上的顺序解析WHERE子句,根据这个原理,表之间的连接必须写在其他WHERE条件之前, 那些可以过滤掉最大数量记录的条件必须写在WHERE子句的末尾
+
+6. SELECT子句中避免使用*
+
+ORACLE在解析的过程中, 会将'*' 依次转换成所有的列名, 这个工作是通过查询数据字典完成的, 这意味着将耗费更多的时间
+
+7. 减少访问数据库的次数，尽量批量操作数据库，如批量删除
+
+ORACLE在内部执行了许多工作: 解析SQL语句, 估算索引的利用率, 绑定变量 , 读数据块等
+
+8. 避免在WHERE子句中使用in，not in，or 或者having
+
+可以使用 exist 和not exist代替 in和not in
+
+9. 用WHERE子句替换HAVING子句
+
+避免使用HAVING子句, HAVING 只会在检索出所有记录之后才对结果集进行过滤. 这个处理需要排序,总计等操作. 如果能通过WHERE子句限制记录的数目,那就能减少这方面的开销。
+
+10. 用好数据库事务
+
+事务是指作为单个逻辑工作单元执行的一系列操作。通过将一组相关操作组合为一个要么全部成功要么全部失败的单元，可以简化错误恢复并使应用程序更加可靠。
+
+Transaction ts = null;
+
+try{
+
+ts = new Transaction(appId);
+
+…
+
+…
+
+boolean bl = ts.execute(sql);
+
+if(bl){
+
+bl = ts.commit();
+
+}
+
+if(!bl){
+
+throw new Exception();
+
+}
+
+}catch(Exception e){
+
+if(ts!=null)
+
+ts.roolback();
+
+bl = false;
+
+}
+
+11. 注意SQL执行效率，考虑单表记录10W以上的运行效果
+
+setup中，日志显示级别为警告以上时，执行时间超过300ms的SQL语句，会在日志中输出warning
+
+12. 索引
+
+参考：[数据库性能优化](http://www.cnblogs.com/xhp956614463/p/5342180.html)
+
+# 三、 项目开发
+
+1. 需求：
+
+1) 需求最终需要开发人员在产品中实现，开发不合理的设计会浪费时间，开发技术无法实现的设计带来最大的痛苦：失败。所以，开发人员要重视需求以及需求评审，提出自己能够想到的所有异议；
+
+2) 开发人员不但要做好需求分析，还要做出精确的估计。因为编码工作保质保量的按时完成需要多方的准备工作，技术难点需要进行充分的技术预言，不熟悉的依赖平台或类库要进行熟悉；
+
+2. 计划：一栋楼很难估算重量，但是一块砖头可以精确估算重量。一个项目的时间很难准确的估计，但把项目开发划分为不能再进行分割的模块功能点，对每个点的估计是可以更精准的估时的，由此由上至下，由下至上，可以得出近乎准确的开发时间。
+
+3. 设计：
+
+1) 一图胜万言，模块结构以及流程等很难用用文字描述，即使用文字描述出来也很难看懂，所以在设计中，要善用用图；
+
+2) 详细设计过程中有思考的痛苦，繁琐的痛苦，但是绕过这些痛苦，编码期间将会面临更大的痛苦，要以快乐的心态面对。
+
+4. 编码：
+
+1) 对于一个实现可以有很多解决方案，花些时间精力选取你认为最好的解决方案可以总体上提高工作成效，往往还可以得到用户更好的体验效果；
+
+2) 细致认真严谨的工作即是对工作负责，更是对自己负责，让这些成为习惯。任何一次，任何时候所进行的编码工作，在逻辑、风格、简单有效等方面都尽可能的做到最好，既能更好为公司实现价值，同时更有利自己在技能，岗位的进步；
+
+3) 简单是美，在有效的前提下，越是简单的处理方法越是珍贵的，代码编写也是，简单的代码便于理解维护，同时不容易产生错误
+
+4) 慎做改动，当然不是说不做改动或不鼓励改动，而是不做仓促、草率的代码改动。没有洞察全局，考虑全面，而仓促进行的改动往往没有达到改动的目的却带来了其他问题
+
+5) 模块的性能不是减少一行或几行执行代码所能提高的，性能的优化首先是从算法上考虑，降低时间复杂度，然后从执行逻辑入手，减少循环执行代码的执行次数
+
+6) 关键地方要打印日志输出到文件中，在运行过程中不断检查日志，发现任何异常都要检查原因并修改
+
+5. 测试：
+
+1) 事出有因，任何bug都是由于代码的疏漏造成的，利用排除法或跟踪调试代码等方法找到疏漏所在；
+
+2) 遇到自身模块相关问题首先检查自己，相互推诿只会浪费时间以及减弱在其他同事对你的信任；
+
+3) 站的高看得远，不同的视角有不同的风景。遇到比较难解决的问题而苦苦没有思路时，转换思路或把问题的考虑范围放的更广一点，往往可以找到解决方案
+
+4) 功能提交测试前或bug修复提交验证前，开发人员都要自己详细的测试一下，验证无误再提交。
+
+6. 其它：
+
+1) 善于及时的沟通。在项目的整个流程过程中，遇到他人的问题或自己解决不了的问题，切忌堆在自己心里，要及时找问题解决方进行沟通，寻求解决方案
+
+2) 善于发现并学习别人的长处。作为开发人员，我们在追求接近完美的同时，也需要学会欣赏别人的长处，发现别人的优点，并学习别人的优点，转化为自己的潜质，这样，我们才可以进步的更快，更全面
+
+3) 善于帮助他人解决问题以及进行知识经验的分享，更有利于自己的提高，同时还可以获得他人的尊重
+
+# 四、 关于测试
+
+1. 在整个项目计划中，测试时间安排的合理性，对测试阶段的情况应作充分预计，不可为了赶发布点而忽略质量。
+
+2. 务必清楚产品包、更新包、bug包的提交规范。具体请参照《开发规范手册》。不要出现测试过程中提交多个bug包，或者提交安装包给测试人员更新的情况。
+
+3. 提包时请先检查，路径是否正确、文件是否完整、配置文件是否应该提交，源代码修改记录描述是否完善。之前经常出现，提包不检查就直接提交来测试，导致出错后环境不断地还原或者重建新的环境。CVS使用不熟悉，提交文件反复出错。
+
+4. 产品质量需要严格控制，自己承认是问题的情况下，请不要试图和测试商谈希望可以不被追究。
+
+5. 请注意提高修改bug的质量，目前，修改一个bug而引发更多的bug的情况特别多。
+
+6. bug修改完成后，在提交测试前请自己先验证通过后再提交，请不要修改完成后不验证就直接提交给测试人员，防止导致bug被反复reopen的情况。
+
+7. 原则上不允许不通过CVS而直接提交文件给测试人员调试问题、寻找原因。如果确有必要，测试人员可以协助调试，但次数不宜过多，防止测试环境版本难以控制。
+
+8. bug是否存在的衡量标准以测试环境为准，不建议出现“我这边是好的”这样的解释。
+
+9. 修改bug时请修改完整，可能会有多个小问题提交在一个BUG里面，BUG修改时多个小问题的地方均需修改。
+
+10. 更新文件必须通过配置发布，无论是否经过测试都不允许直接发给项目或直接更新客户服务器
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/12/15/java%E5%BC%80%E5%8F%91%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB/" data-id="clh04c6dm000eo4rgesrserm0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-如何学好设计，做好架构？ 核心思想才是关键" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/12/03/%E5%A6%82%E4%BD%95%E5%AD%A6%E5%A5%BD%E8%AE%BE%E8%AE%A1%EF%BC%8C%E5%81%9A%E5%A5%BD%E6%9E%B6%E6%9E%84%EF%BC%9F%20%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E6%89%8D%E6%98%AF%E5%85%B3%E9%94%AE/" class="article-date">
+  <time datetime="2021-12-03T00:53:33.996Z" itemprop="datePublished">2021-12-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="如何学好设计，做好架构？-核心思想才是关键"><a href="#如何学好设计，做好架构？-核心思想才是关键" class="headerlink" title="如何学好设计，做好架构？ 核心思想才是关键"></a>如何学好设计，做好架构？ 核心思想才是关键</h1><p>前言<br>其实好多小伙伴都认为学习设计就是学习设计模式,这是一个误区，没有底层思想的支持写出来的设计模式无非就是生搬硬套罢了，这里的底层思想其实就是设计原则，而设计原则则是面向对象编程基于现实背景衍生出来的一套规则，用来解决开发中的痛点。</p>
+<p>好的架构需要反复进行思考以及设计，今天我将从面向对象为出发点 来分享自己对设计/架构衍变过程的理解，尽量帮你理清背景 抓住本质</p>
+<p>文章目录看起来有些枯燥，但有别于其他八股文，跟着流程去学大概率可以短时间内见成效，所以请耐心阅读</p>
+<p>目录</p>
+<ol>
+<li>面向对象</li>
+<li>1 四大特性</li>
+<li>2 诞生背景</li>
+<li>六大设计原则才是一切设计的基石</li>
+<li>1 单一设计原则</li>
+<li>2 开闭原则</li>
+<li>3 迪米特法则</li>
+<li>4 接口隔离原则</li>
+<li>5 里氏替换原则</li>
+<li>6 依赖倒置原则</li>
+<li>设计模式只是设计原则的产物而已</li>
+<li>1 设计模式该怎么去学？</li>
+<li>2 “盐加少许” 只可意会</li>
+<li>3 自创设计模式</li>
+<li>如何做好架构？</li>
+<li>面向对象<br>什么是面向对象？ 估计这个问题能难倒一大片同学，相信读完本文你心里应该会有一个合适的答案。先来看下基本定义：</li>
+</ol>
+<p>面向对象是一种风格，会以类作为代码的基本单位，通过对象访问，并拥有封装、继承、多态、抽象四种特性作为基石，可让其更为智能。代表语言Java</p>
+<p>1.1 四大特性(也有人说三种，不要纠结)<br>封装</p>
+<p>封装也也可称之为信息隐藏。类通过暴露有限的访问接口，授权外部仅能通过类提供的方式（或者叫函数）来访问内部信息或者数据。举个例子解释下：</p>
+<p>class User{<br>    private String idNumber;<br>    private String name;</p>
+<pre><code>public String getIdNumber() &#123;
+    return idNumber;
+&#125;
+
+public void setIdNumber(String idNumber) &#123;
+    this.idNumber = idNumber;
+&#125;
+
+public String getName() &#123;
+    return name;
+&#125;
+
+public void setName(String name) &#123;
+    this.name = name;
+&#125;
+</code></pre>
+<p>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>User类中包含身份证号、姓名等个人信息，这些属性一旦暴露那外界就可以随意修改，进而可能产生安全隐患。此时可通过private修饰符将其隐藏在内部，如果确实需要访问只能通过暴露出来的唯一入口getter,setter方法进行，这一过程就是封装</p>
+<p>合理运用封装可以降低模块间依赖关系(松耦合)</p>
+<p>继承</p>
+<p>“继承”是面向对象中的第二特征，体现了类与类之间的“is-a”关系。当两个类进行继承关联绑定的时候，子类自动具备来自于的父类的属性和行为。可以提升复用性解决模板代码问题，提升开发效率的同时也解决了错写，漏写带来的问题</p>
+<p>多态</p>
+<p>一句话概括”多态”：一个对象多种形态。举个例子说明下：</p>
+<p>interface IFruit{<br>    String getColor();<br>}</p>
+<p>class Apple implements IFruit{<br>    @Override<br>    public String getColor() {<br>        return “red”;<br>    }<br>}</p>
+<p>IFruit fruit = new Apple();<br>fruit.getColor();<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>通过声明的IFruit类型可以对其实现类Apple进行编程，好处就是扩展性强，当需要替换具体实现Apple时，对IFruit`的操作完全不用改</p>
+<p>合理运用多态可以写出易扩展的代码，基于接口而非实现编程和开闭原则的核心</p>
+<p>抽象</p>
+<p>抽象的目的是为了隐藏方法的具体实现，让调用者只需要关心方法提供了哪些方法(功能)，并不需要知道这些功能是如何实现的。在Java中体现方式是接口和抽象类</p>
+<p>接口和抽象类的区别</p>
+<p>接口更侧重于功能的设计，并且能将具体实现与调用者隔离，一般要以接口隔离原则设计接口既粒度越细越好<br>抽象类更侧重于提升复用性，在原有的基础上预留扩展点供开发者灵活实现<br>区别：接口可以降低模块间耦合性，抽象类可提升复用性。<br>相同点：均有较好的扩展性，符合开闭原则<br>tips</p>
+<p>面向对象的四大特性相信大家都很熟悉，本小结只是帮大家做一次简单的回忆，关于其背景和职责下半问会详细描述</p>
+<p>1.2 诞生背景<br>谈及面向对象必定磨不开面向过程，毕竟它就是由面向过程衍变而来，吸收其大部分优点并解决其痛点。那什么是面向过程呢？基本定义如下：</p>
+<p>分析出解决问题所需要的步骤，然后用函数把这些步骤一步一步实现，使用的时候一个一个依次调用就可以了,更侧重于功能的设计。代表语言C</p>
+<p>用代码体现就是下面这样：</p>
+<p>#java版面向过程</p>
+<p>public class Wallet {<br>    /**<br>     * 余额<br>     <em>/<br>    int balance;<br>    /</em>*<br>     * 存钱<br>     <em>/<br>    void saveMoney(int money){<br>        balance += money;<br>    }<br>    /</em>*<br>     * 花钱<br>     */<br>    void spendMoney(int money){<br>        balance -= money;<br>    }<br>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>无权限修饰符将内部信息全部暴露，简单粗暴很符合初级程序员的思维，但带来的问题很明显，外部可直接访问balance修改钱包内余额，现象就是”我钱包都没掏出来但里面钱却变少/多了”。面向过程在开发中带来的问题远不止这些，所以在此背景下诞生了面向对象 通过面向对象封装特性将面向过程代码做个改进，如下：</p>
+<p>#java版面向对象</p>
+<p>public class Wallet {<br>    /**<br>     * 余额<br>     <em>/<br>    private int balance;<br>    /</em>*<br>     * 存钱<br>     <em>/<br>    void saveMoney(int money){<br>        balance += money;<br>    }<br>    /</em>*<br>     * 花钱<br>     */<br>    void spendMoney(int money){<br>        balance -= money;<br>    }<br>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>通过封装特性将balance通过private修饰，这样外部就没有权限直接修改金额，避免误操作带来的未知风险，满足松耦合特性 面向过程编程偏向于功能的开发，简单粗暴难以维护。而面向对象在编程之前需要基于四大特性对功能做建模设计，可以提高代码安全性、复用性、扩展性，更易于维护 既然面向对象这么智能为什么面向过程语言还没有被淘汰？其实面向对象语言的智能是针对我们开发者的，为了能让我们能写出易于维护的代码会多做一步设计，虽然离开发者更近了 但离机器确远了，毕竟机器只认识0和1而已。C语言规则简单易于形成机器码，所以执行效率高，这也是其没有被淘汰的原因。</p>
+<p>小提示：</p>
+<p>不要以为用了面向对象语言写出的就是面向对象代码，如果没有利用其特性那可能还是面向过程，比如没有利用权限修饰符、一个类一把梭等等…</p>
+<ol start="2">
+<li>六大设计原则才是一切设计的基石<br>设计原则是基于面向对象思想衍变出来的一些规则，用来解决实际开发中的一些痛点，是所有设计的底层思想，也是我个人认为是设计/架构领域最重要的知识，所以请大家务必掌握好</li>
+</ol>
+<p>2.1 单一设计原则<br>单一原则很好理解，指一个函数或者一个类再或者一个模块，职责越单一复用性就越强，同时能够间接降低耦合性。</p>
+<p>案例：本地获取用户信息，提交到网络</p>
+<p>fun post(){<br>        //创建数据库访问对象Dao<br>        val userDao = …(这一过程很复杂)</p>
+<pre><code>    //从本地获取
+    val age = dao.getAge()
+    val name = dao.getName()
+    //....省略大量字段
+
+    //将个人信息提交至网络
+    http.request(age,name,....)
+</code></pre>
+<p>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>以上案例将创建、获取、提交三步操作写到同一个函数中，很显然违背了单一设计原则，面临的问题也很明显，当修改创建、获取、提交任一过程时都会影响到其他二者，千万不要说”我注意一点就不会出错”这种话，因为人不是机器改动就可能出错，此时可以通过单一设计原则做一次重构，代码如下：</p>
+<p>fun getUserDao():UserDao{<br>        …<br>        return dao<br>}</p>
+<p>fun getUserInfo():UserInfo{<br>        val dao = getUserDao()<br>        val userInfo = UserInfo()<br>        userInfo.age = dao.getAge()<br>        userInfo.name = dao.getName()<br>        …<br>        return userInfo<br>}</p>
+<p>fun post(){<br>        val userInfo = getUserInfo()<br>        //将个人信息提交至网络<br>        http.request(userInfo.age,userInfo.name,….)<br>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>三步操作被拆至三个函数 互不影响，从根本上杜绝因改动带来的一系列问题。所以使用面向对象语言开发时，不要急着写代码，要优先考虑下模块、类、函数…的设计是否足够单一</p>
+<p>2.2 开闭原则<br>一句话概括开闭原则:对扩展开放，修改关闭。它即充分诠释抽象、多态特性，又是多数行为型设计模式的基础，遍布于各大优秀框架之中，是最重要的一条设计原则，仅这一条原则就能把你的设计能力提高40%</p>
+<p>举个例子让大家感受一下：</p>
+<p>需求：通过SQLite做CRUD操作</p>
+<p>class SQLiteDao{<br>    public void insert() {<br>         //通过SQLite做insert<br>    }<br>    public void delete() {<br>        //通过SQLite做insert<br>    }<br>}</p>
+<p>SQLiteDao dao = new SQLiteDao();<br>dao.insert();<br>…<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>以上是最简单粗暴的写法，但存在一个致命问题，如果某一天想替换SQLite业务层基本要动一遍，改动就存在出错的可能，并且需要做大量的重复操作</p>
+<p>面对以上问题可以利用抽象、多态特性基于开闭原则做出重构，代码如下：</p>
+<p>interface IDao{<br>    void insert();<br>    void delete();<br>}</p>
+<p>class SQLiteDao implements IDao{<br>    @Override<br>    public void insert() {<br>         //通过SQLite做insert<br>    }<br>    @Override<br>    public void delete() {<br>        //通过SQLite做insert<br>    }<br>}</p>
+<p>class RoomDao implements IDao{<br>    @Override<br>    public void insert() {<br>        //通过Room做insert<br>    }<br>    @Override<br>    public void delete() {<br>        //通过Room做delete<br>    }<br>}</p>
+<p>//扩展点<br>IDao dao = new SQLiteDao();<br>dao.insert();<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>定义功能接口IDao<br>定义类SQLiteDao、RoomDao并实现IDao的功能<br>业务层基于接口IDao进行编程<br>重构后，当需要将SQLite替换至Room时，只需将注释扩展点处SQLiteDao替换成RoomDao即可，其他地方完全不用改动。这就是所谓的扩展开放，修改关闭</p>
+<p>在业务不断迭代情况下，唯一不变的就是改变，这种背景下我们能做的只有在代码中基于开闭原则多留扩展点以不变应万变。</p>
+<p>2.3 迪米特法则<br>基本概念：不该有直接依赖关系的模块不要有依赖。有依赖关系的模块之间，尽量只依赖必要的接口。</p>
+<p>迪米特法则很好理解并且非常实用，违背迪米特法则会产生什么问题？还以2.1面向过程代码举例：</p>
+<p>class Wallet{<br>    /**<br>     * 余额<br>     */<br>    int balance;</p>
+<pre><code>/**
+ * 存钱
+ */
+void saveMoney(int money)&#123;
+    balance += money;
+&#125;
+
+/**
+ * 花钱
+ */
+void spendMoney(int money)&#123;
+    balance -= money;
+&#125;
+</code></pre>
+<p>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>Wallet的设计违背了迪米特法则，毕竟外部只需要save和spend功能，将balance暴漏使用者就有权限直接修改其值，可能会对整个Wallet功能造成影响。此时应基于迪米特法则对Wallet进行改造，将balance通过封装特性增加private修饰符</p>
+<p>迪米特法则和单一设计原则很像，前者符合松耦合后者符合高内聚</p>
+<p>2.4 接口隔离原则<br>基本概念：接口的调用者不应该依赖它不需要的接口。</p>
+<p>乍一看与迪米特法则很相似。先来看下什么样的接口违背接口隔离原则：</p>
+<p>interface Callback{<br>    /**<br>     * 点击事件回调方法<br>     <em>/<br>    void clickCallback();<br>    /</em>*<br>     * 滚动事件回调方法<br>     */<br>    void scrollCallback();<br>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>接口Callback包含点击、滚动两个回调方法，面临的问题有两个：</p>
+<p>某些特定场景使用者只需要依赖点击回调，那滚动回调便成了多余，把外部不需要的功能暴露出来就存在误操作的可能。<br>点击和滚动本来就是两种特性，强行揉到一块只能让接口更臃肿，进而降低其复用性<br>根据接口隔离原则改造后如下：</p>
+<p>interface ClickCallback{<br>    /**<br>     * 点击事件回调方法<br>     */<br>    void clickCallback();<br>}</p>
+<p>interface ScrollCallback{<br>    /**<br>     * 滚动事件回调方法<br>     */<br>    void scrollCallback();<br>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>基于单一设计原则把点击和滚动拆分成两个接口，将模块间隔离的更彻底。并且由于粒度更细，所以复用性也更高</p>
+<p>接口隔离原则与迪米特法则目的很相似，都可以降低模块间依赖关系。但接口隔离更侧重于设计单一接口，提升复用性并间接降低模块间依赖关系，而迪米特法则是直接降低模块间依赖关</p>
+<p>2.5 里氏替换原则<br>基本概念：</p>
+<p>设计子类的时候，要遵守父类的行为约定。父类定义了函数的行为约定，子类可以改变函数的内部实现逻辑，但不能改变函数原有的行为约定。</p>
+<p>里氏替换非常简单并且很容易遵守，在使用继承时，允许复写父类方法，但不要改变其功能。比如自定义View，子类的onMeasure中一定要调用setMeasureaDimission()方法（或者直接使用super），否则会影响父类方法功能（会抛异常），也既违背了里氏替换原则。</p>
+<p>2.6 依赖倒置原则<br>控制反转： 提及依赖倒置便不得不提控制反转，一句话概括：将复杂的程序操作控制权由程序员交给成熟的框架处理，程序员-&gt;成熟的框架为反转，框架应暴露出扩展点由程序员实现 想详细了解可至 关于Android架构，你是否还在生搬硬套？ 2.1章节查看</p>
+<p>什么是依赖倒置？</p>
+<p>高层模块(使用者)不应依赖低层模块(被使用者)，它们共同依赖同一个抽象，抽象不要依赖具体实现细节，具体实现细节依赖抽象。</p>
+<p>其实核心点就是基于接口而非实现编程，2.2数据库案例也符合依赖倒置原则，高层模块(业务层)不依赖于低层模块(SQLiteDao/RoomDao),而是依赖于抽象(IDao),可见依赖倒置也是开闭原则扩展而来。 区别是依赖倒置更侧重于指导框架的设计，框架层应该尽量将更多的细节隐藏在内部，对外只暴露抽象(抽象类/接口)，指导框架设计这方面核心就是控制反转</p>
+<ol start="3">
+<li>设计模式只是设计原则的产物而已<br>设计模式共有23种，详细描述都能出一本书出来。本小结仅会分享一些通用的思路，个人认为还是比较硬核的，毕竟设计主要还是思想，而非生搬硬套</li>
+</ol>
+<p>3.1 设计模式该怎么去学？<br>本小节会分析几个常见的设计模式核心思想以及设计背景，用于抛砖引玉</p>
+<p>工厂模式</p>
+<p>基本概念：用于创建复杂对象</p>
+<p>创建复杂对象常规写法如下：</p>
+<p>class B{<br>    …<br>}</p>
+<p>class D{<br>    void test(){<br>        B b = ….(创建B的过程很复杂)<br>        …<br>    }<br>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>在使用的地方直接创建，如果直接new倒也没啥问题，但如果创建过程过于复杂，当修改创建过程时就会影响到test()，进而存在一些未知的隐患。</p>
+<p>这一问题可通过迪米特法则进行改造：</p>
+<p>class FactoryB{<br>    …<br>    static B createB(){<br>        …..(B创建过程)<br>        return b;<br>    }<br>}<br>class D{<br>    void test1(){<br>        B b = FactoryB.create();<br>        …<br>    }<br>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>B的创建本身就于调用者无关，将创建过程转移到类FactoryB中，根本上避免了创建过程对调用者的影响。改造后就是一个标准的简单工厂模式，所以简单工厂模式的核心思想就是迪米特法则</p>
+<p>观察者模式</p>
+<p>基本概念：当一个对象发生改变时需要通知到另一个对象</p>
+<p>粗暴写法：</p>
+<p>/**</p>
+<ul>
+<li>观察者</li>
+<li>/<br>class Observer{<br>  /**<ul>
+<li>接收通知</li>
+<li>/<br>void receive(){<br>  //具体逻辑<br>}<br>}</li>
+</ul>
+</li>
+</ul>
+<p>/**</p>
+<ul>
+<li>被观察者</li>
+<li>/<br>class Observable{<br>  /**<ul>
+<li>发送通知</li>
+<li>/<br>void send(){<br>  Observer observer = new Observer();<br>  observer.receive();<br>}<br>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>Observable(被观察者)内部直接持有Observer(观察者)，在合适的时机发出通知，但这种写法有两个很明显的问题：</li>
+</ul>
+</li>
+</ul>
+<p>扩展性差：当存在多个观察者Observer1,Observer2…时,Observable需要逐个手动创建发出通知<br>耦合性强：Observable直接持有Observer对象，而Observer可能暴露出一些Observable不需要的属性/方法，存在误操作的风险<br>面对以上两个问题可以利用开闭原则和接口隔离原则进行改造：</p>
+<p>interface IObserver{<br>    /**<br>     * 接收通知<br>     */<br>    void receive();<br>}</p>
+<p>class Observable{<br>    /**<br>     * 观察者集合<br>     */<br>    private final List<IObserver> observers = new ArrayList&lt;&gt;();</p>
+<pre><code>/**
+ * 发送通知
+ */
+void send()&#123;
+    for (IObserver observer : observers)&#123;
+        observer.receive();
+    &#125;
+&#125;
+</code></pre>
+<p>}<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>以上是一个标准的观察者模式。通过接口隔离原则设计IObserver接口保证其单一性，避免模块之间依赖关系过强造成的安全隐患，解决了耦合性强问题。通过开闭原则维护一个observers，当新增观察者时只需添加到observers即可，符合扩展开放、修改关闭，解决类扩展性差问题。</p>
+<p>所以开闭原则，接口隔离原则是观察者模式扩展性强，耦合性低的根本原因呐</p>
+<p>以上三个案例足以表明设计模式的核心就是设计原则呐，所以学会设计模式的窍门就是先掌握设计原则</p>
+<p>3.2 “盐加少许” 只可意会<br>据我所知有一部分小伙伴觉得用设计模式很酷，以至于拿着锤子看什么都是钉子，很简单的代码还非要用几个设计模式包装下。还有另一部分小伙伴对设计模式理解不够深刻，把握不好应用场景，经常生搬硬套做出多余的设计。以上两种现象 不但解决不了任何问题反而会降低代码的可读性</p>
+<p>究竟什么场景下需要用设计模式呢？关于这个问题我只能回答合适的场景，因为它根本没有一个固定答案。就如同老师傅做饭时讲的少许盐、少许油一样，因为不同的食材需要的油盐不一样，所以不好去量化，只能根据自己的经验去放。回归到代码中也是一样的，我们在实践中需要不断思考，尝试去发现开发中的痛点，设计模式就是用来解决这些痛点的，所以只有理清背景才能将设计模式用的恰到好处</p>
+<p>3.3 自创设计模式<br>有一说一23种设计模式我也不是全懂，但由于我懂设计原则我一样可以写出易维护的代码，甚至自创设计模式</p>
+<p>在接触LiveData之前，其实我已经有意无意感受到了数据驱动的思想，在传统的MVP模式下我会在View层事先写好对应UI渲染逻辑，Presenter由接口进行驱动(这其实也是数据驱动UI)。 当LiveData/DataBinding走进视线并且大家开始讨论数据驱动UI时，那一刻我仿佛找到了组织，自己的想法终于得到了验证。之所以我能够有意无意遵守数据驱动UI是因为我原本就掌握了控制反转思想</p>
+<p>阅读Retrofit源码前我甚至不知道门面模式的存在，但我依旧能理解ApiService奥妙之所在，无非就是想将Retrofit的实现尽量屏蔽在其内部，尽可能降低模块间依赖关系，符合迪米特法则同时也是门面模式的一种写法。</p>
+<p>说了这么多还是想告诉大家：设计原则才是根本</p>
+<ol start="4">
+<li>如何做好架构？<br>掌握设计原则可以写出扩展性强、复用性高…的代码</li>
+</ol>
+<p>掌握设计模式可以设计出易用性强、安全性高…成熟的框架</p>
+<p>掌握设计原则、设计模式，可以设计出容错率更高的架构</p>
+<p>那什么是架构？</p>
+<p>架构是一个很笼统的概念，上至框架选型下至业务代码都能称为架构的一部分，比喻到盖房子 设计图，打地基，选料…都能称之为架构，总之能够提升项目稳定性以及开发效率就是好架构。好的架构不是一蹴而就，而是根据面临的问题不断添砖加瓦</p>
+<p>架构是如何衍变的？</p>
+<p>远古时代，基于Activity和XML开发，XML这种结构可以天然的将视图与Activity隔离，看起来很美妙，我也很开心…<br>随着业务的发展，Activity代码不断壮大，各种逻辑全都揉到一块，常常改一处崩多处。我觉得不能再拖了，得赶紧基于单一设计原则将代码进行模块化。模块化后效果很明显，莫名其妙的bug少了很多…<br>某一天网络请求时发现参数一直对不上，各种排查才发现原来是修改某个View时对应的数据却忘记改了，这个问题真的很头痛。偶然间发现LiveData、DataBinding，这玩意基于控制反转+观察者设计 改变数据就能修改UI，那我肯定毫不犹豫引入到项目中啊。从此我再也不用担心数据UI一致性问题了…<br>数年后，项目工程逐渐庞大，编译一次都要好几分钟，找个文件找半天还容易改错，令大家苦不堪言。听说Android可以依据单一原则将代码拆分至多个module中并可以单独运行，试了试果然可以…<br>最近有同事经常跟我抱怨：“每个Activity都有好多重复代码啊，而且一不留神容易错写、忘写”，这让我想到了模版设计模式，将通用功能封装在内部并暴露一些抽象方法(钩子方法)，新来的同事也变得开心的了，基于这套模板他可以无障碍开发…<br>未完待续…<br>以上是一个简单架构的衍变过程，选用的每一个库都是基于设计原则，设计模式拓展出来用来解决开发痛点的。但是团队开发人员水平可能参次不齐，不一定能领悟到架构的含义，仅从口头上约束可能作用不大，此时一般会通过模板模式将通用信息做封装，在内部协调好各模块间关系，并暴露出对应的泛型、抽象方法（钩子），这样开发人员在使用模板类的时候就会被强制遵守现有的规则。</p>
+<p>tips</p>
+<p>关于面向对象、设计原则、设计模式如果详细讲解能写三大本书出来。本文主要描述其基本概念、设计背景以及三者之间的关系，起到抛砖引玉的作用。想真的学好设计、做好架构 需要不断从实践中体会、思考。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/12/03/%E5%A6%82%E4%BD%95%E5%AD%A6%E5%A5%BD%E8%AE%BE%E8%AE%A1%EF%BC%8C%E5%81%9A%E5%A5%BD%E6%9E%B6%E6%9E%84%EF%BC%9F%20%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E6%89%8D%E6%98%AF%E5%85%B3%E9%94%AE/" data-id="clh04c6dv000ro4rg4x478s4v" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Gitlab进行备份恢复与迁移" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/10/14/Gitlab%E8%BF%9B%E8%A1%8C%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E8%BF%81%E7%A7%BB/" class="article-date">
+  <time datetime="2021-10-14T09:36:27.596Z" itemprop="datePublished">2021-10-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Gitlab进行备份恢复与迁移"><a href="#Gitlab进行备份恢复与迁移" class="headerlink" title="Gitlab进行备份恢复与迁移"></a>Gitlab进行备份恢复与迁移</h1><h2 id="1、Gitlab-创建备份"><a href="#1、Gitlab-创建备份" class="headerlink" title="1、Gitlab 创建备份"></a>1、Gitlab 创建备份</h2><h3 id="1-1-创建备份文件"><a href="#1-1-创建备份文件" class="headerlink" title="1.1 创建备份文件"></a>1.1 创建备份文件</h3><p>首先我们得把老服务器上的Gitlab整体备份，使用Gitlab一键安装包安装Gitlab非常简单, 同样的备份恢复与迁移也非常简单. 使用一条命令即可创建完整的Gitlab备份。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:create</span><br></pre></td></tr></table></figure>
+
+
+<p>使用以上命令会在/var/opt/gitlab/backups目录下创建一个名称类似为1502357536_2017_08_10_9.4.3_gitlab_backup.tar的压缩包, 这个压缩包就是Gitlab整个的完整部分, 其中开头的1502357536_2017_08_10_9.4.3是备份创建的日期</p>
+<p>/etc/gitlab/gitlab.rb 配置文件须备份<br>/var/opt/gitlab/nginx/conf nginx配置文件<br>/etc/postfix/main.cfpostfix 邮件配置备份</p>
+<p>生成完后，/var/opt/gitlab/backups目录创建一个名称类似为1502357536_2017_08_10_9.4.3_gitlab_backup.tar的压缩包</p>
+<h3 id="1-2-更改Gitlab备份目录"><a href="#1-2-更改Gitlab备份目录" class="headerlink" title="1.2 更改Gitlab备份目录"></a>1.2 更改Gitlab备份目录</h3><p>当然你也可以通过/etc/gitlab/gitlab.rb配置文件来修改默认存放备份文件的目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[&#x27;backup_path&#x27;] = &quot;/var/opt/gitlab/backups&quot;</span><br><span class="line">/var/opt/gitlab/backups  修改为你想存放备份的目录即可，例如下面代码将备份路径修改为/mnt/backups</span><br><span class="line"></span><br><span class="line">gitlab_rails[&#x27;backup_path&#x27;] = &#x27;/mnt/backups&#x27;</span><br></pre></td></tr></table></figure>
+
+
+<p>修改完成之后使用下面命令重载配置文件即可.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-ctl reconfigure</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-Gitlab自动备份"><a href="#1-3-Gitlab自动备份" class="headerlink" title="1.3 Gitlab自动备份"></a>1.3 Gitlab自动备份</h3><h4 id="1-3-1-定时自动备份"><a href="#1-3-1-定时自动备份" class="headerlink" title="1.3.1 定时自动备份"></a>1.3.1 定时自动备份</h4><p>#输入命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+<p>#输入相应的任务 – – 添加定时任务，每天凌晨两点，执行gitlab备份</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 2 * * * /opt/gitlab/bin/gitlab-rake gitlab:backup:create CRON=1 </span><br></pre></td></tr></table></figure>
+
+<p>#重新加载cron配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/service crond reload</span><br></pre></td></tr></table></figure>
+
+<p>#重启cron服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/service crond restart </span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-2-设置备份过期时间"><a href="#1-3-2-设置备份过期时间" class="headerlink" title="1.3.2 设置备份过期时间"></a>1.3.2 设置备份过期时间</h4><p>设置只保存最近7天的备份，编辑 /etc/gitlab/gitlab.rb 配置文件,找到gitlab_rails[‘backup_keep_time’]，设置为你想要设置的值，然后保存。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab_rails[&#x27;backup_keep_time&#x27;] = 604800  </span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="2、-Gitlab迁移"><a href="#2、-Gitlab迁移" class="headerlink" title="2、 Gitlab迁移"></a>2、 Gitlab迁移</h1><h2 id="2-1-从备份文件中恢复gitlab"><a href="#2-1-从备份文件中恢复gitlab" class="headerlink" title="2.1 从备份文件中恢复gitlab"></a>2.1 从备份文件中恢复gitlab</h2><p>1、将备份文件权限修改为777<br>第一步，将备份文件权限修改为777，不然可能恢复的时候会出现权限不够，不能解压的问题</p>
+<p>chmod 777 1502357536_2017_08_10_9.4.3_gitlab_backup.tar </p>
+<p>2、执行命令停止相关数据连接服务<br>第二步，执行命令停止相关数据连接服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gitlab-ctl stop unicorn</span><br><span class="line">gitlab-ctl stop sidekiq</span><br></pre></td></tr></table></figure>
+
+
+<p>3、执行命令从备份文件中恢复Gitlab<br>第三步，执行命令从备份文件中恢复Gitlab</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-rake gitlab:backup:restore BACKUP=备份文件编号</span><br></pre></td></tr></table></figure>
+
+
+<p>例如我们的备份文件的编号是1502357536_2017_08_10_9.4.3，因此执行下面的命令即可恢复gitlab</p>
+<p>gitlab-rake gitlab:backup:restore BACKUP=1502357536_2017_08_10_9.4.3</p>
+<p>敲完命令后，出现第一个交互页面，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu4146:/var/opt/gitlab/backups# gitlab-rake gitlab:backup:restore BACKUP=1502357536_2017_08_10_9.4.3</span><br><span class="line">Unpacking backup ... done</span><br><span class="line">Before restoring the database we recommend removing all existing</span><br><span class="line">tables to avoid future upgrade problems. Be aware that if you have</span><br><span class="line">custom tables in the GitLab database these tables and all data will be</span><br><span class="line">removed.</span><br><span class="line"></span><br><span class="line">Do you want to continue (yes/no)? </span><br><span class="line">输入“yes”继续。 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">恢复过程中。。。。。 </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">出现第二个交互页面，</span><br><span class="line"></span><br><span class="line">Put GitLab hooks in repositories dirs [DONE]</span><br><span class="line">done</span><br><span class="line">Restoring uploads ... </span><br><span class="line">done</span><br><span class="line">Restoring builds ... </span><br><span class="line">done</span><br><span class="line">Restoring artifacts ... </span><br><span class="line">done</span><br><span class="line">Restoring pages ... </span><br><span class="line">done</span><br><span class="line">Restoring lfs objects ... </span><br><span class="line">done</span><br><span class="line">This will rebuild an authorized_keys file.</span><br><span class="line">You will lose any data stored in authorized_keys file.</span><br><span class="line">Do you want to continue (yes/no)? </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">输入“yes”继续。</span><br></pre></td></tr></table></figure>
+
+
+
+<p>4、执行命令从备份文件中恢复Gitlab<br>第四步，启动Gitlab</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gitlab-ctl start</span><br></pre></td></tr></table></figure>
+
+<p>5、打开迁移后的Gitlab，进行对比</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/10/14/Gitlab%E8%BF%9B%E8%A1%8C%E5%A4%87%E4%BB%BD%E6%81%A2%E5%A4%8D%E4%B8%8E%E8%BF%81%E7%A7%BB/" data-id="clh04c6dc0003o4rg5bphgs5w" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Docker的基本使用(部署python项目)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/09/17/Docker%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8(%E9%83%A8%E7%BD%B2python%E9%A1%B9%E7%9B%AE)/" class="article-date">
+  <time datetime="2021-09-17T01:16:58.711Z" itemprop="datePublished">2021-09-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Docker的基本使用-部署python项目"><a href="#Docker的基本使用-部署python项目" class="headerlink" title="Docker的基本使用(部署python项目)"></a>Docker的基本使用(部署python项目)</h1><p>今天开始利用docker来部署项目，当然，首先，需要安装好Docker，这个在之前的PPT讲过。</p>
+<h2 id="一、准备项目"><a href="#一、准备项目" class="headerlink" title="一、准备项目"></a>一、准备项目</h2><p><img src="https://img2018.cnblogs.com/blog/966606/201901/966606-20190120205220141-1346670618.png" alt="img"></p>
+<p>我写的是一个爬取某ppt网站的代码，就一个ppt1.py是爬虫，然后，ppts是存放下载的ppt的</p>
+<h2 id="二、准备requirement-txt文件"><a href="#二、准备requirement-txt文件" class="headerlink" title="二、准备requirement.txt文件"></a>二、准备requirement.txt文件</h2><p>这个是需要哪些python库支持，写好</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="https://img2018.cnblogs.com/blog/966606/201901/966606-20190120205630200-2055969698.png" alt="img"></h2><h2 id="三、准备Dockerfile文件"><a href="#三、准备Dockerfile文件" class="headerlink" title="三、准备Dockerfile文件"></a>三、准备Dockerfile文件</h2><p>需要一个名为Dockerfile的文件，没有后缀，这个创建docker镜像的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM python:3.7  --基础镜像根据自己的实际情况去调整</span><br><span class="line">ENV PATH /usr/local/bin:$PATH</span><br><span class="line">ADD . /code</span><br><span class="line">WORKDIR /code</span><br><span class="line">RUN pip install -r requirements.txt</span><br><span class="line">CMD python ppt1.py</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\Hasee\AppData\Roaming\Typora\typora-user-images\image-20210917092256013.png" alt="image-20210917092256013"></p>
+<p>FROM：需要什么环境</p>
+<p>ENV：修改path，即增加/usr/local/bin这个环境变量</p>
+<p>ADD：将本地代码放到虚拟容器中，它有两个参数，第一个是 . ，代表本地当前路径；第二个参数是/code，代表虚拟容器中的路径，即将本地项目的所有内容放到虚拟容器的/code目录下，以便在虚拟容器中运行代码</p>
+<p>WORKDIR：指定工作目录，也就是刚才的/code，在虚拟容器中的目录</p>
+<p>RUN：执行某些环境准备工作，docker容器中只有python3环境，还需要python的库，这里安装那些库</p>
+<p>CMD：运行项目的命令行命令</p>
+<h2 id="四、开始创建镜像"><a href="#四、开始创建镜像" class="headerlink" title="四、开始创建镜像"></a>四、开始创建镜像</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t pptdemo:latest .</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img2018.cnblogs.com/blog/966606/201901/966606-20190120211256651-507566185.png" alt="img"></p>
+<p>这样应该就没错了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t pptdemo:latest .</span><br><span class="line">Sending build context to Docker daemon  23.55kB</span><br><span class="line">Step 1/6 : FROM python:3.7</span><br><span class="line"> ---&gt; 55fb8aca33df</span><br><span class="line">Step 2/6 : ENV PATH /usr/local/bin:$PATH</span><br><span class="line"> ---&gt; Using cache</span><br><span class="line"> ---&gt; 97e82715b8ee</span><br><span class="line">Step 3/6 : ADD . /code</span><br><span class="line"> ---&gt; 9d2d253015ee</span><br><span class="line">Step 4/6 : WORKDIR /code</span><br><span class="line">Removing intermediate container 25ccdad420a0</span><br><span class="line"> ---&gt; ec462b723417</span><br><span class="line">Step 5/6 : RUN pip install -r requirements.txt</span><br><span class="line"> ---&gt; Running in 83e607d0bc06</span><br><span class="line">Collecting requests (from -r requirements.txt (line 1))</span><br><span class="line">  Downloading https://files.pythonhosted.org/packages/7d/e3/20f3d364d6c8e5d2353c72a67778eb189176f08e873c9900e10c0287b84b/requests-2.21.0-py2.py3-none-any.whl (57kB)</span><br><span class="line">Collecting pyquery (from -r requirements.txt (line 2))</span><br><span class="line">  Downloading https://files.pythonhosted.org/packages/09/c7/ce8c9c37ab8ff8337faad3335c088d60bed4a35a4bed33a64f0e64fbcf29/pyquery-1.4.0-py2.py3-none-any.whl</span><br><span class="line">Collecting idna&lt;2.9,&gt;=2.5 (from requests-&gt;-r requirements.txt (line 1))</span><br><span class="line">  Downloading https://files.pythonhosted.org/packages/14/2c/cd551d81dbe15200be1cf41cd03869a46fe7226e7450af7a6545bfc474c9/idna-2.8-py2.py3-none-any.whl (58kB)</span><br><span class="line">Collecting chardet&lt;3.1.0,&gt;=3.0.2 (from requests-&gt;-r requirements.txt (line 1))</span><br><span class="line">  Downloading https://files.pythonhosted.org/packages/bc/a9/01ffebfb562e4274b6487b4bb1ddec7ca55ec7510b22e4c51f14098443b8/chardet-3.0.4-py2.py3-none-any.whl (133kB)</span><br><span class="line">Collecting certifi&gt;=2017.4.17 (from requests-&gt;-r requirements.txt (line 1))</span><br><span class="line">  Downloading https://files.pythonhosted.org/packages/9f/e0/accfc1b56b57e9750eba272e24c4dddeac86852c2bebd1236674d7887e8a/certifi-2018.11.29-py2.py3-none-any.whl (154kB)</span><br><span class="line">Collecting urllib3&lt;1.25,&gt;=1.21.1 (from requests-&gt;-r requirements.txt (line 1))</span><br><span class="line">  Downloading https://files.pythonhosted.org/packages/62/00/ee1d7de624db8ba7090d1226aebefab96a2c71cd5cfa7629d6ad3f61b79e/urllib3-1.24.1-py2.py3-none-any.whl (118kB)</span><br><span class="line">Collecting lxml&gt;=2.1 (from pyquery-&gt;-r requirements.txt (line 2))</span><br><span class="line">  Downloading https://files.pythonhosted.org/packages/5d/d4/e81be10be160a6323cf5f29f1eabc9693080cb16780a2e19c96091ee37ee/lxml-4.3.0-cp36-cp36m-manylinux1_x86_64.whl (5.7MB)</span><br><span class="line">Collecting cssselect&gt;0.7.9 (from pyquery-&gt;-r requirements.txt (line 2))</span><br><span class="line">  Downloading https://files.pythonhosted.org/packages/7b/44/25b7283e50585f0b4156960691d951b05d061abf4a714078393e51929b30/cssselect-1.0.3-py2.py3-none-any.whl</span><br><span class="line">Installing collected packages: idna, chardet, certifi, urllib3, requests, lxml, cssselect, pyquery</span><br><span class="line">Successfully installed certifi-2018.11.29 chardet-3.0.4 cssselect-1.0.3 idna-2.8 lxml-4.3.0 pyquery-1.4.0 requests-2.21.0 urllib3-1.24.1</span><br><span class="line">Removing intermediate container 83e607d0bc06</span><br><span class="line"> ---&gt; 22244632da67</span><br><span class="line">Step 6/6 : CMD python ppt1.py</span><br><span class="line"> ---&gt; Running in c5ff77a9f680</span><br><span class="line">Removing intermediate container c5ff77a9f680</span><br><span class="line"> ---&gt; 07cfec786f1a</span><br><span class="line">Successfully built 07cfec786f1a</span><br><span class="line">Successfully tagged pptdemo:latest</span><br><span class="line">SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have &#x27;-rwxr-xr-x&#x27; permissions. It is recommended to double check and reset permissions for sensitive files and directories.</span><br></pre></td></tr></table></figure>
+
+<p>继续输入代码查看是否创建成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、运行"><a href="#五、运行" class="headerlink" title="五、运行"></a>五、运行</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run pptdemo</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、docker的导入和导出"><a href="#六、docker的导入和导出" class="headerlink" title="六、docker的导入和导出"></a>六、docker的导入和导出</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">docker 镜像导入导出有两种方法：</span><br><span class="line"></span><br><span class="line">一种是使用 save 和 load 命令</span><br><span class="line"></span><br><span class="line">使用例子如下：</span><br><span class="line"></span><br><span class="line">docker save pptdemo:latest&gt;/root/pptdemo.tar</span><br><span class="line">docker load&lt;pptdemo.tar</span><br><span class="line"></span><br><span class="line">一种是使用 export 和 import 命令</span><br><span class="line"></span><br><span class="line">使用例子如下：</span><br><span class="line"></span><br><span class="line">docker export pptdemo:latest&gt; pptdemo.tar</span><br><span class="line">cat pptdemo.tar |  docker import - pptdemo:latest</span><br><span class="line"></span><br><span class="line">export 和 import 导出的是一个容器的快照, 不是镜像本身, 也就是说没有 layer。</span><br><span class="line"></span><br><span class="line">你的 dockerfile 里的 workdir, entrypoint 之类的所有东西都会丢失，commit 过的话也会丢失。</span><br><span class="line"></span><br><span class="line">快照文件将丢弃所有的历史记录和元数据信息（即仅保存容器当时的快照状态），而镜像存储文件将保存完整记录，体积也更大。</span><br><span class="line"></span><br><span class="line"> docker save 保存的是镜像（image），docker export 保存的是容器（container）；</span><br><span class="line"> docker load 用来载入镜像包，docker import 用来载入容器包，但两者都会恢复为镜像；</span><br><span class="line"> docker load 不能对载入的镜像重命名，而 docker import 可以为镜像指定新名称。</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/09/17/Docker%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8(%E9%83%A8%E7%BD%B2python%E9%A1%B9%E7%9B%AE)/" data-id="clh04c6d60001o4rg21end1wp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Docker的基本使用(部署spring-boot项目)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/09/16/Docker%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8(%E9%83%A8%E7%BD%B2spring-boot%E9%A1%B9%E7%9B%AE)/" class="article-date">
+  <time datetime="2021-09-16T08:20:41.936Z" itemprop="datePublished">2021-09-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Docker的基本使用-部署spring-boot项目"><a href="#Docker的基本使用-部署spring-boot项目" class="headerlink" title="Docker的基本使用(部署spring-boot项目)"></a>Docker的基本使用(部署spring-boot项目)</h1><p>今天开始利用docker来部署项目，当然，首先，需要安装好Docker，这个在之前的PPT讲过。</p>
+<h2 id="1-将springboot项目打成jar包"><a href="#1-将springboot项目打成jar包" class="headerlink" title="1.将springboot项目打成jar包"></a>1.将springboot项目打成jar包</h2><p><img src="https://images1.tqwba.com/20200913/yvpiz0k01sa.png" alt="springboot项目打成的jar包打成镜像放到docker中"></p>
+<h2 id="2-创建一个Dockerfile文件"><a href="#2-创建一个Dockerfile文件" class="headerlink" title="2.创建一个Dockerfile文件"></a>2.创建一个Dockerfile文件</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> java:<span class="number">8</span>   --基础镜像,根据业务的实际情况进行选择</span><br><span class="line"><span class="keyword">ADD</span><span class="language-bash"> *.jar /app.jar --把当前包复制到镜像中</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;--server.port=8080&quot;</span>] --指定启动时服务器绑定端口</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">8080</span> --声明端口 </span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;java&quot;</span>,<span class="string">&quot;-jar&quot;</span>,<span class="string">&quot;/app.jar&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-将jar包和Dockerfile文件放到同一目录中"><a href="#3-将jar包和Dockerfile文件放到同一目录中" class="headerlink" title="3.将jar包和Dockerfile文件放到同一目录中"></a>3.将jar包和Dockerfile文件放到同一目录中</h2><p><img src="https://images1.tqwba.com/20200913/zu5o2afmyed.png" alt="springboot项目打成的jar包打成镜像放到docker中"></p>
+<h2 id="4-打成镜像："><a href="#4-打成镜像：" class="headerlink" title="4.打成镜像："></a>4.打成镜像：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t blog .</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-运行镜像"><a href="#5-运行镜像" class="headerlink" title="5.运行镜像"></a>5.运行镜像</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docekr run -d -p 8080:8080 blog</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="六、docker的导入和导出"><a href="#六、docker的导入和导出" class="headerlink" title="六、docker的导入和导出"></a>六、docker的导入和导出</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">docker 镜像导入导出有两种方法：</span><br><span class="line"></span><br><span class="line">一种是使用 save 和 load 命令</span><br><span class="line"></span><br><span class="line">使用例子如下：</span><br><span class="line"></span><br><span class="line">docker save blog:latest&gt;/root/blog.tar</span><br><span class="line">docker load&lt;blog.tar</span><br><span class="line"></span><br><span class="line">一种是使用 export 和 import 命令</span><br><span class="line"></span><br><span class="line">使用例子如下：</span><br><span class="line"></span><br><span class="line">docker export blog:latest&gt; blog.tar</span><br><span class="line">cat blog.tar |  docker import - blog:latest</span><br><span class="line"></span><br><span class="line">export 和 import 导出的是一个容器的快照, 不是镜像本身, 也就是说没有 layer。</span><br><span class="line"></span><br><span class="line">你的 dockerfile 里的 workdir, entrypoint 之类的所有东西都会丢失，commit 过的话也会丢失。</span><br><span class="line"></span><br><span class="line">快照文件将丢弃所有的历史记录和元数据信息（即仅保存容器当时的快照状态），而镜像存储文件将保存完整记录，体积也更大。</span><br><span class="line"></span><br><span class="line"> docker save 保存的是镜像（image），docker export 保存的是容器（container）；</span><br><span class="line"> docker load 用来载入镜像包，docker import 用来载入容器包，但两者都会恢复为镜像；</span><br><span class="line"> docker load 不能对载入的镜像重命名，而 docker import 可以为镜像指定新名称。</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/09/16/Docker%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8(%E9%83%A8%E7%BD%B2spring-boot%E9%A1%B9%E7%9B%AE)/" data-id="clh04c6db0002o4rgduwsbws9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/04/18/%E5%A4%8D%E4%B9%A0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/23/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/11/Spring%20Security%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E7%9A%84%E5%8E%9F%E7%90%86/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%20%EF%BC%88jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%89/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/06/Docker%20Volume/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

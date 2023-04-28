@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="阿里云环境部署手册v1.01、服务器shell连接账号密码主机IP： 39.100.127.235 39.100.78.178 47.92.23.16 账号密码： grid1：test@12345 47.92.23.16  grid2：test@13579  grid3：test@24680 2、mysql数据库账号密码39.100.127.235:13306 dbadmin ：Grid@1qaz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2021/01/19/%E9%98%BF%E9%87%8C%E4%BA%91%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8Cv1.0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="阿里云环境部署手册v1.01、服务器shell连接账号密码主机IP： 39.100.127.235 39.100.78.178 47.92.23.16 账号密码： grid1：test@12345 47.92.23.16  grid2：test@13579  grid3：test@24680 2、mysql数据库账号密码39.100.127.235:13306 dbadmin ：Grid@1qaz">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-01-19T07:54:54.527Z">
+<meta property="article:modified_time" content="2021-01-19T07:56:18.140Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-阿里云环境部署手册v1.0" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/19/%E9%98%BF%E9%87%8C%E4%BA%91%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8Cv1.0/" class="article-date">
+  <time datetime="2021-01-19T07:54:54.527Z" itemprop="datePublished">2021-01-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="阿里云环境部署手册v1-0"><a href="#阿里云环境部署手册v1-0" class="headerlink" title="阿里云环境部署手册v1.0"></a>阿里云环境部署手册v1.0</h1><h1 id="1、服务器shell连接账号密码"><a href="#1、服务器shell连接账号密码" class="headerlink" title="1、服务器shell连接账号密码"></a>1、服务器shell连接账号密码</h1><p>主机IP：</p>
+<p>39.100.127.235</p>
+<p>39.100.78.178</p>
+<p>47.92.23.16</p>
+<p>账号密码：</p>
+<p>grid1：test@12345</p>
+<p>47.92.23.16 </p>
+<p>grid2：test@13579 </p>
+<p>grid3：test@24680</p>
+<h1 id="2、mysql数据库账号密码"><a href="#2、mysql数据库账号密码" class="headerlink" title="2、mysql数据库账号密码"></a>2、mysql数据库账号密码</h1><p>39.100.127.235:13306</p>
+<p>dbadmin ：<a href="mailto:Grid@1qaz">Grid@1qaz</a></p>
+<p>39.100.78.178:13306（创新平台）</p>
+<p>root：grid@123456</p>
+<p>–使用rpm安装mysql的默认目录：</p>
+<p>数据库目录</p>
+<p>/var/lib/mysql/</p>
+<p>配置文件</p>
+<p>/usr/share/mysql(mysql.server命令及配置文件)</p>
+<p>相关命令</p>
+<p>/usr/bin(mysqladmin mysqldump等命令)</p>
+<p>启动脚本</p>
+<p>/etc/rc.d/init.d/(启动脚本文件mysql的目录)</p>
+<h1 id="3、创新平台-web服务器"><a href="#3、创新平台-web服务器" class="headerlink" title="3、创新平台-web服务器"></a>3、创新平台-web服务器</h1><p>39.100.127.235（前端）18080——18084</p>
+<p>39.100.78.178（前端）18080——18084</p>
+<p>47.92.23.16（文件预览）nginx：81</p>
+<p>#/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf</p>
+<h1 id="4、kafka-zookeeper-jdk"><a href="#4、kafka-zookeeper-jdk" class="headerlink" title="4、kafka+zookeeper+jdk"></a>4、kafka+zookeeper+jdk</h1><p>39.100.127.235（172.17.66.165）zookeeper leader：2888</p>
+<p>39.100.78.178（172.17.66.166）zookeeper follower：3888</p>
+<p>47.92.23.16（172.17.66.164）zookeeper follower：3888</p>
+<p>kafka：9092</p>
+<p>zookeeper集群：2181</p>
+<p># /opt/zookeeper-3.4.14/bin/zkServer.sh start</p>
+<p># /opt/zookeeper-3.4.14/bin/zkServer.sh status</p>
+<p>关闭防火墙systemctl stop firewalld</p>
+<p>#/opt/kafka_2.12-2.3.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.12-2.3.0/config/server.properties</p>
+<p># jps</p>
+<h1 id="5、redis集群"><a href="#5、redis集群" class="headerlink" title="5、redis集群"></a>5、redis集群</h1><p>39.100.127.235（172.17.66.165）从 redis-sentine：26380</p>
+<p>39.100.78.178（172.17.66.166）主 redis-sentine：26379</p>
+<p>47.92.23.16（172.17.66.164）从 redis-sentine：26381</p>
+<p>redis：6379</p>
+<p>#/opt/redis-5.0.5/src/redis-server /etc/redis/redis.conf</p>
+<p>#/opt/redis-5.0.5/src/redis-sentinel /etc/redis/sentinel.conf</p>
+<h1 id="6、fastdfs分布式文件系统"><a href="#6、fastdfs分布式文件系统" class="headerlink" title="6、fastdfs分布式文件系统"></a>6、fastdfs分布式文件系统</h1><p>47.92.23.16（172.17.66.164）</p>
+<p>跟踪器(Tracker)：22122</p>
+<p>存储 (Storage)：23000</p>
+<p>数据目录/home/fastdfs/tracker</p>
+<p>数据目录/home/fastdfs/storage</p>
+<p>store_path0=/home/fastdfs/file</p>
+<p># service fdfs_trackerd start</p>
+<p># service fdfs_storaged start</p>
+<p>查看Storage和Tracker是否在通信：</p>
+<p>#/usr/bin/fdfs_monitor /etc/fdfs/storage.conf</p>
+<h1 id="7、ELK"><a href="#7、ELK" class="headerlink" title="7、ELK"></a>7、ELK</h1><p>elasticsearch</p>
+<p>39.100.127.235（172.17.66.165）：9200</p>
+<p>39.100.78.178（172.17.66.166）：9200</p>
+<p>47.92.23.16（172.17.66.164）：9200</p>
+<p>ES集群：9300</p>
+<p>#su elsearch</p>
+<p>#cd /usr/local/elasticsearch-6.8.8/bin</p>
+<p>#./elasticsearch(前台启动)或</p>
+<p>#nohup ./elasticsearch &amp;(后台启动)</p>
+<p>Logstash</p>
+<p>39.100.127.235（172.17.66.165）：5000、9600</p>
+<p>启动logstash5000.conf</p>
+<p>#nohup /usr/local/logstash-6.8.8/bin/logstash -f /usr/local/logstash-6.8.8/config/logstash5000.conf &amp;</p>
+<p>39.100.78.178（172.17.66.166）</p>
+<p>启动 mysql_all.conf （全量）</p>
+<p>#nohup /usr/local/logstash-6.8.8/bin/logstash -f /usr/local/logstash-6.8.8/config/mysql_all.conf &amp;</p>
+<p>后续是mysql_increment.conf（增量）启动</p>
+<p>Kibana</p>
+<p>47.92.23.16（172.17.66.164）：5601</p>
+<p>#nohup ./kibana &amp;</p>
+<p>elasticsearch-head</p>
+<p>39.100.78.178（172.17.66.166）：9100</p>
+<p><a target="_blank" rel="noopener" href="http://39.100.78.178:9100/?auth_user=elastic&amp;auth_password=grid_elastic123">http://39.100.78.178:9100/?auth_user=elastic&amp;auth_password=grid_elastic123</a></p>
+<h1 id="8、文件预览服务"><a href="#8、文件预览服务" class="headerlink" title="8、文件预览服务"></a>8、文件预览服务</h1><p>47.92.23.16（172.17.66.164）</p>
+<p>openoffice：8100</p>
+<p>kkFileView：8012</p>
+<p>启动openOffice</p>
+<p>#nohup /opt/openoffice4/program/soffice -headless -accept=”socket,host=172.17.66.164,port=8100;urp;” -nofirststartwizard &amp;</p>
+<p>启动kkFile</p>
+<p>#/opt/kkFileView-2.2.0/bin/startup.sh</p>
+<h1 id="9、judger账户"><a href="#9、judger账户" class="headerlink" title="9、judger账户"></a>9、judger账户</h1><p>47.92.23.16（172.17.66.164）</p>
+<p>账号judger 密码111111</p>
+<h1 id="10、gitea"><a href="#10、gitea" class="headerlink" title="10、gitea"></a>10、gitea</h1><p>47.92.23.16（172.17.66.164）：3000</p>
+<p># cd /home/aip/gitea_deploy</p>
+<p># nohup ./gitea &gt;/dev/null 2&gt;&amp;1 &amp;</p>
+<h1 id="11、创新平台微服务架构部署"><a href="#11、创新平台微服务架构部署" class="headerlink" title="11、创新平台微服务架构部署"></a>11、创新平台微服务架构部署</h1><h2 id="1、jhipster-registry-注册中心"><a href="#1、jhipster-registry-注册中心" class="headerlink" title="1、jhipster-registry:注册中心"></a>1、jhipster-registry:注册中心</h2><p>39.100.78.178（172.17.66.166）：:8761</p>
+<p># nohup java -jar jhipster-registry.jar &amp;</p>
+<h2 id="2、uaa-权鉴服务"><a href="#2、uaa-权鉴服务" class="headerlink" title="2、uaa:权鉴服务"></a>2、uaa:权鉴服务</h2><p>39.100.78.178（172.17.66.166）：9999</p>
+<p># ../business.sh uaa</p>
+<h2 id="3、Zipkin链路跟踪"><a href="#3、Zipkin链路跟踪" class="headerlink" title="3、Zipkin链路跟踪"></a>3、Zipkin链路跟踪</h2><p>39.100.78.178（172.17.66.166）：9411</p>
+<p># nohup java -jar zipkinserver.jar &amp;</p>
+<h2 id="4、Seata-分布式事物服务"><a href="#4、Seata-分布式事物服务" class="headerlink" title="4、Seata: 分布式事物服务"></a>4、Seata: 分布式事物服务</h2><p>39.100.78.178（172.17.66.166）：8091</p>
+<p># nohup ./seata-server.sh &amp;</p>
+<h2 id="5、Gateway-网关服务"><a href="#5、Gateway-网关服务" class="headerlink" title="5、Gateway: 网关服务"></a>5、Gateway: 网关服务</h2><p>39.100.78.178（172.17.66.166）：8089</p>
+<p># ../business.sh gateway</p>
+<h1 id="12、创新平台业务微服务"><a href="#12、创新平台业务微服务" class="headerlink" title="12、创新平台业务微服务"></a>12、创新平台业务微服务</h1><h2 id="1、inv-file-server：分布式文件系统"><a href="#1、inv-file-server：分布式文件系统" class="headerlink" title="1、inv-file-server：分布式文件系统"></a>1、inv-file-server：分布式文件系统</h2><p>47.92.23.16（172.17.66.164）：9900</p>
+<p># ../business.sh inv-file-server</p>
+<h2 id="2、inv-personal-center：个人中心服务"><a href="#2、inv-personal-center：个人中心服务" class="headerlink" title="2、inv-personal-center：个人中心服务"></a>2、inv-personal-center：个人中心服务</h2><p>47.92.23.16（172.17.66.164）：8082</p>
+<p># ../business.sh inv-personal-center</p>
+<h2 id="3、inv-user：用户服务"><a href="#3、inv-user：用户服务" class="headerlink" title="3、inv-user：用户服务"></a>3、inv-user：用户服务</h2><p>39.100.78.178（172.17.66.166）：8151</p>
+<p># ../business.sh inv-user</p>
+<h2 id="4、inv-desk：管理后台服务"><a href="#4、inv-desk：管理后台服务" class="headerlink" title="4、inv-desk：管理后台服务"></a>4、inv-desk：管理后台服务</h2><p>47.92.23.16（172.17.66.164）：8063</p>
+<p># ../business.sh inv-desk</p>
+<h2 id="5、inv-judge：评测机服务"><a href="#5、inv-judge：评测机服务" class="headerlink" title="5、inv-judge：评测机服务"></a>5、inv-judge：评测机服务</h2><p>47.92.23.16（172.17.66.164）：8086</p>
+<h2 id="6、inv-integration：积分勋章服务"><a href="#6、inv-integration：积分勋章服务" class="headerlink" title="6、inv-integration：积分勋章服务"></a>6、inv-integration：积分勋章服务</h2><p>39.100.127.235（172.17.66.165）：8158</p>
+<h2 id="7、inv-lab：实验室服务"><a href="#7、inv-lab：实验室服务" class="headerlink" title="7、inv-lab：实验室服务"></a>7、inv-lab：实验室服务</h2><p>47.92.23.16（172.17.66.164）：8085</p>
+<h2 id="8、inv-study：文库，题库服务"><a href="#8、inv-study：文库，题库服务" class="headerlink" title="8、inv-study：文库，题库服务"></a>8、inv-study：文库，题库服务</h2><p>47.92.23.16（172.17.66.164）：8083</p>
+<h2 id="9、inv-reward：悬赏论坛服务"><a href="#9、inv-reward：悬赏论坛服务" class="headerlink" title="9、inv-reward：悬赏论坛服务"></a>9、inv-reward：悬赏论坛服务</h2><p>47.92.23.16（172.17.66.164）：8084</p>
+<h2 id="10、inv-workflow：工作流服务"><a href="#10、inv-workflow：工作流服务" class="headerlink" title="10、inv-workflow：工作流服务"></a>10、inv-workflow：工作流服务</h2><p>47.92.23.16（172.17.66.164）：8141</p>
+<h2 id="11、inv-elk：搜索引擎服务"><a href="#11、inv-elk：搜索引擎服务" class="headerlink" title="11、inv-elk：搜索引擎服务"></a>11、inv-elk：搜索引擎服务</h2><p>47.92.23.16（172.17.66.164）：8068</p>
+<h1 id="13、微服务架构部署（数智河南"><a href="#13、微服务架构部署（数智河南" class="headerlink" title="13、微服务架构部署（数智河南)"></a>13、微服务架构部署（数智河南)</h1><p>注册中心 39.100.127.235 8761</p>
+<p>Uaa 39.100.127.235 9999</p>
+<p>网关 39.100.127.235 8080</p>
+<p>tx-manager事务1 39.100.127.235 7970</p>
+<p>tx-manager事务2 39.100.127.235 7971</p>
+<p>其它业务服务</p>
+<p>用户服务 inv-user 39.100.127.235 8001</p>
+<p>系统服务 inv-system 39.100.127.235 8011</p>
+<p>工作流服务 inv-flow 39.100.127.235 8221</p>
+<p>应用服务 inv-scene 39.100.127.235 8231</p>
+<p>搜索服务 inv-search 39.100.127.235 8241</p>
+<p>分析服务 inv-analysis 39.100.127.235 8251</p>
+<p>评价服务 inv-evaluation 39.100.127.235 8261</p>
+<p>需求服务 inv-requirement 39.100.127.235 8271</p>
+<p>接口服务 inv-api 39.100.127.235 8281</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/19/%E9%98%BF%E9%87%8C%E4%BA%91%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8Cv1.0/" data-id="clh04c6e2000vo4rg98wg1g95" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/01/21/linux%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5%E5%91%BD%E4%BB%A4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/01/18/docker-desk(windows%E7%8E%AF%E5%A2%83)%E4%B8%8Bhpv%E5%92%8Cvmare%E4%B9%8B%E9%97%B4%E7%9A%84%E5%88%87%E6%8D%A2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">December 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/10/">October 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/04/18/%E5%A4%8D%E4%B9%A0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/23/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/11/Spring%20Security%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E7%9A%84%E5%8E%9F%E7%90%86/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/16/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%20%EF%BC%88jdk%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%EF%BC%89/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/01/06/Docker%20Volume/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
